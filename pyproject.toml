@@ -1,0 +1,221 @@
+# this_file: pyproject.toml
+# =============================================================================
+# VEXY-LINES-APY PACKAGE CONFIGURATION
+# Python bindings to the Vexy Lines MCP API and style engine.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# PROJECT METADATA
+# -----------------------------------------------------------------------------
+[project]
+name = "vexy-lines-apy"
+description = "Python bindings to the Vexy Lines MCP API and style engine"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = [
+    "vexy-lines",
+    "vector-art",
+    "mcp",
+    "api",
+    "style-engine",
+    "creative-tools",
+]
+dynamic = ["version"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Topic :: Multimedia :: Graphics",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "vexy-lines-py>=0.1.0",
+    "loguru>=0.7.2",
+    "typing-extensions>=4.0",
+]
+
+[[project.authors]]
+name = "Fontlab Ltd."
+email = "opensource@vexy.art"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+Documentation = "https://github.com/vexyart/vexy-lines/tree/main/vexy-lines-apy#readme"
+Issues = "https://github.com/vexyart/vexy-lines/issues"
+Source = "https://github.com/vexyart/vexy-lines/tree/main/vexy-lines-apy"
+
+# -----------------------------------------------------------------------------
+# BUILD SYSTEM
+# -----------------------------------------------------------------------------
+[build-system]
+requires = [
+    "hatchling>=1.27.0",
+    "hatch-vcs>=0.4.0",
+]
+build-backend = "hatchling.build"
+
+# -----------------------------------------------------------------------------
+# HATCH BUILD
+# -----------------------------------------------------------------------------
+[tool.hatch.build]
+include = [
+    "src/vexy_lines_api/py.typed",
+]
+exclude = ["**/__pycache__", "**/.pytest_cache", "**/.mypy_cache"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vexy_lines_api"]
+reproducible = true
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/vexy_lines_api/__version__.py"
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.1.0"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+# -----------------------------------------------------------------------------
+# HATCH ENVIRONMENTS
+# -----------------------------------------------------------------------------
+[tool.hatch.envs.default]
+dependencies = [
+    "ruff>=0.9.7",
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/vexy_lines_api --cov=tests {args:tests}"
+type-check = "mypy src/vexy_lines_api tests"
+lint = ["ruff check src/vexy_lines_api tests", "ruff format --check --respect-gitignore src/vexy_lines_api tests"]
+fmt = ["ruff format --respect-gitignore src/vexy_lines_api tests", "ruff check --fix src/vexy_lines_api tests"]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.10", "3.11", "3.12", "3.13"]
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+    "ruff>=0.9.7",
+    "mypy>=1.15.0",
+]
+
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/vexy_lines_api tests}"
+style = ["ruff check {args:.}", "ruff format --check --respect-gitignore {args:.}"]
+fmt = ["ruff format --respect-gitignore {args:.}", "ruff check --fix {args:.}"]
+
+[tool.hatch.envs.test]
+dependencies = [
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+]
+
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest {args:tests}"
+test-cov = "python -m pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/vexy_lines_api --cov=tests {args:tests}"
+
+# -----------------------------------------------------------------------------
+# COVERAGE
+# -----------------------------------------------------------------------------
+[tool.coverage.paths]
+vexy_lines_api = ["src/vexy_lines_api", "*/vexy-lines-apy/src/vexy_lines_api"]
+tests = ["tests", "*/vexy-lines-apy/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "pass",
+    "raise NotImplementedError",
+]
+
+[tool.coverage.run]
+source_pkgs = ["vexy_lines_api", "tests"]
+branch = true
+parallel = true
+
+# -----------------------------------------------------------------------------
+# MYPY
+# -----------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+
+# -----------------------------------------------------------------------------
+# PYTEST
+# -----------------------------------------------------------------------------
+[tool.pytest.ini_options]
+addopts = "-v --durations=10 --tb=short"
+console_output_style = "progress"
+filterwarnings = ["ignore::DeprecationWarning"]
+log_cli = true
+log_cli_level = "INFO"
+norecursedirs = [".*", "build", "dist", "venv", "__pycache__", "*.egg-info"]
+python_classes = ["Test*"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+
+# -----------------------------------------------------------------------------
+# RUFF
+# -----------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "A", "ARG", "ASYNC", "B", "C", "DTZ", "E", "EM", "F", "FBT", "I", "ICN",
+    "ISC", "LOG", "N", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET",
+    "RSE", "RUF", "S", "SIM", "T", "TCH", "TID", "UP", "W", "YTT",
+]
+ignore = [
+    "B027", "C901", "FBT003", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
+    "PLR1714", "PLW0603", "PT013", "PTH123", "PYI056", "S105", "S106",
+    "S107", "S110", "SIM102",
+]
+unfixable = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["vexy_lines_api"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
