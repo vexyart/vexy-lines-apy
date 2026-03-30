@@ -1,0 +1,2063 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Python bindings to the Vexy Lines MCP API and style engine">
+      
+      
+      
+      
+        <link rel="prev" href="../installation/">
+      
+      
+        <link rel="next" href="../style-engine/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-materialx-10.1.1">
+    
+    
+      
+        <title>API Reference - vexy-lines-apy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.b72b68c2.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.204eaadb.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="indigo" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<div class="vexy-top-nav" style="width: 100%;">
+  <script src="https://i.vexy.art/vl/webcode/vexy-lines-menu.js"></script>
+  <vexy-lines-menu></vexy-lines-menu>
+</div>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="vexy-lines-apy" class="md-header__button md-logo" aria-label="vexy-lines-apy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            vexy-lines-apy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="vexy-lines-apy" class="md-nav__button md-logo" aria-label="vexy-lines-apy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    vexy-lines-apy
+  </label>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#mcpclient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCPClient
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCPClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#document-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Document methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new_documentwidth-height-dpi-source_image-newdocumentresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        new_document(width, height, dpi, source_image) -&gt; NewDocumentResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open_documentpath-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        open_document(path) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_documentpathnone-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save_document(path=None) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export_documentpath-dpinone-formatnone-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export_document(path, dpi=None, format=None) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_document_info-documentinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_document_info() -&gt; DocumentInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Structure methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_layer_tree-layernode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_layer_tree() -&gt; LayerNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_groupparent_idnone-captionnone-source_image_pathnone-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_group(parent_id=None, caption=None, source_image_path=None) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_layergroup_id-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_layer(group_id) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_filllayer_id-fill_type-colornone-paramsnone-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_fill(layer_id, fill_type, color=None, params=None) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_objectobject_id-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete_object(object_id) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill-parameter-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fill parameter methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fill parameter methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_fill_paramsfill_id-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_fill_params(fill_id) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_fill_paramsfill_id-params-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_fill_params(fill_id, **params) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visual methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set_source_imageimage_path-group_idnone-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_source_image(image_path, group_id=None) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_captionobject_id-caption-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_caption(object_id, caption) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_visibleobject_id-visibletrue-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_visible(object_id, visible=True) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_layer_masklayer_id-paths-modecreate-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_layer_mask(layer_id, paths, mode="create") -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_layer_masklayer_id-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_layer_mask(layer_id) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transform_layerlayer_id-translate_x0-translate_y0-rotate_deg0-scale_x1-scale_y1-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        transform_layer(layer_id, translate_x=0, translate_y=0, rotate_deg=0, scale_x=1, scale_y=1) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_layer_warp(layer_id, top_left, top_right, bottom_right, bottom_left) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Control methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rendertimeout1200-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        render(timeout=120.0) -&gt; bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render_all-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        render_all() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wait_for_rendertimeout1200-poll_interval05-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wait_for_render(timeout=120.0, poll_interval=0.5) -&gt; bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_render_status-renderstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_render_status() -&gt; RenderStatus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#undo-str-redo-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        undo() -&gt; str / redo() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_selection-dict-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_selection() -&gt; dict | str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select_objectobject_id-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select_object(object_id) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-level-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low-level method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Low-level method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#call_toolname-argumentsnone-dict-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        call_tool(name, arguments=None) -&gt; dict | str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcperror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCPError
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#style-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Style functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extract_stylepath-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_style(path) -&gt; Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apply_styleclient-style-source_image-dpi72-relativefalse-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_style(client, style, source_image, dpi=72, relative=False) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpolate_stylea-b-t-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interpolate_style(a, b, t) -&gt; Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#styles_compatiblea-b-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        styles_compatible(a, b) -&gt; bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataclasses
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dataclasses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DocumentInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layernode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LayerNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#newdocumentresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NewDocumentResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RenderStatus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../style-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#mcpclient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCPClient
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCPClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#document-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Document methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new_documentwidth-height-dpi-source_image-newdocumentresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        new_document(width, height, dpi, source_image) -&gt; NewDocumentResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open_documentpath-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        open_document(path) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_documentpathnone-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save_document(path=None) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export_documentpath-dpinone-formatnone-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export_document(path, dpi=None, format=None) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_document_info-documentinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_document_info() -&gt; DocumentInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Structure methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_layer_tree-layernode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_layer_tree() -&gt; LayerNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_groupparent_idnone-captionnone-source_image_pathnone-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_group(parent_id=None, caption=None, source_image_path=None) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_layergroup_id-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_layer(group_id) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_filllayer_id-fill_type-colornone-paramsnone-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_fill(layer_id, fill_type, color=None, params=None) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_objectobject_id-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete_object(object_id) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill-parameter-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fill parameter methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fill parameter methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_fill_paramsfill_id-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_fill_params(fill_id) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_fill_paramsfill_id-params-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_fill_params(fill_id, **params) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visual methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set_source_imageimage_path-group_idnone-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_source_image(image_path, group_id=None) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_captionobject_id-caption-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_caption(object_id, caption) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_visibleobject_id-visibletrue-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_visible(object_id, visible=True) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_layer_masklayer_id-paths-modecreate-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_layer_mask(layer_id, paths, mode="create") -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_layer_masklayer_id-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_layer_mask(layer_id) -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transform_layerlayer_id-translate_x0-translate_y0-rotate_deg0-scale_x1-scale_y1-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        transform_layer(layer_id, translate_x=0, translate_y=0, rotate_deg=0, scale_x=1, scale_y=1) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_layer_warp(layer_id, top_left, top_right, bottom_right, bottom_left) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Control methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rendertimeout1200-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        render(timeout=120.0) -&gt; bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render_all-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        render_all() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wait_for_rendertimeout1200-poll_interval05-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wait_for_render(timeout=120.0, poll_interval=0.5) -&gt; bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_render_status-renderstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_render_status() -&gt; RenderStatus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#undo-str-redo-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        undo() -&gt; str / redo() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_selection-dict-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_selection() -&gt; dict | str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select_objectobject_id-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select_object(object_id) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-level-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low-level method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Low-level method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#call_toolname-argumentsnone-dict-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        call_tool(name, arguments=None) -&gt; dict | str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcperror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCPError
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#style-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Style functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extract_stylepath-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_style(path) -&gt; Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apply_styleclient-style-source_image-dpi72-relativefalse-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_style(client, style, source_image, dpi=72, relative=False) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpolate_stylea-b-t-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interpolate_style(a, b, t) -&gt; Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#styles_compatiblea-b-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        styles_compatible(a, b) -&gt; bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataclasses
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dataclasses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DocumentInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layernode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LayerNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#newdocumentresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NewDocumentResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RenderStatus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="mcpclient">MCPClient<a class="headerlink" href="#mcpclient" title="Permanent link">&para;</a></h2>
+<p>Context-managed TCP client for the Vexy Lines MCP server.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">vexy_lines_api</span> <span class="kn">import</span> <span class="n">MCPClient</span>
+
+<span class="k">with</span> <span class="n">MCPClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">47384</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">auto_launch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">get_document_info</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Constructor args:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td><code>str</code></td>
+<td><code>"127.0.0.1"</code></td>
+<td>Server address</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td><code>int</code></td>
+<td><code>47384</code></td>
+<td>Server port</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>float</code></td>
+<td><code>30.0</code></td>
+<td>Socket timeout in seconds</td>
+</tr>
+<tr>
+<td><code>auto_launch</code></td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+<td>Launch the app on connection failure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="document-methods">Document methods<a class="headerlink" href="#document-methods" title="Permanent link">&para;</a></h3>
+<h4 id="new_documentwidth-height-dpi-source_image-newdocumentresult"><code>new_document(width, height, dpi, source_image) -&gt; NewDocumentResult</code><a class="headerlink" href="#new_documentwidth-height-dpi-source_image-newdocumentresult" title="Permanent link">&para;</a></h4>
+<p>Create a new document. Width and height are optional when a source image is provided.</p>
+<h4 id="open_documentpath-str"><code>open_document(path) -&gt; str</code><a class="headerlink" href="#open_documentpath-str" title="Permanent link">&para;</a></h4>
+<p>Open a <code>.lines</code> file. Returns server status.</p>
+<h4 id="save_documentpathnone-str"><code>save_document(path=None) -&gt; str</code><a class="headerlink" href="#save_documentpathnone-str" title="Permanent link">&para;</a></h4>
+<p>Save the document. Pass a path for Save As.</p>
+<h4 id="export_documentpath-dpinone-formatnone-str"><code>export_document(path, dpi=None, format=None) -&gt; str</code><a class="headerlink" href="#export_documentpath-dpinone-formatnone-str" title="Permanent link">&para;</a></h4>
+<p>Export to file. Format: <code>"svg"</code>, <code>"pdf"</code>, <code>"png"</code>, <code>"jpg"</code>, <code>"eps"</code>.</p>
+<h4 id="get_document_info-documentinfo"><code>get_document_info() -&gt; DocumentInfo</code><a class="headerlink" href="#get_document_info-documentinfo" title="Permanent link">&para;</a></h4>
+<p>Returns document metadata: dimensions, DPI, units, unsaved changes flag.</p>
+<h3 id="structure-methods">Structure methods<a class="headerlink" href="#structure-methods" title="Permanent link">&para;</a></h3>
+<h4 id="get_layer_tree-layernode"><code>get_layer_tree() -&gt; LayerNode</code><a class="headerlink" href="#get_layer_tree-layernode" title="Permanent link">&para;</a></h4>
+<p>Returns the full document tree as a recursive <code>LayerNode</code>.</p>
+<h4 id="add_groupparent_idnone-captionnone-source_image_pathnone-dict"><code>add_group(parent_id=None, caption=None, source_image_path=None) -&gt; dict</code><a class="headerlink" href="#add_groupparent_idnone-captionnone-source_image_pathnone-dict" title="Permanent link">&para;</a></h4>
+<p>Add a group. Returns dict with <code>"id"</code> of the created group.</p>
+<h4 id="add_layergroup_id-dict"><code>add_layer(group_id) -&gt; dict</code><a class="headerlink" href="#add_layergroup_id-dict" title="Permanent link">&para;</a></h4>
+<p>Add a layer to a group. Returns dict with <code>"id"</code>.</p>
+<h4 id="add_filllayer_id-fill_type-colornone-paramsnone-dict"><code>add_fill(layer_id, fill_type, color=None, params=None) -&gt; dict</code><a class="headerlink" href="#add_filllayer_id-fill_type-colornone-paramsnone-dict" title="Permanent link">&para;</a></h4>
+<p>Add a fill to a layer. <code>fill_type</code> is e.g. <code>"linear"</code>, <code>"circular"</code>.</p>
+<h4 id="delete_objectobject_id-str"><code>delete_object(object_id) -&gt; str</code><a class="headerlink" href="#delete_objectobject_id-str" title="Permanent link">&para;</a></h4>
+<p>Delete any object by ID.</p>
+<h3 id="fill-parameter-methods">Fill parameter methods<a class="headerlink" href="#fill-parameter-methods" title="Permanent link">&para;</a></h3>
+<h4 id="get_fill_paramsfill_id-dict"><code>get_fill_params(fill_id) -&gt; dict</code><a class="headerlink" href="#get_fill_paramsfill_id-dict" title="Permanent link">&para;</a></h4>
+<p>Get all parameters of a fill as a dict.</p>
+<h4 id="set_fill_paramsfill_id-params-str"><code>set_fill_params(fill_id, **params) -&gt; str</code><a class="headerlink" href="#set_fill_paramsfill_id-params-str" title="Permanent link">&para;</a></h4>
+<p>Set fill parameters by keyword:</p>
+<div class="highlight"><pre><span></span><code><span class="n">vl</span><span class="o">.</span><span class="n">set_fill_params</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#ff0000&quot;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="visual-methods">Visual methods<a class="headerlink" href="#visual-methods" title="Permanent link">&para;</a></h3>
+<h4 id="set_source_imageimage_path-group_idnone-str"><code>set_source_image(image_path, group_id=None) -&gt; str</code><a class="headerlink" href="#set_source_imageimage_path-group_idnone-str" title="Permanent link">&para;</a></h4>
+<p>Set the source image for a group.</p>
+<h4 id="set_captionobject_id-caption-str"><code>set_caption(object_id, caption) -&gt; str</code><a class="headerlink" href="#set_captionobject_id-caption-str" title="Permanent link">&para;</a></h4>
+<p>Rename an object.</p>
+<h4 id="set_visibleobject_id-visibletrue-str"><code>set_visible(object_id, visible=True) -&gt; str</code><a class="headerlink" href="#set_visibleobject_id-visibletrue-str" title="Permanent link">&para;</a></h4>
+<p>Toggle visibility.</p>
+<h4 id="set_layer_masklayer_id-paths-modecreate-str"><code>set_layer_mask(layer_id, paths, mode="create") -&gt; str</code><a class="headerlink" href="#set_layer_masklayer_id-paths-modecreate-str" title="Permanent link">&para;</a></h4>
+<p>Set an SVG vector mask. Mode: <code>"create"</code>, <code>"add"</code>, <code>"subtract"</code>.</p>
+<h4 id="get_layer_masklayer_id-dict"><code>get_layer_mask(layer_id) -&gt; dict</code><a class="headerlink" href="#get_layer_masklayer_id-dict" title="Permanent link">&para;</a></h4>
+<p>Get mask data for a layer.</p>
+<h4 id="transform_layerlayer_id-translate_x0-translate_y0-rotate_deg0-scale_x1-scale_y1-str"><code>transform_layer(layer_id, translate_x=0, translate_y=0, rotate_deg=0, scale_x=1, scale_y=1) -&gt; str</code><a class="headerlink" href="#transform_layerlayer_id-translate_x0-translate_y0-rotate_deg0-scale_x1-scale_y1-str" title="Permanent link">&para;</a></h4>
+<p>Apply a 2D transform to a layer.</p>
+<h4 id="set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str"><code>set_layer_warp(layer_id, top_left, top_right, bottom_right, bottom_left) -&gt; str</code><a class="headerlink" href="#set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str" title="Permanent link">&para;</a></h4>
+<p>Set perspective warp corners. Each corner is <code>[x, y]</code>.</p>
+<h3 id="control-methods">Control methods<a class="headerlink" href="#control-methods" title="Permanent link">&para;</a></h3>
+<h4 id="rendertimeout1200-bool"><code>render(timeout=120.0) -&gt; bool</code><a class="headerlink" href="#rendertimeout1200-bool" title="Permanent link">&para;</a></h4>
+<p>Render all layers and wait for completion. Combines <code>render_all()</code> + <code>wait_for_render()</code>.</p>
+<h4 id="render_all-str"><code>render_all() -&gt; str</code><a class="headerlink" href="#render_all-str" title="Permanent link">&para;</a></h4>
+<p>Trigger a render without waiting.</p>
+<h4 id="wait_for_rendertimeout1200-poll_interval05-bool"><code>wait_for_render(timeout=120.0, poll_interval=0.5) -&gt; bool</code><a class="headerlink" href="#wait_for_rendertimeout1200-poll_interval05-bool" title="Permanent link">&para;</a></h4>
+<p>Poll until rendering finishes.</p>
+<h4 id="get_render_status-renderstatus"><code>get_render_status() -&gt; RenderStatus</code><a class="headerlink" href="#get_render_status-renderstatus" title="Permanent link">&para;</a></h4>
+<p>Check whether the document is currently rendering.</p>
+<h4 id="undo-str-redo-str"><code>undo() -&gt; str</code> / <code>redo() -&gt; str</code><a class="headerlink" href="#undo-str-redo-str" title="Permanent link">&para;</a></h4>
+<p>Undo or redo the last action.</p>
+<h4 id="get_selection-dict-str"><code>get_selection() -&gt; dict | str</code><a class="headerlink" href="#get_selection-dict-str" title="Permanent link">&para;</a></h4>
+<p>Get the currently selected objects.</p>
+<h4 id="select_objectobject_id-str"><code>select_object(object_id) -&gt; str</code><a class="headerlink" href="#select_objectobject_id-str" title="Permanent link">&para;</a></h4>
+<p>Select an object by ID.</p>
+<h3 id="export-shortcuts">Export shortcuts<a class="headerlink" href="#export-shortcuts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>export_svg(path, dpi=None)</code></td>
+<td>Resolved <code>Path</code></td>
+</tr>
+<tr>
+<td><code>export_pdf(path, dpi=None)</code></td>
+<td>Resolved <code>Path</code></td>
+</tr>
+<tr>
+<td><code>export_png(path, dpi=None)</code></td>
+<td>Resolved <code>Path</code></td>
+</tr>
+<tr>
+<td><code>export_jpeg(path, dpi=None)</code></td>
+<td>Resolved <code>Path</code></td>
+</tr>
+<tr>
+<td><code>export_eps(path, dpi=None)</code></td>
+<td>Resolved <code>Path</code></td>
+</tr>
+<tr>
+<td><code>svg()</code></td>
+<td>SVG content as <code>str</code></td>
+</tr>
+<tr>
+<td><code>svg_parsed()</code></td>
+<td><code>svglab.Svg</code> object (requires <code>[svg]</code> extra)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="low-level-method">Low-level method<a class="headerlink" href="#low-level-method" title="Permanent link">&para;</a></h3>
+<h4 id="call_toolname-argumentsnone-dict-str"><code>call_tool(name, arguments=None) -&gt; dict | str</code><a class="headerlink" href="#call_toolname-argumentsnone-dict-str" title="Permanent link">&para;</a></h4>
+<p>Call any MCP tool by name. Returns parsed JSON dict or raw string.</p>
+<hr />
+<h2 id="mcperror">MCPError<a class="headerlink" href="#mcperror" title="Permanent link">&para;</a></h2>
+<p>Raised when the MCP server returns an error or communication fails.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">vexy_lines_api</span> <span class="kn">import</span> <span class="n">MCPClient</span><span class="p">,</span> <span class="n">MCPError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">MCPClient</span><span class="p">(</span><span class="n">auto_launch</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
+        <span class="n">vl</span><span class="o">.</span><span class="n">get_document_info</span><span class="p">()</span>
+<span class="k">except</span> <span class="n">MCPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MCP failed: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="style-functions">Style functions<a class="headerlink" href="#style-functions" title="Permanent link">&para;</a></h2>
+<h3 id="extract_stylepath-style"><code>extract_style(path) -&gt; Style</code><a class="headerlink" href="#extract_stylepath-style" title="Permanent link">&para;</a></h3>
+<p>Parse a <code>.lines</code> file and return a <code>Style</code> containing the full group/layer/fill tree and document properties. Does not need the app.</p>
+<h3 id="apply_styleclient-style-source_image-dpi72-relativefalse-str"><code>apply_style(client, style, source_image, dpi=72, relative=False) -&gt; str</code><a class="headerlink" href="#apply_styleclient-style-source_image-dpi72-relativefalse-str" title="Permanent link">&para;</a></h3>
+<p>Apply a style to a source image via MCP. Creates a new document, replicates the style tree, renders, and exports SVG.</p>
+<p>When <code>relative=True</code>, spatial fill parameters (interval, thickness, base_width, dispersion) are scaled by the geometric mean of width/height ratios between the source style's document and the target. Keeps styles looking consistent across different image sizes.</p>
+<h3 id="interpolate_stylea-b-t-style"><code>interpolate_style(a, b, t) -&gt; Style</code><a class="headerlink" href="#interpolate_stylea-b-t-style" title="Permanent link">&para;</a></h3>
+<p>Blend two compatible styles. <code>t=0</code> returns style A, <code>t=1</code> returns style B, <code>t=0.5</code> is the midpoint. Numeric fill parameters and hex colours interpolate linearly.</p>
+<h3 id="styles_compatiblea-b-bool"><code>styles_compatible(a, b) -&gt; bool</code><a class="headerlink" href="#styles_compatiblea-b-bool" title="Permanent link">&para;</a></h3>
+<p>Check whether two styles have matching tree structures (same groups, layers, fills, fill types). Required for interpolation.</p>
+<hr />
+<h2 id="dataclasses">Dataclasses<a class="headerlink" href="#dataclasses" title="Permanent link">&para;</a></h2>
+<h3 id="style"><code>Style</code><a class="headerlink" href="#style" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>groups</code></td>
+<td><code>list[GroupInfo \| LayerInfo]</code></td>
+<td>The fill tree</td>
+</tr>
+<tr>
+<td><code>props</code></td>
+<td><code>DocumentProps</code></td>
+<td>Document dimensions and stroke limits</td>
+</tr>
+<tr>
+<td><code>source_path</code></td>
+<td><code>str \| None</code></td>
+<td>Path of the source <code>.lines</code> file</td>
+</tr>
+</tbody>
+</table>
+<h3 id="documentinfo"><code>DocumentInfo</code><a class="headerlink" href="#documentinfo" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>width_mm</code></td>
+<td><code>float</code></td>
+<td>Document width in mm</td>
+</tr>
+<tr>
+<td><code>height_mm</code></td>
+<td><code>float</code></td>
+<td>Document height in mm</td>
+</tr>
+<tr>
+<td><code>resolution</code></td>
+<td><code>float</code></td>
+<td>DPI</td>
+</tr>
+<tr>
+<td><code>units</code></td>
+<td><code>str</code></td>
+<td>Measurement units (e.g. <code>"mm"</code>)</td>
+</tr>
+<tr>
+<td><code>has_changes</code></td>
+<td><code>bool</code></td>
+<td>Unsaved changes flag</td>
+</tr>
+</tbody>
+</table>
+<h3 id="layernode"><code>LayerNode</code><a class="headerlink" href="#layernode" title="Permanent link">&para;</a></h3>
+<p>Recursive tree node from <code>get_layer_tree()</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>int</code></td>
+<td>Object ID for MCP calls</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>str</code></td>
+<td><code>"document"</code>, <code>"group"</code>, <code>"layer"</code>, or <code>"fill"</code></td>
+</tr>
+<tr>
+<td><code>caption</code></td>
+<td><code>str</code></td>
+<td>Display name</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td><code>bool</code></td>
+<td>Visibility state</td>
+</tr>
+<tr>
+<td><code>fill_type</code></td>
+<td><code>str \| None</code></td>
+<td>Fill algorithm (only when <code>type == "fill"</code>)</td>
+</tr>
+<tr>
+<td><code>children</code></td>
+<td><code>list[LayerNode]</code></td>
+<td>Child nodes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="newdocumentresult"><code>NewDocumentResult</code><a class="headerlink" href="#newdocumentresult" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status</code></td>
+<td><code>str</code></td>
+<td>Status string</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td><code>float</code></td>
+<td>Width in pixels</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>float</code></td>
+<td>Height in pixels</td>
+</tr>
+<tr>
+<td><code>dpi</code></td>
+<td><code>float</code></td>
+<td>Resolution</td>
+</tr>
+<tr>
+<td><code>root_id</code></td>
+<td><code>int</code></td>
+<td>Root node object ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="renderstatus"><code>RenderStatus</code><a class="headerlink" href="#renderstatus" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rendering</code></td>
+<td><code>bool</code></td>
+<td>Whether the document is currently rendering</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 14H9V6h11Z"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m-5 14H4V6h11Z"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.sections"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e3ad5d0a.min.js"></script>
+      
+    
+  </body>
+</html>
