@@ -43,25 +43,35 @@ _HEX_RGBA_LEN = 8
 PARSER_TO_MCP_PARAMS: dict[str, str] = {
     "interval": "interval",
     "angle": "angle",
-    "thickness": "thickness",
+    "multiplier": "thickness",
     "thickness_min": "thickness_min",
-    "smoothness": "smoothness",
+    "smoothness": "contrast",
     "uplimit": "break_up",
     "downlimit": "break_down",
-    "multiplier": "contrast",
     "dispersion": "dispersion",
 }
-"""FillParams field name -> MCP ``set_fill_params`` key name."""
+"""FillParams field name -> MCP ``set_fill_params`` key name.
+
+The MCP server uses its own naming convention that differs from the XML
+attribute names in ``.lines`` files.  Key non-obvious mappings:
+
+- MCP ``thickness`` = XML ``multiplier`` (stroke width multiplier, stored in mm)
+- MCP ``thickness_min`` = XML ``base_width`` (min stroke width, stored in mm)
+- MCP ``contrast`` = XML ``smoothness`` (tone-mapping curve)
+- MCP ``break_up`` / ``break_down`` = XML ``uplimit`` / ``downlimit``
+
+Note: XML ``thick_gap`` has no MCP equivalent — it is not settable via the API.
+"""
 
 # Spatial params that should be scaled when applying a style in relative mode.
 # These represent physical dimensions (mm, pixels) that change with document size.
 # Excluded: angle, smoothness, uplimit, downlimit, multiplier, shear (ratios/degrees/thresholds).
 SPATIAL_PARAMS: frozenset[str] = frozenset({
     "interval",
-    "thick_gap",
+    "multiplier",
+    "thickness_min",
     "base_width",
     "dispersion",
-    "vert_disp",
 })
 
 
@@ -221,9 +231,7 @@ def _scale_fill_params(params: FillParams, scale: float) -> FillParams:
     if scale == 1.0:
         return result
 
-    for field_name in NUMERIC_PARAMS:
-        if field_name not in SPATIAL_PARAMS:
-            continue
+    for field_name in SPATIAL_PARAMS:
         value = getattr(result, field_name, None)
         if value is not None:
             setattr(result, field_name, float(value) * scale)
@@ -341,6 +349,7 @@ def apply_style(
     *,
     dpi: int = 72,
     relative: bool = False,
+    render_timeout: float = 300.0,
 ) -> str:
     """Apply a style to a source image via MCP and return the SVG result.
 
@@ -361,6 +370,8 @@ def apply_style(
         dpi: Document DPI (lower = faster, 72 good for video).
         relative: If ``True``, scale spatial params to match target image
             dimensions (relative mode).  Default ``False`` (absolute mode).
+        render_timeout: Maximum seconds to wait for the render to complete.
+            Complex fills (Fractals) at high resolution may need 120-300s.
 
     Returns:
         SVG string of the rendered result.
@@ -402,11 +413,52 @@ def apply_style(
 
     # 4. Render and wait
     logger.debug("Rendering...")
-    client.render(timeout=60.0)
+    client.render(timeout=render_timeout)
 
     # 5. Export SVG
     logger.debug("Exporting SVG")
     return client.svg()
+
+
+def create_styled_document(
+    client: MCPClient,
+    style: Style,
+    source_image: str | Path,
+    *,
+    dpi: int = 72,
+    relative: bool = False,
+) -> None:
+    """Create a styled document in Vexy Lines without rendering or exporting.
+
+    Replicates the style's group->layer->fill structure onto a new document
+    with the given source image.  The document remains open in the app so
+    the caller can :meth:`~vexy_lines_api.client.MCPClient.save_document`,
+    :meth:`~vexy_lines_api.client.MCPClient.render`, or export as needed.
+
+    Args:
+        client: Connected :class:`~vexy_lines_api.client.MCPClient` instance.
+        style: Style to apply.
+        source_image: Path to the source image file.
+        dpi: Document DPI.
+        relative: If ``True``, scale spatial params to match target dimensions.
+    """
+    source_image = Path(source_image).expanduser().resolve()
+    logger.debug("Creating styled document from {} at {}dpi", source_image, dpi)
+
+    doc_result = client.new_document(source_image=str(source_image), dpi=dpi)
+    root_id = doc_result.root_id
+
+    effective_style = style
+    if relative:
+        scale = _compute_relative_scale(style, doc_result.width, doc_result.height)
+        if scale != 1.0:
+            effective_style = _scale_style(style, scale)
+
+    for node in effective_style.groups:
+        if isinstance(node, GroupInfo):
+            _apply_group(client, node, parent_id=root_id)
+        elif isinstance(node, LayerInfo):
+            _apply_layer(client, node, group_id=root_id)
 
 
 # ---------------------------------------------------------------------------

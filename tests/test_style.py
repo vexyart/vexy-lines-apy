@@ -452,18 +452,23 @@ class TestFillParamsToDict:
         assert result["interval"] == 2.0
 
     def test_translates_parser_names_to_mcp_names(self):
-        params = FillParams(fill_type="linear", color="", uplimit=200.0, downlimit=50.0, multiplier=1.5)
+        params = FillParams(fill_type="linear", color="", uplimit=200.0, downlimit=50.0, multiplier=1.5, smoothness=0.5)
         result = _fill_params_to_dict(params)
         assert "break_up" in result
         assert result["break_up"] == 200.0
         assert "break_down" in result
         assert result["break_down"] == 50.0
+        # MCP "thickness" = FillParams.multiplier (XML multiplier)
+        assert "thickness" in result
+        assert result["thickness"] == 1.5
+        # MCP "contrast" = FillParams.smoothness (XML smoothness)
         assert "contrast" in result
-        assert result["contrast"] == 1.5
-        # Parser names should NOT appear
+        assert result["contrast"] == 0.5
+        # Parser field names should NOT appear as MCP keys
         assert "uplimit" not in result
         assert "downlimit" not in result
         assert "multiplier" not in result
+        assert "smoothness" not in result
 
     def test_includes_color_when_set(self):
         params = FillParams(fill_type="linear", color="#ff0000")
@@ -600,7 +605,6 @@ class TestScaleFillParams:
             smoothness=0.5,
             uplimit=200.0,
             downlimit=50.0,
-            multiplier=1.5,
             shear=10.0,
         )
         result = _scale_fill_params(params, 3.0)
@@ -608,8 +612,12 @@ class TestScaleFillParams:
         assert result.smoothness == 0.5, "smoothness should NOT be scaled"
         assert result.uplimit == 200.0, "uplimit should NOT be scaled"
         assert result.downlimit == 50.0, "downlimit should NOT be scaled"
-        assert result.multiplier == 1.5, "multiplier should NOT be scaled"
         assert result.shear == 10.0, "shear should NOT be scaled"
+
+    def test_multiplier_is_spatial(self):
+        params = FillParams(fill_type="linear", color="#000000", multiplier=1.5)
+        result = _scale_fill_params(params, 3.0)
+        assert result.multiplier == 4.5, "multiplier (MCP thickness) should be scaled"
 
     def test_color_unchanged(self):
         params = FillParams(fill_type="linear", color="#ff0000", interval=1.0)

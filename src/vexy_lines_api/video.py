@@ -174,6 +174,7 @@ def process_video(
     end_frame: int | None = None,
     include_audio: bool = True,
     size_multiplier: int = 1,
+    abort_event: Any = None,
 ) -> VideoInfo:
     """Basic pass-through video processing (no style transfer).
 
@@ -222,8 +223,13 @@ def process_video(
 
     frame_idx = 0
     for packet in in_container.demux():
+        if abort_event and abort_event.is_set():
+            break
+
         if packet.stream.type == "video":
             for frame in packet.decode():
+                if abort_event and abort_event.is_set():
+                    break
                 if frame_idx < start_frame:
                     frame_idx += 1
                     continue
@@ -264,6 +270,7 @@ def process_video_with_style(
     include_audio: bool = True,
     size_multiplier: int = 1,
     relative: bool = False,
+    abort_event: Any = None,
 ) -> VideoInfo:
     """Process a video with per-frame style transfer.
 
@@ -282,6 +289,7 @@ def process_video_with_style(
         size_multiplier: Integer scale factor for output resolution.
         relative: Scale spatial fill parameters to match the target frame
             dimensions.  Default ``False`` (absolute mode).
+        abort_event: Optional threading.Event to stop processing early.
 
     Returns:
         A :class:`VideoInfo` for the output file.
@@ -294,6 +302,7 @@ def process_video_with_style(
             end_frame=end_frame,
             include_audio=include_audio,
             size_multiplier=size_multiplier,
+            abort_event=abort_event,
         )
 
     try:
@@ -330,8 +339,14 @@ def process_video_with_style(
     frame_idx = 0
     with MCPClient() as client:
         for packet in in_container.demux():
+            if abort_event and abort_event.is_set():
+                break
+
             if packet.stream.type == "video":
                 for frame in packet.decode():
+                    if abort_event and abort_event.is_set():
+                        break
+
                     if frame_idx < start_frame:
                         frame_idx += 1
                         continue
