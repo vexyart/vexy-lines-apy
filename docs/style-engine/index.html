@@ -1,0 +1,932 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Python bindings to the Vexy Lines MCP API and style engine">
+      
+      
+      
+      
+        <link rel="prev" href="../api-reference/">
+      
+      
+        <link rel="next" href="../mcp-protocol/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-materialx-10.1.1">
+    
+    
+      
+        <title>Style Engine - vexy-lines-apy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.b72b68c2.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.204eaadb.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#style-engine" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="vexy-lines-apy" class="md-header__button md-logo" aria-label="vexy-lines-apy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            vexy-lines-apy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Style Engine
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="vexy-lines-apy" class="md-nav__button md-logo" aria-label="vexy-lines-apy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    vexy-lines-apy
+  </label>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style Engine
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concepts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract-a-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extract a style
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apply-a-style-to-an-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apply a style to an image
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Apply a style to an image">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relative-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relative mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpolate-two-styles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpolate two styles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpolate two styles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-interpolates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What interpolates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-doesnt-interpolate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What doesn't interpolate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#animation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concepts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract-a-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extract a style
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apply-a-style-to-an-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apply a style to an image
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Apply a style to an image">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relative-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relative mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpolate-two-styles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpolate two styles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpolate two styles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-interpolates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What interpolates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-doesnt-interpolate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What doesn't interpolate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#animation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="style-engine">Style Engine<a class="headerlink" href="#style-engine" title="Permanent link">&para;</a></h1>
+<p>The style engine extracts, applies, and interpolates fill structures from <code>.lines</code> files. It bridges the parser (<code>vexy-lines-py</code>) and the MCP client into a high-level workflow: take a style from one file, apply it to a different image.</p>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h2>
+<p>A <strong>Style</strong> is a snapshot of the group/layer/fill tree and document properties from a <code>.lines</code> file. It contains everything needed to replicate the artistic look: which fill algorithms, in what order, with what parameters.</p>
+<p><strong>Extraction</strong> reads a <code>.lines</code> file and captures the tree. This is offline -- no app needed.</p>
+<p><strong>Application</strong> creates a new document in Vexy Lines via MCP, rebuilds the fill tree with matching parameters, renders, and exports SVG.</p>
+<p><strong>Interpolation</strong> blends two compatible styles at any ratio. Numeric parameters and hex colours interpolate linearly.</p>
+<h2 id="extract-a-style">Extract a style<a class="headerlink" href="#extract-a-style" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_style</span>
+
+<span class="n">style</span> <span class="o">=</span> <span class="n">extract_style</span><span class="p">(</span><span class="s2">&quot;reference.lines&quot;</span><span class="p">)</span>
+
+<span class="c1"># Inspect what&#39;s inside</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">style</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">source_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Canvas: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">props</span><span class="o">.</span><span class="n">width_mm</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">props</span><span class="o">.</span><span class="n">height_mm</span><span class="si">}</span><span class="s2"> mm&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The returned <code>Style</code> is a deep copy -- modifying it won't affect the parsed document.</p>
+<h2 id="apply-a-style-to-an-image">Apply a style to an image<a class="headerlink" href="#apply-a-style-to-an-image" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span><span class="p">,</span> <span class="n">extract_style</span><span class="p">,</span> <span class="n">apply_style</span>
+
+<span class="n">style</span> <span class="o">=</span> <span class="n">extract_style</span><span class="p">(</span><span class="s2">&quot;reference.lines&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">MCPClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
+    <span class="n">svg</span> <span class="o">=</span> <span class="n">apply_style</span><span class="p">(</span><span class="n">vl</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="s2">&quot;photo.jpg&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;result.svg&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">svg</span><span class="p">)</span>
+</code></pre></div>
+<p>What happens behind the scenes:</p>
+<ol>
+<li>Creates a new document with the source image</li>
+<li>Walks the style tree and creates matching groups, layers, and fills via MCP</li>
+<li>Sets all numeric fill parameters on each fill</li>
+<li>Renders and waits for completion</li>
+<li>Exports and returns the SVG string</li>
+</ol>
+<h3 id="relative-mode">Relative mode<a class="headerlink" href="#relative-mode" title="Permanent link">&para;</a></h3>
+<p>By default, <code>apply_style</code> uses absolute mode: fill parameters are applied as-is from the source style. If the target image is much larger or smaller than the original, the style may look different.</p>
+<p>Relative mode scales spatial parameters (interval, thickness, base_width, dispersion, vert_disp) to match the target document size:</p>
+<div class="highlight"><pre><span></span><code><span class="n">svg</span> <span class="o">=</span> <span class="n">apply_style</span><span class="p">(</span><span class="n">vl</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="s2">&quot;large_photo.jpg&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>The scale factor is the geometric mean of the width and height ratios between source and target dimensions. Non-spatial parameters (angles, brightness thresholds, ratios) stay unchanged.</p>
+<h2 id="interpolate-two-styles">Interpolate two styles<a class="headerlink" href="#interpolate-two-styles" title="Permanent link">&para;</a></h2>
+<p>Blend two styles to create smooth transitions. Both styles must be compatible -- same tree structure, same fill types at each position.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_style</span><span class="p">,</span> <span class="n">interpolate_style</span><span class="p">,</span> <span class="n">styles_compatible</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">extract_style</span><span class="p">(</span><span class="s2">&quot;painterly.lines&quot;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">extract_style</span><span class="p">(</span><span class="s2">&quot;technical.lines&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check compatibility first</span>
+<span class="k">if</span> <span class="n">styles_compatible</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="n">interpolate_style</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># halfway blend</span>
+</code></pre></div>
+<p>The <code>t</code> parameter controls the mix:</p>
+<table>
+<thead>
+<tr>
+<th><code>t</code> value</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0.0</code></td>
+<td>Identical to style A</td>
+</tr>
+<tr>
+<td><code>0.25</code></td>
+<td>75% A, 25% B</td>
+</tr>
+<tr>
+<td><code>0.5</code></td>
+<td>Halfway between A and B</td>
+</tr>
+<tr>
+<td><code>1.0</code></td>
+<td>Identical to style B</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-interpolates">What interpolates<a class="headerlink" href="#what-interpolates" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Numeric fill params</strong>: interval, angle, thickness, smoothness, uplimit, downlimit, multiplier, base_width, dispersion, shear -- all linearly interpolated</li>
+<li><strong>Colours</strong>: hex RGB channels interpolated independently</li>
+<li><strong>Document props</strong>: width, height, thickness/interval ranges interpolated; DPI kept from style A (integer device setting)</li>
+</ul>
+<h3 id="what-doesnt-interpolate">What doesn't interpolate<a class="headerlink" href="#what-doesnt-interpolate" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fill types (must match)</li>
+<li>Tree structure (must match)</li>
+<li>Captions, visibility, masks, grid edges (taken from style A)</li>
+</ul>
+<h2 id="compatibility-check">Compatibility check<a class="headerlink" href="#compatibility-check" title="Permanent link">&para;</a></h2>
+<p>Two styles are compatible when they share the exact same structure:</p>
+<ul>
+<li>Same number of top-level nodes</li>
+<li>Same node types at each position (group vs layer)</li>
+<li>Within each group, same number and types of children (recursive)</li>
+<li>Within each layer, same number of fills with matching fill types</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">styles_compatible</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">styles_compatible</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Styles have different structures -- can&#39;t interpolate&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>If you pass incompatible styles to <code>interpolate_style</code>, it logs a warning and returns a deep copy of style A unchanged.</p>
+<h2 id="animation-workflow">Animation workflow<a class="headerlink" href="#animation-workflow" title="Permanent link">&para;</a></h2>
+<p>Interpolation across a sequence of images creates smooth style transitions:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span><span class="p">,</span> <span class="n">extract_style</span><span class="p">,</span> <span class="n">interpolate_style</span><span class="p">,</span> <span class="n">apply_style</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">extract_style</span><span class="p">(</span><span class="s2">&quot;start.lines&quot;</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">extract_style</span><span class="p">(</span><span class="s2">&quot;end.lines&quot;</span><span class="p">)</span>
+<span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;frame_001.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;frame_002.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;frame_003.jpg&quot;</span><span class="p">]</span>
+
+<span class="k">with</span> <span class="n">MCPClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">interpolate_style</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">svg</span> <span class="o">=</span> <span class="n">apply_style</span><span class="p">(</span><span class="n">vl</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;output_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">svg</span><span class="p">)</span>
+</code></pre></div>
+<p>The CLI command <code>vexy-lines style-transfer --style start.lines --end-style end.lines</code> does this automatically.</p>
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 14H9V6h11Z"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m-5 14H4V6h11Z"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.sections"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e3ad5d0a.min.js"></script>
+      
+    
+  </body>
+</html>
