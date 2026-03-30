@@ -7,7 +7,11 @@
 
 Python bindings to the [Vexy Lines](https://vexy.art) MCP API and style engine.
 
-Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images -- all from Python.
+Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images — all from Python.
+
+- [On Github](https://github.com/vexyart/vexy-lines-apy)
+- [On PyPI](https://pypi.org/project/vexy-lines-apy/)
+
 
 ## Two entry points
 
