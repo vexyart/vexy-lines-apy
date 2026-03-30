@@ -1,3 +1,8 @@
+
+[Vexy Lines for Mac & Windows](https://vexy.art/lines/) | [Download](https://www.vexy.art/lines/#buy) | [Buy](https://www.vexy.art/lines/#buy) | [Batch GUI](https://vexy.dev/vexy-lines-run/) | [CLI/MCP](https://vexy.dev/vexy-lines-cli/) | **API** | [.lines format](https://vexy.dev/vexy-lines-py/)
+
+[![Vexy Lines](https://i.vexy.art/vl/websiteart/vexy-lines-hero-poster.png)](https://www.vexy.art/lines/)
+
 # vexy-lines-apy
 
 Python bindings to the [Vexy Lines](https://vexy.art) MCP API and style engine.

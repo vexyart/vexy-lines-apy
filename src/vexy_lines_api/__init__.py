@@ -44,6 +44,7 @@ from __future__ import annotations
 
 from vexy_lines_api.client import MCPClient, MCPError
 from vexy_lines_api.style import Style, apply_style, extract_style, interpolate_style, styles_compatible
+from vexy_lines_api.video import VideoInfo, _svg_to_pil, probe, process_video, process_video_with_style
 from vexy_lines_api.types import (
     FILL_TYPE_PARAMS,
     FILL_TYPES,
@@ -67,4 +68,9 @@ __all__ = [
     "extract_style",
     "interpolate_style",
     "styles_compatible",
+    "VideoInfo",
+    "_svg_to_pil",
+    "probe",
+    "process_video",
+    "process_video_with_style",
 ]

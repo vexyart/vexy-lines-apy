@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Python 3.10 or newer
+- Python 3.11 or newer
 - The [Vexy Lines](https://vexy.art) desktop app (macOS or Windows) for all MCP operations
 
 ## Install from PyPI
@@ -33,7 +33,7 @@ Adds the `svglab` package, enabling `client.svg_parsed()` which returns a full S
 |---------|-----|
 | `vexy-lines-py` | `.lines` file parser and types |
 | `loguru` | Structured debug logging |
-| `typing-extensions` | Backported type hints for Python 3.10 |
+| `typing-extensions` | Backported type hints for Python 3.11 |
 
 ## Verify the install
 
