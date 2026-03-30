@@ -1,18 +1,19 @@
 site_name: "vexy-lines-apy"
 site_description: "Python bindings to the Vexy Lines MCP API and style engine"
 theme:
+  custom_dir: overrides
   name: materialx
   features:
     - content.code.copy
     - navigation.sections
   palette:
     - scheme: slate
-      primary: deep purple
+      primary: pink
       toggle:
         icon: material/brightness-7
         name: Light mode
     - scheme: default
-      primary: deep purple
+      primary: pink
       toggle:
         icon: material/brightness-4
         name: Dark mode
