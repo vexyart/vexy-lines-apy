@@ -7,7 +7,6 @@ All tests mock the TCP socket to avoid requiring a running Vexy Lines instance.
 from __future__ import annotations
 
 import json
-import socket
 from unittest.mock import MagicMock, patch
 
 import pytest

@@ -70,9 +70,18 @@ SPATIAL_PARAMS: frozenset[str] = frozenset({
     "interval",
     "multiplier",
     "thickness_min",
-    "base_width",
     "dispersion",
 })
+
+# MCP parameter names that the server stores internally in mm.
+# Server converts incoming pixel values: px * 25.4 / dpi → mm.
+# To send correct values: mm_value * (source_dpi / 25.4) → pixels.
+MCP_MM_PARAMS: frozenset[str] = frozenset({"thickness", "thickness_min"})
+
+# MCP parameter names that the server stores internally in points.
+# Server converts incoming pixel values: px * 72 / dpi → pt.
+# To send correct values: pt_value * (source_dpi / 72.0) → pixels.
+MCP_PT_PARAMS: frozenset[str] = frozenset({"interval", "dispersion"})
 
 
 # ---------------------------------------------------------------------------
@@ -242,25 +251,26 @@ def _scale_fill_params(params: FillParams, scale: float) -> FillParams:
 def _compute_relative_scale(style: Style, target_width: float, target_height: float) -> float:
     """Compute a uniform scale factor from source style dimensions to target dimensions.
 
-    Uses the geometric mean of the X and Y ratios so that scaling is uniform
-    regardless of aspect-ratio differences.  Returns ``1.0`` when the source
-    dimensions are zero (no scaling possible).
+    Converts source dimensions from mm to pixels using the source DPI, then
+    computes the geometric mean of the X and Y ratios against the target
+    pixel dimensions.  Returns ``1.0`` when source dimensions are zero.
 
     Args:
-        style: Source style containing original document dimensions.
-        target_width: Target document width (pixels or mm, same unit as source).
-        target_height: Target document height (pixels or mm, same unit as source).
+        style: Source style containing original document dimensions and DPI.
+        target_width: Target document width in pixels.
+        target_height: Target document height in pixels.
 
     Returns:
         Geometric-mean scale factor, or ``1.0`` if source dimensions are zero.
     """
-    src_w = style.props.width_mm
-    src_h = style.props.height_mm
-    if src_w <= 0 or src_h <= 0:
+    src_dpi = style.props.dpi or 72
+    src_w_px = style.props.width_mm * src_dpi / 25.4
+    src_h_px = style.props.height_mm * src_dpi / 25.4
+    if src_w_px <= 0 or src_h_px <= 0:
         logger.warning(
-            "Source style has zero/negative dimensions ({}x{}); relative scaling disabled",
-            src_w,
-            src_h,
+            "Source style has zero/negative dimensions ({}x{} mm); relative scaling disabled",
+            style.props.width_mm,
+            style.props.height_mm,
         )
         return 1.0
     if target_width <= 0 or target_height <= 0:
@@ -273,8 +283,8 @@ def _compute_relative_scale(style: Style, target_width: float, target_height: fl
 
     import math  # noqa: PLC0415
 
-    scale_x = target_width / src_w
-    scale_y = target_height / src_h
+    scale_x = target_width / src_w_px
+    scale_y = target_height / src_h_px
     return math.sqrt(scale_x * scale_y)
 
 
@@ -405,11 +415,13 @@ def apply_style(
             effective_style = _scale_style(style, scale)
 
     # 3. Replicate the style tree
+    source_dpi = style.props.dpi or 72
+
     for node in effective_style.groups:
         if isinstance(node, GroupInfo):
-            _apply_group(client, node, parent_id=root_id)
+            _apply_group(client, node, parent_id=root_id, source_dpi=source_dpi)
         elif isinstance(node, LayerInfo):
-            _apply_layer(client, node, group_id=root_id)
+            _apply_layer(client, node, group_id=root_id, source_dpi=source_dpi)
 
     # 4. Render and wait
     logger.debug("Rendering...")
@@ -454,11 +466,13 @@ def create_styled_document(
         if scale != 1.0:
             effective_style = _scale_style(style, scale)
 
+    source_dpi = style.props.dpi or 72
+
     for node in effective_style.groups:
         if isinstance(node, GroupInfo):
-            _apply_group(client, node, parent_id=root_id)
+            _apply_group(client, node, parent_id=root_id, source_dpi=source_dpi)
         elif isinstance(node, LayerInfo):
-            _apply_layer(client, node, group_id=root_id)
+            _apply_layer(client, node, group_id=root_id, source_dpi=source_dpi)
 
 
 # ---------------------------------------------------------------------------
@@ -466,7 +480,7 @@ def create_styled_document(
 # ---------------------------------------------------------------------------
 
 
-def _apply_group(client: MCPClient, group: GroupInfo, parent_id: int) -> None:
+def _apply_group(client: MCPClient, group: GroupInfo, parent_id: int, source_dpi: int) -> None:
     """Create a group in MCP and recursively add its children."""
     result = client.add_group(parent_id=parent_id, caption=group.caption)
     group_id = int(result["id"])
@@ -474,22 +488,22 @@ def _apply_group(client: MCPClient, group: GroupInfo, parent_id: int) -> None:
 
     for child in group.children:
         if isinstance(child, GroupInfo):
-            _apply_group(client, child, parent_id=group_id)
+            _apply_group(client, child, parent_id=group_id, source_dpi=source_dpi)
         elif isinstance(child, LayerInfo):
-            _apply_layer(client, child, group_id=group_id)
+            _apply_layer(client, child, group_id=group_id, source_dpi=source_dpi)
 
 
-def _apply_layer(client: MCPClient, layer: LayerInfo, group_id: int) -> None:
+def _apply_layer(client: MCPClient, layer: LayerInfo, group_id: int, source_dpi: int) -> None:
     """Create a layer in MCP and add all its fills."""
     result = client.add_layer(group_id=group_id)
     layer_id = int(result["id"])
     logger.debug("Added layer '{}' id={}", layer.caption, layer_id)
 
     for fill in layer.fills:
-        _apply_fill(client, fill, layer_id=layer_id)
+        _apply_fill(client, fill, layer_id=layer_id, source_dpi=source_dpi)
 
 
-def _apply_fill(client: MCPClient, fill: FillNode, layer_id: int) -> None:
+def _apply_fill(client: MCPClient, fill: FillNode, layer_id: int, source_dpi: int) -> None:
     """Add a fill to a layer and apply all its numeric parameters.
 
     Passes parameters both during creation (``add_fill``) and via a
@@ -498,7 +512,7 @@ def _apply_fill(client: MCPClient, fill: FillNode, layer_id: int) -> None:
     """
     params = fill.params
 
-    init_params = _fill_params_to_dict(params)
+    init_params = _fill_params_to_dict(params, source_dpi=source_dpi)
 
     result = client.add_fill(
         layer_id=layer_id,
@@ -514,23 +528,38 @@ def _apply_fill(client: MCPClient, fill: FillNode, layer_id: int) -> None:
         client.set_fill_params(fill_id, **init_params)
 
 
-def _fill_params_to_dict(params: FillParams) -> dict[str, object]:
-    """Extract numeric values from FillParams, translated to MCP parameter names.
+def _fill_params_to_dict(params: FillParams, source_dpi: int = 72) -> dict[str, object]:
+    """Extract numeric values from FillParams, converted to MCP pixel units.
 
     Reads each field listed in :data:`PARSER_TO_MCP_PARAMS`, translates the
-    field name to the MCP server's expected key, and includes the colour.
+    field name to the MCP server's expected key, and converts spatial values
+    from their storage units (mm or points) to pixels using *source_dpi*.
+
+    The MCP server expects all spatial values in pixels and converts them
+    internally: thickness params to mm (``px * 25.4 / dpi``), other spatial
+    params to points (``px * 72 / dpi``).
 
     Args:
         params: Fill parameters to convert.
+        source_dpi: DPI of the source ``.lines`` document.  Used to convert
+            mm/pt values to the pixel values the MCP server expects.
 
     Returns:
-        Dict of MCP parameter names to values.
+        Dict of MCP parameter names to pixel-converted values.
     """
+    mm_to_px = source_dpi / 25.4
+    pt_to_px = source_dpi / 72.0
+
     result: dict[str, object] = {}
     for field_name, mcp_name in PARSER_TO_MCP_PARAMS.items():
         value = getattr(params, field_name, None)
         if value is not None:
-            result[mcp_name] = value
+            if mcp_name in MCP_MM_PARAMS:
+                result[mcp_name] = float(value) * mm_to_px
+            elif mcp_name in MCP_PT_PARAMS:
+                result[mcp_name] = float(value) * pt_to_px
+            else:
+                result[mcp_name] = value
     # Include color_mode for static-colour fills
     if params.color:
         result["color"] = params.color

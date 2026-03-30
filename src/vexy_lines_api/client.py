@@ -27,7 +27,7 @@ import time
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from typing_extensions import Self
+from typing import Self
 
 from vexy_lines_api.types import DocumentInfo, LayerNode, NewDocumentResult, RenderStatus
 

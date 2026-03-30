@@ -22,6 +22,8 @@ from vexy_lines.types import (
     LinesDocument,
 )
 from vexy_lines_api.style import (
+    MCP_MM_PARAMS,
+    MCP_PT_PARAMS,
     SPATIAL_PARAMS,
     Style,
     _compare_fills,
@@ -446,25 +448,25 @@ class TestFillParamsToDict:
 
     def test_extracts_numeric_params_with_mcp_names(self):
         params = FillParams(fill_type="linear", color="#000000", interval=2.0, angle=45.0, smoothness=0.0)
-        result = _fill_params_to_dict(params)
+        result = _fill_params_to_dict(params, source_dpi=72)
         assert "interval" in result
         assert "angle" in result
-        assert result["interval"] == 2.0
+        # interval is a pt param: 2.0 * (72/72) = 2.0 px
+        assert result["interval"] == pytest.approx(2.0)
 
     def test_translates_parser_names_to_mcp_names(self):
         params = FillParams(fill_type="linear", color="", uplimit=200.0, downlimit=50.0, multiplier=1.5, smoothness=0.5)
-        result = _fill_params_to_dict(params)
+        result = _fill_params_to_dict(params, source_dpi=72)
         assert "break_up" in result
         assert result["break_up"] == 200.0
         assert "break_down" in result
         assert result["break_down"] == 50.0
-        # MCP "thickness" = FillParams.multiplier (XML multiplier)
+        # MCP "thickness" = FillParams.multiplier; mm param: 1.5 * (72/25.4) ≈ 4.252
         assert "thickness" in result
-        assert result["thickness"] == 1.5
-        # MCP "contrast" = FillParams.smoothness (XML smoothness)
+        assert result["thickness"] == pytest.approx(1.5 * 72 / 25.4)
+        # MCP "contrast" = FillParams.smoothness; non-spatial, passed as-is
         assert "contrast" in result
         assert result["contrast"] == 0.5
-        # Parser field names should NOT appear as MCP keys
         assert "uplimit" not in result
         assert "downlimit" not in result
         assert "multiplier" not in result
@@ -480,6 +482,43 @@ class TestFillParamsToDict:
         params = FillParams(fill_type="linear", color="")
         result = _fill_params_to_dict(params)
         assert "fill_type" not in result
+
+    def test_mm_params_converted_at_300_dpi(self):
+        """Thickness params (mm) are converted to pixels using source DPI."""
+        params = FillParams(fill_type="linear", color="", multiplier=1.2014, thickness_min=0.5)
+        result = _fill_params_to_dict(params, source_dpi=300)
+        # multiplier → MCP "thickness": 1.2014 mm * (300/25.4) ≈ 14.19 px
+        assert result["thickness"] == pytest.approx(1.2014 * 300 / 25.4)
+        # thickness_min: 0.5 mm * (300/25.4) ≈ 5.906 px
+        assert result["thickness_min"] == pytest.approx(0.5 * 300 / 25.4)
+
+    def test_pt_params_converted_at_300_dpi(self):
+        """Spatial params (pt) are converted to pixels using source DPI."""
+        params = FillParams(fill_type="linear", color="", interval=5.07, dispersion=2.0)
+        result = _fill_params_to_dict(params, source_dpi=300)
+        # interval: 5.07 pt * (300/72) ≈ 21.125 px
+        assert result["interval"] == pytest.approx(5.07 * 300 / 72)
+        # dispersion: 2.0 pt * (300/72) ≈ 8.333 px
+        assert result["dispersion"] == pytest.approx(2.0 * 300 / 72)
+
+    def test_non_spatial_params_unchanged(self):
+        """Angle, contrast, break_up, break_down are not converted."""
+        params = FillParams(
+            fill_type="linear", color="", angle=45.0, smoothness=0.8,
+            uplimit=200.0, downlimit=50.0,
+        )
+        result = _fill_params_to_dict(params, source_dpi=300)
+        assert result["angle"] == 45.0
+        assert result["contrast"] == 0.8
+        assert result["break_up"] == 200.0
+        assert result["break_down"] == 50.0
+
+    def test_default_dpi_is_72(self):
+        """Default source_dpi=72 means pt params pass through 1:1."""
+        params = FillParams(fill_type="linear", color="", interval=10.0)
+        result = _fill_params_to_dict(params)
+        # 10.0 pt * (72/72) = 10.0 px
+        assert result["interval"] == pytest.approx(10.0)
 
 
 # ---------------------------------------------------------------------------
@@ -594,7 +633,7 @@ class TestScaleFillParams:
         )
         result = _scale_fill_params(params, 2.0)
         assert result.interval == 8.0, "interval should be scaled"
-        assert result.base_width == 2.0, "base_width should be scaled"
+        assert result.base_width == 1.0, "base_width is NOT spatial (redundant with thickness_min)"
         assert result.dispersion == 6.0, "dispersion should be scaled"
 
     def test_non_spatial_params_unchanged(self):
@@ -638,7 +677,7 @@ class TestScaleFillParams:
         params = FillParams(fill_type="linear", color="#000000", interval=5.0, base_width=2.0)
         result = _scale_fill_params(params, 0.0)
         assert result.interval == 0.0
-        assert result.base_width == 0.0
+        assert result.base_width == 2.0, "base_width is NOT spatial, should not be scaled"
 
     def test_fractional_scale(self):
         params = FillParams(fill_type="linear", color="#000000", interval=10.0)
@@ -654,53 +693,63 @@ class TestScaleFillParams:
 class TestComputeRelativeScale:
     """Tests for _compute_relative_scale."""
 
-    def test_same_dimensions_returns_1(self):
-        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
-        scale = _compute_relative_scale(style, 100.0, 100.0)
-        assert scale == 1.0
+    def test_same_pixel_dimensions_returns_1(self):
+        # Source: 100mm × 100mm at 300 DPI → 100*300/25.4 = 1181.1 px
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300))
+        src_px = 100.0 * 300 / 25.4
+        scale = _compute_relative_scale(style, src_px, src_px)
+        assert scale == pytest.approx(1.0)
 
-    def test_double_dimensions(self):
-        import math
+    def test_double_pixel_dimensions(self):
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300))
+        src_px = 100.0 * 300 / 25.4
+        scale = _compute_relative_scale(style, src_px * 2, src_px * 2)
+        assert scale == pytest.approx(2.0)
 
-        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
-        scale = _compute_relative_scale(style, 200.0, 200.0)
-        assert scale == pytest.approx(2.0), "doubling both dims should give scale=2.0"
-
-    def test_half_dimensions(self):
-        style = _make_style(props=_make_props(width_mm=200.0, height_mm=200.0))
-        scale = _compute_relative_scale(style, 100.0, 100.0)
+    def test_half_pixel_dimensions(self):
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300))
+        src_px = 100.0 * 300 / 25.4
+        scale = _compute_relative_scale(style, src_px / 2, src_px / 2)
         assert scale == pytest.approx(0.5)
 
     def test_asymmetric_scaling_uses_geometric_mean(self):
-        import math
-
-        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
-        # scale_x=4, scale_y=1 => geometric mean = sqrt(4*1) = 2.0
-        scale = _compute_relative_scale(style, 400.0, 100.0)
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300))
+        src_px = 100.0 * 300 / 25.4
+        # scale_x=4, scale_y=1 => geometric mean = sqrt(4) = 2.0
+        scale = _compute_relative_scale(style, src_px * 4, src_px)
         assert scale == pytest.approx(2.0)
 
+    def test_same_image_different_dpi_returns_1(self):
+        """Same image pixels at different DPI should give scale=1.0."""
+        # Source: 210mm × 297mm at 300 DPI → 2480 × 3508 px
+        style = _make_style(props=_make_props(width_mm=210.0, height_mm=297.0, dpi=300))
+        target_w = 210.0 * 300 / 25.4  # same pixel count
+        target_h = 297.0 * 300 / 25.4
+        scale = _compute_relative_scale(style, target_w, target_h)
+        assert scale == pytest.approx(1.0)
+
     def test_zero_source_width_returns_1(self):
-        style = _make_style(props=_make_props(width_mm=0.0, height_mm=100.0))
+        style = _make_style(props=_make_props(width_mm=0.0, height_mm=100.0, dpi=300))
         scale = _compute_relative_scale(style, 200.0, 200.0)
         assert scale == 1.0
 
     def test_zero_source_height_returns_1(self):
-        style = _make_style(props=_make_props(width_mm=100.0, height_mm=0.0))
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=0.0, dpi=300))
         scale = _compute_relative_scale(style, 200.0, 200.0)
         assert scale == 1.0
 
     def test_zero_target_width_returns_1(self):
-        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300))
         scale = _compute_relative_scale(style, 0.0, 200.0)
         assert scale == 1.0
 
     def test_zero_target_height_returns_1(self):
-        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300))
         scale = _compute_relative_scale(style, 200.0, 0.0)
         assert scale == 1.0
 
     def test_negative_source_returns_1(self):
-        style = _make_style(props=_make_props(width_mm=-100.0, height_mm=100.0))
+        style = _make_style(props=_make_props(width_mm=-100.0, height_mm=100.0, dpi=300))
         scale = _compute_relative_scale(style, 200.0, 200.0)
         assert scale == 1.0
 
@@ -755,10 +804,10 @@ class TestScaleStyle:
 class TestApplyStyleRelative:
     """Tests for apply_style with relative=True."""
 
-    def _mock_client(self, target_width: float = 200.0, target_height: float = 200.0):
+    def _mock_client(self, target_width: float = 200.0, target_height: float = 200.0, dpi: int = 72):
         mock = MagicMock()
         mock.new_document.return_value = MagicMock(
-            root_id=1, width=target_width, height=target_height, dpi=72,
+            root_id=1, width=target_width, height=target_height, dpi=dpi,
         )
         mock.add_group.return_value = {"id": 2}
         mock.add_layer.return_value = {"id": 3}
@@ -767,35 +816,61 @@ class TestApplyStyleRelative:
         mock.svg.return_value = "<svg>test</svg>"
         return mock
 
-    def test_absolute_mode_does_not_scale(self):
-        """With relative=False (default), params are used as-is."""
+    def test_absolute_mode_converts_to_pixels(self):
+        """With relative=False, params are converted from mm/pt to pixels using source DPI."""
         client = self._mock_client(target_width=400.0, target_height=400.0)
-        fill = _make_fill(interval=2.0)
+        fill = _make_fill(interval=2.0)  # 2.0 pt
         layer = _make_layer(fills=[fill])
         group = _make_group(children=[layer])
         style = _make_style(
             groups=[group],
-            props=_make_props(width_mm=100.0, height_mm=100.0),
+            props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300),
         )
 
         apply_style(client, style, "/fake.png", relative=False)
 
-        # Check the interval passed to set_fill_params
         call_kwargs = client.set_fill_params.call_args
         assert call_kwargs is not None
         _, kwargs = call_kwargs
-        assert kwargs["interval"] == 2.0, "absolute mode should not scale interval"
+        # interval 2.0 pt * (300/72) ≈ 8.333 px
+        assert kwargs["interval"] == pytest.approx(2.0 * 300 / 72)
 
-    def test_relative_mode_scales_params(self):
-        """With relative=True, spatial params are scaled by the dimension ratio."""
-        # Source style: 100x100, target: 200x200 => scale = 2.0
+    def test_relative_mode_scales_then_converts(self):
+        """With relative=True, spatial params are scaled by pixel-dimension ratio then converted to px."""
+        # Source: 100x100mm at 300 DPI → 1181.1 px each
+        # Target: 200x200 px → scale = 200/1181.1 = 0.1694
+        src_px = 100.0 * 300 / 25.4
         client = self._mock_client(target_width=200.0, target_height=200.0)
-        fill = _make_fill(interval=2.0)
+        fill = _make_fill(interval=2.0)  # 2.0 pt
         layer = _make_layer(fills=[fill])
         group = _make_group(children=[layer])
         style = _make_style(
             groups=[group],
-            props=_make_props(width_mm=100.0, height_mm=100.0),
+            props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300),
+        )
+
+        apply_style(client, style, "/fake.png", relative=True)
+
+        import math
+        expected_scale = math.sqrt((200.0 / src_px) * (200.0 / src_px))
+        expected_interval_px = 2.0 * expected_scale * (300 / 72)
+
+        call_kwargs = client.set_fill_params.call_args
+        assert call_kwargs is not None
+        _, kwargs = call_kwargs
+        assert kwargs["interval"] == pytest.approx(expected_interval_px)
+
+    def test_relative_mode_same_pixel_size_no_scale(self):
+        """When source and target have same pixel dimensions, relative mode scale is 1.0."""
+        src_px_w = 100.0 * 300 / 25.4  # 1181.1 px
+        src_px_h = 100.0 * 300 / 25.4
+        client = self._mock_client(target_width=src_px_w, target_height=src_px_h)
+        fill = _make_fill(interval=5.0)  # 5.0 pt
+        layer = _make_layer(fills=[fill])
+        group = _make_group(children=[layer])
+        style = _make_style(
+            groups=[group],
+            props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300),
         )
 
         apply_style(client, style, "/fake.png", relative=True)
@@ -803,22 +878,5 @@ class TestApplyStyleRelative:
         call_kwargs = client.set_fill_params.call_args
         assert call_kwargs is not None
         _, kwargs = call_kwargs
-        assert kwargs["interval"] == pytest.approx(4.0), "relative mode should double interval"
-
-    def test_relative_mode_same_size_no_change(self):
-        """When source and target are the same size, relative mode changes nothing."""
-        client = self._mock_client(target_width=100.0, target_height=100.0)
-        fill = _make_fill(interval=5.0)
-        layer = _make_layer(fills=[fill])
-        group = _make_group(children=[layer])
-        style = _make_style(
-            groups=[group],
-            props=_make_props(width_mm=100.0, height_mm=100.0),
-        )
-
-        apply_style(client, style, "/fake.png", relative=True)
-
-        call_kwargs = client.set_fill_params.call_args
-        assert call_kwargs is not None
-        _, kwargs = call_kwargs
-        assert kwargs["interval"] == 5.0, "same size should not change interval"
+        # scale=1.0, so just pt→px conversion: 5.0 * (300/72) ≈ 20.833
+        assert kwargs["interval"] == pytest.approx(5.0 * 300 / 72)
