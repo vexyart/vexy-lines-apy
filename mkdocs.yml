@@ -20,7 +20,8 @@ theme:
 docs_dir: src_docs
 site_dir: docs
 markdown_extensions:
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      auto_title: false
   - pymdownx.superfences
   - admonition
   - toc:
