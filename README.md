@@ -12,10 +12,10 @@ Connect to the Vexy Lines app over TCP, drive it programmatically — open docum
 pip install vexy-lines-apy
 ```
 
-Optional SVG manipulation support:
+For SVG object manipulation (`svg_parsed()`), install `svglab` separately:
 
 ```bash
-pip install "vexy-lines-apy[svg]"
+pip install svglab
 ```
 
 ## Quick start
@@ -52,7 +52,7 @@ with MCPClient() as vl:
     # SVG as a string (useful for embedding or piping)
     svg_text = vl.svg()
 
-    # SVG as a parsed svglab object (requires the [svg] extra)
+    # SVG as a parsed svglab object (requires svglab)
     svg_obj = vl.svg_parsed()
 ```
 
@@ -168,7 +168,7 @@ Two styles are compatible for interpolation when they share the same group/layer
 | `export_jpeg(path, dpi)` | Resolved `Path` |
 | `export_eps(path, dpi)` | Resolved `Path` |
 | `svg()` | SVG content as `str` |
-| `svg_parsed()` | `svglab.Svg` object (requires `[svg]`) |
+| `svg_parsed()` | `svglab.Svg` object (requires `svglab`) |
 
 ### Style engine
 

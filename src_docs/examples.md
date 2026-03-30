@@ -72,7 +72,7 @@ with MCPClient() as vl:
         layer_id=layer["id"],
         fill_type="linear",
         color="#333333",
-        params={"interval": 2.0, "angle": 45, "thick_gap": 0.5},
+        params={"interval": 2.0, "angle": 45},
     )
 
     vl.render()
@@ -144,7 +144,7 @@ with MCPClient() as vl:
     svg_text = vl.svg()
     print(f"SVG length: {len(svg_text)} chars")
 
-    # Use with svglab (requires [svg] extra)
+    # Use with svglab (install separately: pip install svglab)
     svg_obj = vl.svg_parsed()
 ```
 

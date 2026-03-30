@@ -512,7 +512,9 @@ def save_and_consolidate(
     client.open_document(resolved_path_str)
 
     logger.debug("Consolidation step 3/4: rendering reopened document")
-    client.render(timeout=render_timeout)
+    render_ok = client.render(timeout=render_timeout)
+    if not render_ok:
+        logger.warning("Render timed out after {}s during consolidation of {}", render_timeout, resolved_path_str)
 
     logger.debug("Consolidation step 4/4: final save to {}", resolved_path_str)
     client.save_document(resolved_path_str)

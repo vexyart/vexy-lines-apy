@@ -726,8 +726,8 @@ class MCPClient:
             poll_interval: Seconds between status checks.
 
         Returns:
-            ``True`` when rendering is done. Returns ``True`` even on timeout
-            (the app continues rendering in the background regardless).
+            ``True`` when rendering completed within the timeout, ``False`` if
+            the timeout elapsed (the app continues rendering in the background).
         """
         # Give the render thread time to set its flag before we start polling
         time.sleep(0.5)

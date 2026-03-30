@@ -18,8 +18,10 @@ imported lazily inside each function, so importing this module is cheap.
 from __future__ import annotations
 
 import io
+import tempfile
 from dataclasses import dataclass
 from fractions import Fraction
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from loguru import logger
@@ -115,10 +117,11 @@ def probe(path: str) -> VideoInfo:
 
 
 def svg_to_pil(svg_string: str, width: int, height: int) -> Image.Image:
-    """Rasterise an SVG string to a PIL Image.
+    """Rasterise an SVG string to a PIL Image via ``resvg_py``.
 
-    Tries ``resvg-py`` first, then ``svglab``, and finally a basic
-    Pillow-only fallback (white image).
+    Patches mm dimensions to px (resvg cannot parse mm units), then
+    calls ``resvg_py.svg_to_bytes`` directly with the SVG string.
+    Falls back to a blank white image if resvg_py is not installed.
 
     Args:
         svg_string: The SVG markup.
@@ -128,37 +131,29 @@ def svg_to_pil(svg_string: str, width: int, height: int) -> Image.Image:
     Returns:
         A PIL ``Image.Image`` in RGBA mode.
     """
-    # Attempt 1: resvg-py
+    import re  # noqa: PLC0415
+
+    from PIL import Image as _PILImage  # noqa: PLC0415
+
     try:
-        import resvg  # type: ignore[import-untyped]
+        import resvg_py  # type: ignore[import-untyped]  # noqa: PLC0415
 
-        svg_bytes = svg_string.encode("utf-8")
-        png_bytes = resvg.svg_to_png(svg_bytes, width=width, height=height)
-        from PIL import Image as _PILImage
+        # Patch mm dimensions to px (resvg cannot parse mm units)
+        svg_fixed = re.sub(r'width="[^"]*mm"', f'width="{width}px"', svg_string, count=1)
+        svg_fixed = re.sub(r'height="[^"]*mm"', f'height="{height}px"', svg_fixed, count=1)
 
-        return _PILImage.open(io.BytesIO(png_bytes)).convert("RGBA")
+        png_bytes = resvg_py.svg_to_bytes(svg_fixed)
+        img = _PILImage.open(io.BytesIO(bytes(png_bytes)))
+        if img.size != (width, height):
+            img = img.resize((width, height), _PILImage.Resampling.LANCZOS)
+        return img.convert("RGBA")
     except ImportError:
         pass
     except Exception:
-        logger.opt(exception=True).debug("resvg rasterisation failed")
-
-    # Attempt 2: svglab
-    try:
-        import svglab  # type: ignore[import-untyped]
-
-        png_bytes = svglab.render_svg(svg_string, width=width, height=height, fmt="png")
-        from PIL import Image as _PILImage
-
-        return _PILImage.open(io.BytesIO(png_bytes)).convert("RGBA")
-    except ImportError:
-        pass
-    except Exception:
-        logger.opt(exception=True).debug("svglab rasterisation failed")
+        logger.opt(exception=True).debug("resvg_py rasterisation failed")
 
     # Fallback: blank image
     logger.warning("No SVG rasteriser available; returning blank {}x{} image", width, height)
-    from PIL import Image as _PILImage
-
     return _PILImage.new("RGBA", (width, height), (255, 255, 255, 255))
 
 
@@ -217,11 +212,15 @@ def process_video(
     out_video.height = out_height
     out_video.pix_fmt = "yuv420p"
 
-    # Audio passthrough
+    # Audio passthrough (best-effort — skip on failure)
     out_audio = None
     if include_audio and info.has_audio:
-        in_audio = in_container.streams.audio[0]
-        out_audio = out_container.add_stream(template=in_audio)
+        try:
+            in_audio = in_container.streams.audio[0]
+            out_audio = out_container.add_stream_from_template(in_audio)
+        except Exception:
+            logger.warning("Could not copy audio stream, proceeding without audio")
+            out_audio = None
 
     frame_idx = 0
     for packet in in_container.demux():
@@ -273,6 +272,7 @@ def process_video_with_style(
     size_multiplier: int = 1,
     relative: bool = False,
     abort_event: Any = None,
+    on_progress: Any = None,
 ) -> VideoInfo:
     """Process a video with per-frame style transfer.
 
@@ -292,6 +292,8 @@ def process_video_with_style(
         relative: Scale spatial fill parameters to match the target frame
             dimensions.  Default ``False`` (absolute mode).
         abort_event: Optional threading.Event to stop processing early.
+        on_progress: Optional callback ``(current, total) -> None``
+            invoked after each frame is processed.
 
     Returns:
         A :class:`VideoInfo` for the output file.
@@ -336,8 +338,12 @@ def process_video_with_style(
 
     out_audio = None
     if include_audio and info.has_audio:
-        in_audio = in_container.streams.audio[0]
-        out_audio = out_container.add_stream(template=in_audio)
+        try:
+            in_audio = in_container.streams.audio[0]
+            out_audio = out_container.add_stream_from_template(in_audio)
+        except Exception:
+            logger.warning("Could not copy audio stream, proceeding without audio")
+            out_audio = None
 
     frame_idx = 0
     with MCPClient() as client:
@@ -356,10 +362,11 @@ def process_video_with_style(
                     if frame_idx >= actual_end:
                         break
 
-                    # Convert to PIL, encode to PNG
+                    # Convert to PIL, save to temp file for MCP
                     pil_img = frame.to_image()
-                    buf = io.BytesIO()
-                    pil_img.save(buf, format="PNG")
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                        pil_img.save(tmp, format="PNG")
+                        tmp_path = tmp.name
 
                     # Apply style
                     t = (frame_idx - start_frame) / total
@@ -368,14 +375,16 @@ def process_video_with_style(
                         current_style = interpolate_style(style, end_style, t)
 
                     try:
-                        svg_string = apply_style(client, current_style, buf, relative=relative)
+                        svg_string = apply_style(client, current_style, tmp_path, relative=relative)
                         styled_img = svg_to_pil(svg_string, out_width, out_height).convert("RGB")
                     except Exception:
                         logger.opt(exception=True).debug("Style failed on frame {}", frame_idx)
                         styled_img = pil_img.convert("RGB")
+                    finally:
+                        Path(tmp_path).unlink(missing_ok=True)
 
                     if size_multiplier > 1:
-                        styled_img = styled_img.resize((out_width, out_height), PILImage.LANCZOS)
+                        styled_img = styled_img.resize((out_width, out_height), PILImage.Resampling.LANCZOS)
 
                     # Convert back to av.VideoFrame
                     out_frame = av.VideoFrame.from_image(styled_img)
@@ -383,6 +392,8 @@ def process_video_with_style(
                         out_container.mux(out_packet)
 
                     frame_idx += 1
+                    if on_progress is not None:
+                        on_progress(frame_idx - start_frame, total)
 
             elif packet.stream.type == "audio" and out_audio is not None:
                 packet.stream = out_audio
