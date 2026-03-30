@@ -50,6 +50,13 @@ email = "opensource@vexy.art"
 [project.license]
 text = "MIT"
 
+[project.optional-dependencies]
+video = [
+    "opencv-python-headless>=4.8.0",
+    "Pillow>=10.0.0",
+    "resvg-py>=0.2.0",
+]
+
 [project.urls]
 Documentation = "https://github.com/vexyart/vexy-lines/tree/main/vexy-lines-apy#readme"
 Issues = "https://github.com/vexyart/vexy-lines/issues"
