@@ -78,9 +78,10 @@ def _detect_audio(path: str) -> bool:
         return False
     try:
         result = subprocess.run(
-            [ffprobe, "-v", "quiet", "-select_streams", "a",
-             "-show_entries", "stream=index", "-of", "csv=p=0", path],
-            capture_output=True, text=True, timeout=10,
+            [ffprobe, "-v", "quiet", "-select_streams", "a", "-show_entries", "stream=index", "-of", "csv=p=0", path],
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         return bool(result.stdout.strip())
     except Exception:  # noqa: BLE001
@@ -102,13 +103,27 @@ def _merge_audio(video_only: str, audio_source: str, output_path: str) -> None:
         return
     try:
         subprocess.run(
-            [ffmpeg, "-y",
-             "-i", video_only,
-             "-i", audio_source,
-             "-c:v", "copy", "-c:a", "aac",
-             "-map", "0:v:0", "-map", "1:a:0",
-             "-shortest", output_path],
-            capture_output=True, timeout=300, check=True,
+            [
+                ffmpeg,
+                "-y",
+                "-i",
+                video_only,
+                "-i",
+                audio_source,
+                "-c:v",
+                "copy",
+                "-c:a",
+                "aac",
+                "-map",
+                "0:v:0",
+                "-map",
+                "1:a:0",
+                "-shortest",
+                output_path,
+            ],
+            capture_output=True,
+            timeout=300,
+            check=True,
         )
     except Exception:  # noqa: BLE001
         logger.warning("Audio merge failed; using video-only output")
@@ -217,7 +232,10 @@ def svg_to_pil(svg_string: str, width: int, height: int) -> Image.Image:
 
 
 def _create_video_writer(
-    path: str, fps: float, width: int, height: int,
+    path: str,
+    fps: float,
+    width: int,
+    height: int,
 ) -> Any:
     """Create a cv2.VideoWriter, trying H.264 (avc1) first, falling back to mp4v."""
     import cv2  # type: ignore[import-untyped]  # noqa: PLC0415
@@ -242,6 +260,7 @@ def process_video(
     include_audio: bool = True,
     size_multiplier: int = 1,
     abort_event: Any = None,
+    on_frame_image: Any = None,
 ) -> VideoInfo:
     """Basic pass-through video processing (no style transfer).
 
@@ -255,6 +274,8 @@ def process_video(
         include_audio: Copy the audio stream if present.
         size_multiplier: Integer scale factor for output resolution.
         abort_event: Optional threading.Event to stop processing early.
+        on_frame_image: Optional callback ``(frame_image) -> None``
+            invoked with each processed frame as a PIL image.
 
     Returns:
         A :class:`VideoInfo` for the *output* file.
@@ -267,6 +288,7 @@ def process_video(
     except ImportError as exc:
         msg = "opencv-python-headless is required for video processing: pip install opencv-python-headless"
         raise ImportError(msg) from exc
+    from PIL import Image as PILImage  # noqa: PLC0415
 
     info = probe(input_path)
     actual_end = min(end_frame, info.total_frames) if end_frame is not None else info.total_frames
@@ -299,6 +321,9 @@ def process_video(
             if size_multiplier > 1:
                 frame = cv2.resize(frame, (out_width, out_height), interpolation=cv2.INTER_LANCZOS4)
 
+            if on_frame_image is not None:
+                on_frame_image(PILImage.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
+
             writer.write(frame)
             frame_idx += 1
     finally:
@@ -330,6 +355,7 @@ def process_video_with_style(
     relative: bool = False,
     abort_event: Any = None,
     on_progress: Any = None,
+    on_frame_image: Any = None,
 ) -> VideoInfo:
     """Process a video with per-frame style transfer.
 
@@ -351,6 +377,8 @@ def process_video_with_style(
         abort_event: Optional threading.Event to stop processing early.
         on_progress: Optional callback ``(current, total) -> None``
             invoked after each frame is processed.
+        on_frame_image: Optional callback ``(frame_image) -> None``
+            invoked with each processed frame as a PIL image.
 
     Returns:
         A :class:`VideoInfo` for the output file.
@@ -364,6 +392,7 @@ def process_video_with_style(
             include_audio=include_audio,
             size_multiplier=size_multiplier,
             abort_event=abort_event,
+            on_frame_image=on_frame_image,
         )
 
     try:
@@ -432,6 +461,9 @@ def process_video_with_style(
 
                 if size_multiplier > 1:
                     styled_img = styled_img.resize((out_width, out_height), PILImage.Resampling.LANCZOS)
+
+                if on_frame_image is not None:
+                    on_frame_image(styled_img)
 
                 # Convert PIL back to BGR numpy array for cv2
                 styled_bgr = cv2.cvtColor(np.array(styled_img), cv2.COLOR_RGB2BGR)
