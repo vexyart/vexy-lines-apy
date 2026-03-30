@@ -16,18 +16,20 @@ from dataclasses import dataclass, field
 # MCP fill type constants (must match the C++ server g_tmplTypes table)
 # ---------------------------------------------------------------------------
 
-FILL_TYPES: frozenset[str] = frozenset({
-    "linear",
-    "wave",
-    "circular",
-    "radial",
-    "spiral",
-    "scribble",
-    "halftone",
-    "handmade",
-    "fractals",
-    "trace",
-})
+FILL_TYPES: frozenset[str] = frozenset(
+    {
+        "linear",
+        "wave",
+        "circular",
+        "radial",
+        "spiral",
+        "scribble",
+        "halftone",
+        "handmade",
+        "fractals",
+        "trace",
+    }
+)
 """All valid fill type names accepted by the ``add_fill`` MCP tool."""
 
 # Common base parameters shared by all stroke-based fills (everything except trace).
@@ -53,10 +55,16 @@ FILL_TYPE_PARAMS: dict[str, tuple[str, ...]] = {
     "circular": (*_BASE_PARAMS, "x0", "y0"),
     "radial": (*_BASE_PARAMS, "x0", "y0", "r0", "auto_distance", "auto_randomize"),
     "spiral": (*_BASE_PARAMS, "x0", "y0", "direction_ccw"),
-    "scribble": (*_BASE_PARAMS, "scribble_length", "curviness", "variety", "complexity", "rotation",
-                 "scribble_pattern"),
-    "halftone": (*_BASE_PARAMS, "cell_size", "rotation", "halftone_mode", "rotation_mode", "morphing",
-                 "randomization"),
+    "scribble": (
+        *_BASE_PARAMS,
+        "scribble_length",
+        "curviness",
+        "variety",
+        "complexity",
+        "rotation",
+        "scribble_pattern",
+    ),
+    "halftone": (*_BASE_PARAMS, "cell_size", "rotation", "halftone_mode", "rotation_mode", "morphing", "randomization"),
     "handmade": (*_BASE_PARAMS, "mode", "parity_mode", "is_filled", "expand_lines", "averaging"),
     "fractals": (*_BASE_PARAMS, "depth", "kind"),
     "trace": ("smoothness", "clearing_level", "detailing", "color_mode"),

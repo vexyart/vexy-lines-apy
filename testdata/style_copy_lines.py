@@ -16,7 +16,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from vexy_lines_api import MCPClient, create_styled_document, extract_style
+from vexy_lines_api import MCPClient, create_styled_document, extract_style, save_and_consolidate
 
 TESTDATA = Path(__file__).parent
 STYLE_FILE = TESTDATA / "beara-01.lines"
@@ -46,7 +46,7 @@ def main() -> None:
 
         with MCPClient() as client:
             create_styled_document(client, style, image_path)
-            client.save_document(str(out_path.resolve()))
+            save_and_consolidate(client, out_path)
 
         logger.info("Wrote {}", out_path.name)
 

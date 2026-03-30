@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import io
 from dataclasses import dataclass
+from fractions import Fraction
 from typing import TYPE_CHECKING, Any
 
 from loguru import logger
@@ -28,7 +29,7 @@ if TYPE_CHECKING:
 
 __all__ = [
     "VideoInfo",
-    "_svg_to_pil",
+    "svg_to_pil",
     "probe",
     "process_video",
     "process_video_with_style",
@@ -113,7 +114,7 @@ def probe(path: str) -> VideoInfo:
 # ---------------------------------------------------------------------------
 
 
-def _svg_to_pil(svg_string: str, width: int, height: int) -> Image.Image:
+def svg_to_pil(svg_string: str, width: int, height: int) -> Image.Image:
     """Rasterise an SVG string to a PIL Image.
 
     Tries ``resvg-py`` first, then ``svglab``, and finally a basic
@@ -210,7 +211,8 @@ def process_video(
     out_width = in_video.width * size_multiplier
     out_height = in_video.height * size_multiplier
 
-    out_video = out_container.add_stream("libx264", rate=info.fps)
+    fps_rational = Fraction(info.fps).limit_denominator(10000)
+    out_video = out_container.add_stream("libx264", rate=fps_rational)
     out_video.width = out_width
     out_video.height = out_height
     out_video.pix_fmt = "yuv420p"
@@ -326,7 +328,8 @@ def process_video_with_style(
     out_width = in_video.width * size_multiplier
     out_height = in_video.height * size_multiplier
 
-    out_video = out_container.add_stream("libx264", rate=info.fps)
+    fps_rational = Fraction(info.fps).limit_denominator(10000)
+    out_video = out_container.add_stream("libx264", rate=fps_rational)
     out_video.width = out_width
     out_video.height = out_height
     out_video.pix_fmt = "yuv420p"
@@ -366,7 +369,7 @@ def process_video_with_style(
 
                     try:
                         svg_string = apply_style(client, current_style, buf, relative=relative)
-                        styled_img = _svg_to_pil(svg_string, out_width, out_height).convert("RGB")
+                        styled_img = svg_to_pil(svg_string, out_width, out_height).convert("RGB")
                     except Exception:
                         logger.opt(exception=True).debug("Style failed on frame {}", frame_idx)
                         styled_img = pil_img.convert("RGB")

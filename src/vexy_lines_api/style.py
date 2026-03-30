@@ -66,12 +66,14 @@ Note: XML ``thick_gap`` has no MCP equivalent — it is not settable via the API
 # Spatial params that should be scaled when applying a style in relative mode.
 # These represent physical dimensions (mm, pixels) that change with document size.
 # Excluded: angle, smoothness, uplimit, downlimit, multiplier, shear (ratios/degrees/thresholds).
-SPATIAL_PARAMS: frozenset[str] = frozenset({
-    "interval",
-    "multiplier",
-    "thickness_min",
-    "dispersion",
-})
+SPATIAL_PARAMS: frozenset[str] = frozenset(
+    {
+        "interval",
+        "multiplier",
+        "thickness_min",
+        "dispersion",
+    }
+)
 
 # MCP parameter names that the server stores internally in mm.
 # Server converts incoming pixel values: px * 25.4 / dpi → mm.
@@ -444,8 +446,11 @@ def create_styled_document(
 
     Replicates the style's group->layer->fill structure onto a new document
     with the given source image.  The document remains open in the app so
-    the caller can :meth:`~vexy_lines_api.client.MCPClient.save_document`,
-    :meth:`~vexy_lines_api.client.MCPClient.render`, or export as needed.
+    the caller can save, render, or export as needed.
+
+    For durable ``.lines`` output after edits, follow the consolidation pattern
+    of save -> open -> render -> save. Use :func:`save_and_consolidate` to run
+    that sequence in one call.
 
     Args:
         client: Connected :class:`~vexy_lines_api.client.MCPClient` instance.
@@ -473,6 +478,44 @@ def create_styled_document(
             _apply_group(client, node, parent_id=root_id, source_dpi=source_dpi)
         elif isinstance(node, LayerInfo):
             _apply_layer(client, node, group_id=root_id, source_dpi=source_dpi)
+
+
+def save_and_consolidate(
+    client: MCPClient,
+    path: str | Path,
+    *,
+    render_timeout: float = 300.0,
+) -> None:
+    """Save a document, reopen it, render it, and save again.
+
+    This helper improves ``.lines`` reliability after programmatic edits by
+    forcing the Vexy Lines app to re-parse and re-render the saved file before
+    the final write. The consolidation sequence is:
+
+    1. Save current document state to disk.
+    2. Reopen that saved file in Vexy Lines.
+    3. Render the reopened document and wait for completion.
+    4. Save again so the persisted file reflects the rendered state.
+
+    Args:
+        client: Connected :class:`~vexy_lines_api.client.MCPClient` instance.
+        path: Destination ``.lines`` path.
+        render_timeout: Maximum seconds to wait for the render after reopen.
+    """
+    resolved_path = Path(path).expanduser().resolve()
+    resolved_path_str = str(resolved_path)
+
+    logger.debug("Consolidation step 1/4: initial save to {}", resolved_path_str)
+    client.save_document(resolved_path_str)
+
+    logger.debug("Consolidation step 2/4: reopening {}", resolved_path_str)
+    client.open_document(resolved_path_str)
+
+    logger.debug("Consolidation step 3/4: rendering reopened document")
+    client.render(timeout=render_timeout)
+
+    logger.debug("Consolidation step 4/4: final save to {}", resolved_path_str)
+    client.save_document(resolved_path_str)
 
 
 # ---------------------------------------------------------------------------

@@ -9,6 +9,7 @@ and mock the parser / MCPClient as needed.
 from __future__ import annotations
 
 import copy
+import math
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -22,9 +23,6 @@ from vexy_lines.types import (
     LinesDocument,
 )
 from vexy_lines_api.style import (
-    MCP_MM_PARAMS,
-    MCP_PT_PARAMS,
-    SPATIAL_PARAMS,
     Style,
     _compare_fills,
     _compare_structure,
@@ -32,8 +30,6 @@ from vexy_lines_api.style import (
     _fill_params_to_dict,
     _interpolate_doc_props,
     _interpolate_fill_params,
-    _interpolate_group,
-    _interpolate_layer,
     _lerp,
     _lerp_color,
     _scale_fill_params,
@@ -43,7 +39,6 @@ from vexy_lines_api.style import (
     interpolate_style,
     styles_compatible,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -504,8 +499,12 @@ class TestFillParamsToDict:
     def test_non_spatial_params_unchanged(self):
         """Angle, contrast, break_up, break_down are not converted."""
         params = FillParams(
-            fill_type="linear", color="", angle=45.0, smoothness=0.8,
-            uplimit=200.0, downlimit=50.0,
+            fill_type="linear",
+            color="",
+            angle=45.0,
+            smoothness=0.8,
+            uplimit=200.0,
+            downlimit=50.0,
         )
         result = _fill_params_to_dict(params, source_dpi=300)
         assert result["angle"] == 45.0
@@ -694,7 +693,7 @@ class TestComputeRelativeScale:
     """Tests for _compute_relative_scale."""
 
     def test_same_pixel_dimensions_returns_1(self):
-        # Source: 100mm × 100mm at 300 DPI → 100*300/25.4 = 1181.1 px
+        # Source: 100mm x 100mm at 300 DPI → 100*300/25.4 = 1181.1 px
         style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0, dpi=300))
         src_px = 100.0 * 300 / 25.4
         scale = _compute_relative_scale(style, src_px, src_px)
@@ -721,7 +720,7 @@ class TestComputeRelativeScale:
 
     def test_same_image_different_dpi_returns_1(self):
         """Same image pixels at different DPI should give scale=1.0."""
-        # Source: 210mm × 297mm at 300 DPI → 2480 × 3508 px
+        # Source: 210mm x 297mm at 300 DPI → 2480 x 3508 px
         style = _make_style(props=_make_props(width_mm=210.0, height_mm=297.0, dpi=300))
         target_w = 210.0 * 300 / 25.4  # same pixel count
         target_h = 297.0 * 300 / 25.4
@@ -807,7 +806,10 @@ class TestApplyStyleRelative:
     def _mock_client(self, target_width: float = 200.0, target_height: float = 200.0, dpi: int = 72):
         mock = MagicMock()
         mock.new_document.return_value = MagicMock(
-            root_id=1, width=target_width, height=target_height, dpi=dpi,
+            root_id=1,
+            width=target_width,
+            height=target_height,
+            dpi=dpi,
         )
         mock.add_group.return_value = {"id": 2}
         mock.add_layer.return_value = {"id": 3}
@@ -851,7 +853,6 @@ class TestApplyStyleRelative:
 
         apply_style(client, style, "/fake.png", relative=True)
 
-        import math
         expected_scale = math.sqrt((200.0 / src_px) * (200.0 / src_px))
         expected_interval_px = 2.0 * expected_scale * (300 / 72)
 

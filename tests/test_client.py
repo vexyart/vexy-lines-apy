@@ -14,7 +14,6 @@ import pytest
 from vexy_lines_api.client import APP_NAME, MCP_PORT, PROTOCOL_VERSION, MCPClient, MCPError
 from vexy_lines_api.types import DocumentInfo, LayerNode, NewDocumentResult, RenderStatus
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -93,7 +92,8 @@ class TestMCPError:
 
     def test_raise_and_catch(self):
         with pytest.raises(MCPError, match="connection failed"):
-            raise MCPError("connection failed")
+            msg = "connection failed"
+            raise MCPError(msg)
 
 
 # ---------------------------------------------------------------------------
@@ -153,9 +153,9 @@ class TestAutoLaunchWindows:
         with (
             patch("sys.platform", "win32"),
             patch("pathlib.Path.exists", return_value=False),
+            pytest.raises(MCPError, match="not found"),
         ):
-            with pytest.raises(MCPError, match="not found"):
-                client._launch_app()
+            client._launch_app()
 
     def test_launch_app_win32_found(self):
         """On Windows, launches the found exe."""
@@ -193,9 +193,8 @@ class TestHandshake:
         bad_response = _jsonrpc_response({"protocolVersion": "9999-01-01"}, request_id=1)
         mock_sock = MockSocket([bad_response])
         client = MCPClient(auto_launch=False)
-        with patch("socket.socket", return_value=mock_sock):
-            with pytest.raises(MCPError, match="Protocol mismatch"):
-                client.__enter__()
+        with patch("socket.socket", return_value=mock_sock), pytest.raises(MCPError, match="Protocol mismatch"):
+            client.__enter__()
 
     def test_handshake_sends_correct_client_info(self):
         """Handshake sends vexy-lines-apy as client name."""
@@ -221,7 +220,7 @@ class TestCallTool:
 
     def _make_connected_client(self, responses: list[bytes]) -> tuple[MCPClient, MockSocket]:
         """Create a client that has completed the handshake."""
-        all_responses = [_make_handshake_response()] + responses
+        all_responses = [_make_handshake_response(), *responses]
         mock_sock = MockSocket(all_responses)
         client = MCPClient(auto_launch=False)
         with patch("socket.socket", return_value=mock_sock):
@@ -231,7 +230,7 @@ class TestCallTool:
     def test_call_tool_json_response(self):
         """call_tool parses JSON text content into a dict."""
         tool_resp = _tool_response({"width_mm": 210.0, "height_mm": 297.0}, request_id=2)
-        client, sock = self._make_connected_client([tool_resp])
+        client, _sock = self._make_connected_client([tool_resp])
         result = client.call_tool("get_document_info")
         assert isinstance(result, dict)
         assert result["width_mm"] == 210.0
@@ -240,7 +239,7 @@ class TestCallTool:
         """call_tool returns raw string when text is not JSON."""
         text = "Document saved successfully"
         resp = _tool_response(text, request_id=2)
-        client, sock = self._make_connected_client([resp])
+        client, _sock = self._make_connected_client([resp])
         result = client.call_tool("save_document")
         assert result == text
 
@@ -259,20 +258,20 @@ class TestCallTool:
     def test_server_error_raises_mcp_error(self):
         """Server error response raises MCPError with code and message."""
         error_resp = _jsonrpc_error(-32600, "Invalid request", request_id=2)
-        client, sock = self._make_connected_client([error_resp])
+        client, _sock = self._make_connected_client([error_resp])
         with pytest.raises(MCPError, match="MCP error -32600: Invalid request"):
             client.call_tool("bad_tool")
 
     def test_connection_closed_raises_mcp_error(self):
         """Empty recv (connection closed) raises MCPError."""
-        client, sock = self._make_connected_client([])
+        client, _sock = self._make_connected_client([])
         # Socket returns empty bytes = connection closed
         with pytest.raises(MCPError, match="Connection closed"):
             client.call_tool("anything")
 
     def test_invalid_json_raises_mcp_error(self):
         """Invalid JSON from server raises MCPError."""
-        client, sock = self._make_connected_client([b"not-json\n"])
+        client, _sock = self._make_connected_client([b"not-json\n"])
         with pytest.raises(MCPError, match="Invalid JSON"):
             client.call_tool("anything")
 
@@ -286,7 +285,7 @@ class TestTypedMethods:
     """Tests for typed wrapper methods (get_document_info, etc.)."""
 
     def _make_connected_client(self, responses: list[bytes]) -> MCPClient:
-        all_responses = [_make_handshake_response()] + responses
+        all_responses = [_make_handshake_response(), *responses]
         mock_sock = MockSocket(all_responses)
         client = MCPClient(auto_launch=False)
         with patch("socket.socket", return_value=mock_sock):

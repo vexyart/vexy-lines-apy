@@ -25,9 +25,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 from vexy_lines_api.types import DocumentInfo, LayerNode, NewDocumentResult, RenderStatus
 
@@ -752,7 +750,7 @@ class MCPClient:
                     time.sleep(0.5)
                     return True
             time.sleep(poll_interval)
-        return True
+        return False
 
     def get_render_status(self) -> RenderStatus:
         """Check whether the document is currently rendering.

@@ -43,8 +43,15 @@ Style interpolation::
 from __future__ import annotations
 
 from vexy_lines_api.client import MCPClient, MCPError
-from vexy_lines_api.style import Style, apply_style, create_styled_document, extract_style, interpolate_style, styles_compatible
-from vexy_lines_api.video import VideoInfo, _svg_to_pil, probe, process_video, process_video_with_style
+from vexy_lines_api.style import (
+    Style,
+    apply_style,
+    create_styled_document,
+    extract_style,
+    interpolate_style,
+    save_and_consolidate,
+    styles_compatible,
+)
 from vexy_lines_api.types import (
     FILL_TYPE_PARAMS,
     FILL_TYPES,
@@ -53,25 +60,27 @@ from vexy_lines_api.types import (
     NewDocumentResult,
     RenderStatus,
 )
+from vexy_lines_api.video import VideoInfo, svg_to_pil, probe, process_video, process_video_with_style
 
 __all__ = [
-    "FILL_TYPE_PARAMS",
     "FILL_TYPES",
-    "MCPClient",
-    "MCPError",
+    "FILL_TYPE_PARAMS",
     "DocumentInfo",
     "LayerNode",
+    "MCPClient",
+    "MCPError",
     "NewDocumentResult",
     "RenderStatus",
     "Style",
+    "VideoInfo",
+    "svg_to_pil",
     "apply_style",
     "create_styled_document",
     "extract_style",
     "interpolate_style",
-    "styles_compatible",
-    "VideoInfo",
-    "_svg_to_pil",
+    "save_and_consolidate",
     "probe",
     "process_video",
     "process_video_with_style",
+    "styles_compatible",
 ]
