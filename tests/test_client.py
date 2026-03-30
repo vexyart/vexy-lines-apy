@@ -1,4 +1,4 @@
-# this_file: tests/test_client.py
+# this_file: vexy-lines-apy/tests/test_client.py
 """Tests for vexy_lines_api.client module.
 
 All tests mock the TCP socket to avoid requiring a running Vexy Lines instance.

@@ -98,6 +98,8 @@ dependencies = [
     "mypy>=1.15.0",
     "pytest>=8.3.4",
     "pytest-cov>=6.0.0",
+    "mkdocs>=1.6",
+    "mkdocs-materialx>=2.0",
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -212,7 +214,7 @@ ignore = [
 unfixable = ["F401"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["vexy_lines_api"]
+known-first-party = ["vexy_lines_api", "vexy_lines"]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"

@@ -1,15 +1,19 @@
-# this_file: src/vexy_lines_api/client.py
-"""MCP client for Vexy Lines desktop app via TCP JSON-RPC 2.0.
+# this_file: vexy-lines-apy/src/vexy_lines_api/client.py
+"""TCP client for the Vexy Lines MCP server (JSON-RPC 2.0).
 
-Connects to the embedded MCP server on localhost:47384.
-Protocol: newline-delimited JSON-RPC over raw TCP socket.
+The Vexy Lines macOS app embeds an MCP server on ``localhost:47384``.
+This module speaks newline-delimited JSON-RPC 2.0 over a raw TCP socket,
+handles the MCP initialize/initialized handshake, and exposes all 25 tools
+as typed Python methods.
 
-Usage::
+Example::
 
     with MCPClient() as vl:
-        info = vl.get_document_info()
-        tree = vl.get_layer_tree()
-        vl.render_all()
+        info = vl.get_document_info()   # DocumentInfo
+        tree = vl.get_layer_tree()      # LayerNode tree
+        vl.set_fill_params(fill_id, color="#ff0000")
+        vl.render()                     # render + wait
+        vl.export_svg("out.svg")
 """
 
 from __future__ import annotations
@@ -112,7 +116,12 @@ class MCPClient:
             raise MCPError(msg) from exc
 
     def _launch_app(self) -> None:
-        """Launch Vexy Lines on the current platform."""
+        """Launch the Vexy Lines app on macOS or Windows.
+
+        Raises:
+            MCPError: On Windows if the executable is not found in standard
+                install locations, or on unsupported platforms.
+        """
         if sys.platform == "darwin":
             subprocess.run(  # noqa: S603
                 ["open", "-a", APP_NAME],  # noqa: S607
@@ -139,7 +148,17 @@ class MCPClient:
             raise MCPError(msg)
 
     def _wait_for_server(self, max_wait: float = 30.0) -> None:
-        """Poll until the MCP server accepts connections."""
+        """Poll until the MCP server accepts connections or the deadline passes.
+
+        Uses gentle exponential back-off (0.5s → 2.0s cap) to avoid hammering
+        the socket while the app starts up.
+
+        Args:
+            max_wait: Maximum seconds to wait before raising.
+
+        Raises:
+            MCPError: If the server is still unreachable after *max_wait* seconds.
+        """
         deadline = time.monotonic() + max_wait
         interval = 0.5
         last_error: MCPError | None = None
@@ -501,7 +520,7 @@ class MCPClient:
         Returns:
             Server status string.
         """
-        result = self.call_tool("delete_object", {"object_id": object_id})
+        result = self.call_tool("delete_object", {"id": object_id})
         return result if isinstance(result, str) else str(result)
 
     # -- fill params ------------------------------------------------------
@@ -515,7 +534,7 @@ class MCPClient:
         Returns:
             Dict of fill parameter names to values.
         """
-        data = self.call_tool("get_fill_params", {"fill_id": fill_id})
+        data = self.call_tool("get_fill_params", {"id": fill_id})
         return data if isinstance(data, dict) else {"result": data}
 
     def set_fill_params(self, fill_id: int, **params: object) -> str:
@@ -523,16 +542,17 @@ class MCPClient:
 
         Example::
 
-            client.set_fill_params(42, color="#ff0000", opacity=0.8)
+            client.set_fill_params(42, color="#ff0000", interval=20)
 
         Args:
             fill_id: Fill object ID.
-            **params: Parameter names and values to set.
+            **params: Parameter names and values to set.  Spatial values
+                are in pixels.  ``"color"`` accepts hex or named colour.
 
         Returns:
             Server status string.
         """
-        args: dict[str, object] = {"fill_id": fill_id, **params}
+        args: dict[str, object] = {"id": fill_id, "params": dict(params)}
         result = self.call_tool("set_fill_params", args)
         return result if isinstance(result, str) else str(result)
 
@@ -564,7 +584,7 @@ class MCPClient:
         Returns:
             Server status string.
         """
-        result = self.call_tool("set_caption", {"object_id": object_id, "caption": caption})
+        result = self.call_tool("set_caption", {"id": object_id, "caption": caption})
         return result if isinstance(result, str) else str(result)
 
     def set_visible(self, object_id: int, *, visible: bool) -> str:
@@ -577,7 +597,7 @@ class MCPClient:
         Returns:
             Server status string.
         """
-        result = self.call_tool("set_visible", {"object_id": object_id, "visible": visible})
+        result = self.call_tool("set_visible", {"id": object_id, "visible": visible})
         return result if isinstance(result, str) else str(result)
 
     def set_layer_mask(self, layer_id: int, paths: list[str], mode: str = "create") -> str:
@@ -638,7 +658,7 @@ class MCPClient:
         result = self.call_tool(
             "transform_layer",
             {
-                "layer_id": layer_id,
+                "id": layer_id,
                 "translate_x": translate_x,
                 "translate_y": translate_y,
                 "rotate_deg": rotate_deg,
@@ -671,7 +691,7 @@ class MCPClient:
         result = self.call_tool(
             "set_layer_warp",
             {
-                "layer_id": layer_id,
+                "id": layer_id,
                 "top_left": top_left,
                 "top_right": top_right,
                 "bottom_right": bottom_right,
@@ -692,20 +712,26 @@ class MCPClient:
         return result if isinstance(result, str) else str(result)
 
     def wait_for_render(self, timeout: float = 120.0, poll_interval: float = 0.5) -> bool:
-        """Wait for rendering to complete.
+        """Poll until the document finishes rendering.
 
-        Pauses briefly before polling to let the render thread start
-        (avoids a race where ``get_render_status`` returns ``False`` before
-        the render has begun).
+        The server may not flip ``rendering=True`` immediately after
+        :meth:`render_all`, so this method waits 0.5 s before starting,
+        then handles two scenarios:
+
+        - Render started and finished: detected by a ``True → False``
+          transition in ``get_render_status``.
+        - Render already finished before polling began: detected by
+          four consecutive ``False`` readings without ever seeing ``True``.
 
         Args:
-            timeout: Maximum wait time in seconds.
-            poll_interval: Time between status checks.
+            timeout: Maximum seconds to wait.
+            poll_interval: Seconds between status checks.
 
         Returns:
-            ``True`` if render completed, ``False`` if timed out.
+            ``True`` when rendering is done. Returns ``True`` even on timeout
+            (the app continues rendering in the background regardless).
         """
-        # Let the render thread actually start before we begin polling
+        # Give the render thread time to set its flag before we start polling
         time.sleep(0.5)
         deadline = time.monotonic() + timeout
         was_rendering = False
@@ -718,11 +744,11 @@ class MCPClient:
             else:
                 not_rendering_count += 1
                 if was_rendering:
-                    # Transitioned from rendering -> done
+                    # Transitioned rendering → done
                     time.sleep(0.5)
                     return True
                 if not_rendering_count >= 4:
-                    # Never saw rendering start -- it already completed
+                    # Render completed before we started polling
                     time.sleep(0.5)
                     return True
             time.sleep(poll_interval)
@@ -911,5 +937,5 @@ class MCPClient:
         Returns:
             Server status string.
         """
-        result = self.call_tool("select_object", {"object_id": object_id})
+        result = self.call_tool("select_object", {"id": object_id})
         return result if isinstance(result, str) else str(result)

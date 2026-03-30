@@ -71,6 +71,9 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# MkDocs output
+docs/
+
 # PyBuilder
 .pybuilder/
 target/
@@ -205,3 +208,4 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+_version.py 

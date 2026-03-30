@@ -1,106 +1,197 @@
 # vexy-lines-apy
 
-Python bindings to the Vexy Lines MCP API and style engine.
+Python bindings to the [Vexy Lines](https://vexy.art) MCP API and style engine.
 
-Provides a typed TCP client for the Vexy Lines embedded MCP server (JSON-RPC 2.0 over newline-delimited TCP) and a style engine for extracting, applying, and interpolating fill structures from `.lines` files.
+Connect to the Vexy Lines app over TCP, drive it programmatically — open documents, tweak fill parameters, render, export — and transfer or blend artistic styles between images without touching the GUI.
 
-## Installation
+**Requires the Vexy Lines app** (macOS or Windows) for all MCP operations. The app auto-launches if it isn't running.
+
+## Install
 
 ```bash
 pip install vexy-lines-apy
 ```
 
-## Quick start
+Optional SVG manipulation support:
 
-### Connect to Vexy Lines and query the document
+```bash
+pip install "vexy-lines-apy[svg]"
+```
+
+## Quick start
 
 ```python
 from vexy_lines_api import MCPClient
 
 with MCPClient() as vl:
+    vl.open_document("photo.lines")
+
     info = vl.get_document_info()
-    print(f"Document: {info.width_mm}x{info.height_mm}mm @ {info.resolution}dpi")
+    print(f"{info.width_mm:.0f} x {info.height_mm:.0f} mm @ {info.resolution} dpi")
 
-    tree = vl.get_layer_tree()
-    print(f"Root node: {tree.caption} ({len(tree.children)} children)")
-
-    vl.render()
-    svg_path = vl.export_svg("output.svg")
-    print(f"Exported to {svg_path}")
+    tree = vl.get_layer_tree()          # LayerNode tree
+    vl.render()                          # render all layers, wait for completion
+    vl.export_svg("output.svg")
 ```
 
-### Apply a style from a .lines file to an image
+`MCPClient()` connects to `localhost:47384`. If the app isn't open, it launches it and waits up to 30 seconds.
+
+## Export formats
+
+```python
+with MCPClient() as vl:
+    vl.open_document("art.lines")
+    vl.render()
+
+    vl.export_svg("out.svg")
+    vl.export_pdf("out.pdf")
+    vl.export_png("out.png", dpi=150)
+    vl.export_jpeg("out.jpg")
+    vl.export_eps("out.eps")
+
+    # SVG as a string (useful for embedding or piping)
+    svg_text = vl.svg()
+
+    # SVG as a parsed svglab object (requires the [svg] extra)
+    svg_obj = vl.svg_parsed()
+```
+
+## Edit fill parameters
+
+```python
+with MCPClient() as vl:
+    vl.open_document("art.lines")
+    tree = vl.get_layer_tree()
+
+    # Find a fill node and change its colour
+    fill_id = tree.children[0].children[0].children[0].id
+    vl.set_fill_params(fill_id, color="#3a7bd5", opacity=0.9)
+
+    vl.render()
+    vl.export_png("result.png")
+```
+
+## Style engine
+
+Extract the complete fill structure from a `.lines` file and apply it to any source image — no GUI required.
 
 ```python
 from vexy_lines_api import MCPClient, extract_style, apply_style
 
-style = extract_style("my_artwork.lines")
+style = extract_style("reference.lines")   # parse fill tree from file
 
 with MCPClient() as vl:
     svg = apply_style(vl, style, "photo.jpg", dpi=72)
-    with open("styled.svg", "w") as f:
-        f.write(svg)
+
+with open("result.svg", "w") as f:
+    f.write(svg)
 ```
 
-### Interpolate between two styles
+### Style interpolation
+
+Blend two compatible styles at any mix ratio. Numeric fill parameters and colours interpolate smoothly.
 
 ```python
-from vexy_lines_api import extract_style, interpolate_style, styles_compatible
+from vexy_lines_api import MCPClient, extract_style, interpolate_style, apply_style
 
-style_a = extract_style("bold.lines")
-style_b = extract_style("thin.lines")
+painterly = extract_style("painterly.lines")
+technical = extract_style("technical.lines")
 
-if styles_compatible(style_a, style_b):
-    blended = interpolate_style(style_a, style_b, t=0.5)
+mid = interpolate_style(painterly, technical, t=0.5)   # halfway blend
+
+with MCPClient() as vl:
+    svg = apply_style(vl, mid, "photo.jpg")
 ```
+
+Two styles are compatible for interpolation when they share the same group/layer/fill structure with matching fill types. Check with `styles_compatible(a, b)` before blending.
 
 ## API reference
 
-### Client
+### Document
 
-| Class / Function | Description |
-|------------------|-------------|
-| `MCPClient` | Context-managed TCP client for the Vexy Lines MCP server |
-| `MCPError` | Exception for MCP communication or server errors |
+| Method | Description |
+|---|---|
+| `new_document(width, height, dpi, source_image)` | Create a new document |
+| `open_document(path)` | Open a `.lines` file |
+| `save_document(path)` | Save (or Save As) |
+| `export_document(path, format, dpi)` | Export to svg/pdf/png/jpg/eps |
+| `get_document_info()` | Returns `DocumentInfo` |
 
-#### MCPClient methods
+### Structure
 
-**Document:** `new_document`, `open_document`, `save_document`, `export_document`, `get_document_info`
+| Method | Description |
+|---|---|
+| `get_layer_tree()` | Returns root `LayerNode` |
+| `add_group(parent_id, caption)` | Add a group |
+| `add_layer(group_id)` | Add a layer to a group |
+| `add_fill(layer_id, fill_type, color, params)` | Add a fill to a layer |
+| `delete_object(object_id)` | Delete any object |
 
-**Structure:** `get_layer_tree`, `add_group`, `add_layer`, `add_fill`, `delete_object`
+### Fill parameters
 
-**Fill params:** `get_fill_params`, `set_fill_params`
+| Method | Description |
+|---|---|
+| `get_fill_params(fill_id)` | Get all params as a dict |
+| `set_fill_params(fill_id, **params)` | Set params by keyword |
 
-**Visual:** `set_source_image`, `set_caption`, `set_visible`, `set_layer_mask`, `get_layer_mask`, `transform_layer`, `set_layer_warp`
+### Visual
 
-**Control:** `render_all`, `wait_for_render`, `get_render_status`, `render`, `undo`, `redo`, `get_selection`, `select_object`
+| Method | Description |
+|---|---|
+| `set_source_image(image_path, group_id)` | Set source image for a group |
+| `set_caption(object_id, caption)` | Rename an object |
+| `set_visible(object_id, visible)` | Toggle visibility |
+| `set_layer_mask(layer_id, paths, mode)` | Set SVG vector mask |
+| `get_layer_mask(layer_id)` | Get layer mask data |
+| `transform_layer(layer_id, ...)` | Translate, rotate, scale |
+| `set_layer_warp(layer_id, ...)` | Perspective warp corners |
 
-**Export:** `export_svg`, `export_pdf`, `export_png`, `export_jpeg`, `export_eps`, `svg`, `svg_parsed`
+### Control
 
-### Types
+| Method | Description |
+|---|---|
+| `render()` | Render all layers and wait |
+| `render_all()` | Trigger render (no wait) |
+| `wait_for_render(timeout)` | Poll until render completes |
+| `get_render_status()` | Returns `RenderStatus` |
+| `undo()` / `redo()` | Undo/redo last action |
+| `get_selection()` | Get selected objects |
+| `select_object(object_id)` | Select by ID |
 
-| Type | Description |
-|------|-------------|
-| `DocumentInfo` | Document metadata (dimensions, resolution, units) |
-| `LayerNode` | Recursive tree node for the document layer structure |
-| `NewDocumentResult` | Result of creating a new document |
-| `RenderStatus` | Current render state |
+### Export shortcuts
+
+| Method | Returns |
+|---|---|
+| `export_svg(path, dpi)` | Resolved `Path` |
+| `export_pdf(path, dpi)` | Resolved `Path` |
+| `export_png(path, dpi)` | Resolved `Path` |
+| `export_jpeg(path, dpi)` | Resolved `Path` |
+| `export_eps(path, dpi)` | Resolved `Path` |
+| `svg()` | SVG content as `str` |
+| `svg_parsed()` | `svglab.Svg` object (requires `[svg]`) |
 
 ### Style engine
 
 | Function | Description |
-|----------|-------------|
-| `extract_style(path)` | Extract fill style tree from a `.lines` file |
-| `apply_style(client, style, image)` | Apply a style to an image via MCP, returns SVG |
-| `interpolate_style(a, b, t)` | Blend two compatible styles at factor `t` |
-| `styles_compatible(a, b)` | Check if two styles have matching tree structure |
-| `Style` | Dataclass holding the group/layer/fill tree and document props |
+|---|---|
+| `extract_style(path)` | Parse a `.lines` file into a `Style` |
+| `apply_style(client, style, source_image, dpi)` | Apply style to an image, return SVG string |
+| `interpolate_style(a, b, t)` | Blend two styles at ratio `t` in [0, 1] |
+| `styles_compatible(a, b)` | Check if two styles can be interpolated |
+
+### Types
+
+`DocumentInfo`, `LayerNode`, `NewDocumentResult`, `RenderStatus`, `Style`
 
 ## Dependencies
 
-- [`vexy-lines-py`](../vexy-lines-py) — `.lines` file types and constants
+- [`vexy-lines-py`](../vexy-lines-py) — `.lines` file parser and types
 - [`loguru`](https://github.com/Delgan/loguru) — structured logging
 - [`typing-extensions`](https://pypi.org/project/typing-extensions/) — backported type hints
+
+## Full documentation
+
+[Read the docs](https://vexyart.github.io/vexy-lines/vexy-lines-apy/) for the complete API reference, style engine guide, MCP protocol specification, and more examples.
 
 ## License
 

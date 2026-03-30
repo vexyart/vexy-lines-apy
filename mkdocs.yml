@@ -1,0 +1,34 @@
+site_name: "vexy-lines-apy"
+site_description: "Python bindings to the Vexy Lines MCP API and style engine"
+theme:
+  name: materialx
+  features:
+    - content.code.copy
+    - navigation.sections
+  palette:
+    - scheme: slate
+      primary: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Light mode
+    - scheme: default
+      primary: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Dark mode
+docs_dir: src_docs
+site_dir: docs
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - admonition
+  - toc:
+      permalink: true
+nav:
+  - Overview: index.md
+  - Installation: installation.md
+  - API Reference: api-reference.md
+  - Style Engine: style-engine.md
+  - MCP Protocol: mcp-protocol.md
+  - Examples: examples.md
+  - Changelog: changelog.md

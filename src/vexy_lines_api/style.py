@@ -1,4 +1,4 @@
-# this_file: src/vexy_lines_api/style.py
+# this_file: vexy-lines-apy/src/vexy_lines_api/style.py
 """Style engine: extract, apply, and interpolate fill structures from .lines files.
 
 A Style captures the group->layer->fill tree and document properties from a
@@ -38,6 +38,32 @@ if TYPE_CHECKING:
 _HEX_RGB_LEN = 6
 _HEX_RGBA_LEN = 8
 
+# Map parser FillParams field names to MCP server parameter names.
+# The parser uses XML attribute names; the MCP server uses its own naming.
+PARSER_TO_MCP_PARAMS: dict[str, str] = {
+    "interval": "interval",
+    "angle": "angle",
+    "thickness": "thickness",
+    "thickness_min": "thickness_min",
+    "smoothness": "smoothness",
+    "uplimit": "break_up",
+    "downlimit": "break_down",
+    "multiplier": "contrast",
+    "dispersion": "dispersion",
+}
+"""FillParams field name -> MCP ``set_fill_params`` key name."""
+
+# Spatial params that should be scaled when applying a style in relative mode.
+# These represent physical dimensions (mm, pixels) that change with document size.
+# Excluded: angle, smoothness, uplimit, downlimit, multiplier, shear (ratios/degrees/thresholds).
+SPATIAL_PARAMS: frozenset[str] = frozenset({
+    "interval",
+    "thick_gap",
+    "base_width",
+    "dispersion",
+    "vert_disp",
+})
+
 
 # ---------------------------------------------------------------------------
 # Style dataclass
@@ -68,36 +94,10 @@ class Style:
 
 
 def _parse_lines_file(path: Path) -> LinesDocument:
-    """Parse a .lines file, trying vexy_lines.parse first, then vexy_lines_utils.parser.
+    """Parse a .lines file, importing the parser lazily to keep startup fast."""
+    from vexy_lines import parse  # noqa: PLC0415
 
-    Args:
-        path: Path to the .lines file.
-
-    Returns:
-        Parsed LinesDocument.
-    """
-    # Try the vexy-lines-py package first (it has a types module but parse lives elsewhere)
-    try:
-        from vexy_lines.types import LinesDocument as _LD  # noqa: F811
-
-        # vexy-lines-py is a types-only package; parsing is in vexy-lines-utils
-        _LD  # just check import works
-    except ImportError:
-        pass
-
-    # The actual parse function lives in vexy_lines_utils.parser (vexy-lines-utils package)
-    try:
-        from vexy_lines_utils.parser import parse as _parse  # type: ignore[import-untyped]
-
-        return _parse(path)  # type: ignore[return-value]
-    except ImportError:
-        pass
-
-    msg = (
-        "Cannot parse .lines files: install 'vexy-lines-utils' "
-        "(pip install vexy-lines-utils) which provides the parser."
-    )
-    raise ImportError(msg)
+    return parse(path)
 
 
 def extract_style(path: str | Path) -> Style:
@@ -198,6 +198,138 @@ def interpolate_style(a: Style, b: Style, t: float) -> Style:
 
 
 # ---------------------------------------------------------------------------
+# Relative-mode scaling
+# ---------------------------------------------------------------------------
+
+
+def _scale_fill_params(params: FillParams, scale: float) -> FillParams:
+    """Return a copy of *params* with spatial numeric values multiplied by *scale*.
+
+    Only parameters listed in :data:`SPATIAL_PARAMS` are scaled.  Non-spatial
+    parameters (angles, brightness thresholds, ratios) are left unchanged.
+
+    A *scale* of ``1.0`` returns an identical copy.
+
+    Args:
+        params: Original fill parameters.
+        scale: Multiplicative scale factor (e.g. ``2.0`` doubles spatial values).
+
+    Returns:
+        New :class:`~vexy_lines.types.FillParams` with scaled spatial values.
+    """
+    result = copy.deepcopy(params)
+    if scale == 1.0:
+        return result
+
+    for field_name in NUMERIC_PARAMS:
+        if field_name not in SPATIAL_PARAMS:
+            continue
+        value = getattr(result, field_name, None)
+        if value is not None:
+            setattr(result, field_name, float(value) * scale)
+
+    return result
+
+
+def _compute_relative_scale(style: Style, target_width: float, target_height: float) -> float:
+    """Compute a uniform scale factor from source style dimensions to target dimensions.
+
+    Uses the geometric mean of the X and Y ratios so that scaling is uniform
+    regardless of aspect-ratio differences.  Returns ``1.0`` when the source
+    dimensions are zero (no scaling possible).
+
+    Args:
+        style: Source style containing original document dimensions.
+        target_width: Target document width (pixels or mm, same unit as source).
+        target_height: Target document height (pixels or mm, same unit as source).
+
+    Returns:
+        Geometric-mean scale factor, or ``1.0`` if source dimensions are zero.
+    """
+    src_w = style.props.width_mm
+    src_h = style.props.height_mm
+    if src_w <= 0 or src_h <= 0:
+        logger.warning(
+            "Source style has zero/negative dimensions ({}x{}); relative scaling disabled",
+            src_w,
+            src_h,
+        )
+        return 1.0
+    if target_width <= 0 or target_height <= 0:
+        logger.warning(
+            "Target document has zero/negative dimensions ({}x{}); relative scaling disabled",
+            target_width,
+            target_height,
+        )
+        return 1.0
+
+    import math  # noqa: PLC0415
+
+    scale_x = target_width / src_w
+    scale_y = target_height / src_h
+    return math.sqrt(scale_x * scale_y)
+
+
+def _scale_style(style: Style, scale: float) -> Style:
+    """Return a deep copy of *style* with all spatial fill params scaled.
+
+    Args:
+        style: Original style.
+        scale: Uniform scale factor.
+
+    Returns:
+        New :class:`Style` with scaled fills.  If *scale* is ``1.0`` a plain
+        deep copy is returned.
+    """
+    if scale == 1.0:
+        return Style(
+            groups=copy.deepcopy(style.groups),
+            props=copy.deepcopy(style.props),
+            source_path=style.source_path,
+        )
+
+    def _scale_nodes(nodes: list[GroupInfo | LayerInfo]) -> list[GroupInfo | LayerInfo]:
+        result: list[GroupInfo | LayerInfo] = []
+        for node in nodes:
+            if isinstance(node, GroupInfo):
+                result.append(
+                    GroupInfo(
+                        caption=node.caption,
+                        object_id=node.object_id,
+                        expanded=node.expanded,
+                        children=_scale_nodes(node.children),
+                    )
+                )
+            elif isinstance(node, LayerInfo):
+                scaled_fills = [
+                    FillNode(
+                        xml_tag=f.xml_tag,
+                        caption=f.caption,
+                        params=_scale_fill_params(f.params, scale),
+                        object_id=f.object_id,
+                    )
+                    for f in node.fills
+                ]
+                result.append(
+                    LayerInfo(
+                        caption=node.caption,
+                        object_id=node.object_id,
+                        visible=node.visible,
+                        mask=copy.deepcopy(node.mask),
+                        fills=scaled_fills,
+                        grid_edges=copy.deepcopy(node.grid_edges),
+                    )
+                )
+        return result
+
+    return Style(
+        groups=_scale_nodes(style.groups),
+        props=copy.deepcopy(style.props),
+        source_path=style.source_path,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Application via MCP
 # ---------------------------------------------------------------------------
 
@@ -208,6 +340,7 @@ def apply_style(
     source_image: str | Path,
     *,
     dpi: int = 72,
+    relative: bool = False,
 ) -> str:
     """Apply a style to a source image via MCP and return the SVG result.
 
@@ -215,17 +348,31 @@ def apply_style(
     group->layer->fill structure, sets all fill parameters, renders,
     and exports as SVG.
 
+    When *relative* is ``True``, spatial fill parameters (interval,
+    thickness, base_width, dispersion, vert_disp) are scaled by the
+    geometric mean of the width and height ratios between the source
+    style's document and the new target document.  This makes styles
+    look consistent regardless of image size.
+
     Args:
         client: Connected :class:`~vexy_lines_api.client.MCPClient` instance.
         style: Style to apply.
         source_image: Path to the source image file.
         dpi: Document DPI (lower = faster, 72 good for video).
+        relative: If ``True``, scale spatial params to match target image
+            dimensions (relative mode).  Default ``False`` (absolute mode).
 
     Returns:
         SVG string of the rendered result.
     """
     source_image = Path(source_image).expanduser().resolve()
-    logger.debug("Applying style (source={}) to image {} at {}dpi", style.source_path, source_image, dpi)
+    logger.debug(
+        "Applying style (source={}, relative={}) to image {} at {}dpi",
+        style.source_path,
+        relative,
+        source_image,
+        dpi,
+    )
 
     # 1. Create new document with the source image
     doc_result = client.new_document(source_image=str(source_image), dpi=dpi)
@@ -238,18 +385,26 @@ def apply_style(
         doc_result.dpi,
     )
 
-    # 2. Replicate the style tree
-    for node in style.groups:
+    # 2. Optionally scale style params for relative mode
+    effective_style = style
+    if relative:
+        scale = _compute_relative_scale(style, doc_result.width, doc_result.height)
+        logger.debug("Relative mode: scale factor = {:.4f}", scale)
+        if scale != 1.0:
+            effective_style = _scale_style(style, scale)
+
+    # 3. Replicate the style tree
+    for node in effective_style.groups:
         if isinstance(node, GroupInfo):
             _apply_group(client, node, parent_id=root_id)
         elif isinstance(node, LayerInfo):
             _apply_layer(client, node, group_id=root_id)
 
-    # 3. Render and wait
+    # 4. Render and wait
     logger.debug("Rendering...")
     client.render(timeout=60.0)
 
-    # 4. Export SVG
+    # 5. Export SVG
     logger.debug("Exporting SVG")
     return client.svg()
 
@@ -283,10 +438,14 @@ def _apply_layer(client: MCPClient, layer: LayerInfo, group_id: int) -> None:
 
 
 def _apply_fill(client: MCPClient, fill: FillNode, layer_id: int) -> None:
-    """Add a fill to a layer and set its parameters."""
+    """Add a fill to a layer and apply all its numeric parameters.
+
+    Passes parameters both during creation (``add_fill``) and via a
+    subsequent ``set_fill_params`` call, ensuring the server picks up
+    any params it ignores during initial creation.
+    """
     params = fill.params
 
-    # Build the params dict for add_fill (initial creation)
     init_params = _fill_params_to_dict(params)
 
     result = client.add_fill(
@@ -298,28 +457,32 @@ def _apply_fill(client: MCPClient, fill: FillNode, layer_id: int) -> None:
     fill_id = int(result["id"])
     logger.debug("Added fill '{}' type={} id={}", fill.caption, params.fill_type, fill_id)
 
-    # Set any remaining params via set_fill_params for completeness
+    # Re-apply via set_fill_params: some servers only honour params set this way
     if init_params:
         client.set_fill_params(fill_id, **init_params)
 
 
 def _fill_params_to_dict(params: FillParams) -> dict[str, object]:
-    """Extract all non-None numeric values from FillParams as a dict.
+    """Extract numeric values from FillParams, translated to MCP parameter names.
 
-    Uses the ``NUMERIC_PARAMS`` list from the types module to identify which
-    fields are numeric and should be passed to the MCP API.
+    Reads each field listed in :data:`PARSER_TO_MCP_PARAMS`, translates the
+    field name to the MCP server's expected key, and includes the colour.
 
     Args:
         params: Fill parameters to convert.
 
     Returns:
-        Dict of parameter names to numeric values.
+        Dict of MCP parameter names to values.
     """
     result: dict[str, object] = {}
-    for field_name in NUMERIC_PARAMS:
+    for field_name, mcp_name in PARSER_TO_MCP_PARAMS.items():
         value = getattr(params, field_name, None)
         if value is not None:
-            result[field_name] = value
+            result[mcp_name] = value
+    # Include color_mode for static-colour fills
+    if params.color:
+        result["color"] = params.color
+        result["color_mode"] = 2  # static colour
     return result
 
 
@@ -546,7 +709,7 @@ def _interpolate_doc_props(a: DocumentProps, b: DocumentProps, t: float) -> Docu
     return DocumentProps(
         width_mm=_lerp(a.width_mm, b.width_mm, t),
         height_mm=_lerp(a.height_mm, b.height_mm, t),
-        dpi=a.dpi,  # Keep a's DPI -- not meaningful to interpolate
+        dpi=a.dpi,  # DPI is an integer device setting; interpolating it is nonsensical
         thickness_min=_lerp(a.thickness_min, b.thickness_min, t),
         thickness_max=_lerp(a.thickness_max, b.thickness_max, t),
         interval_min=_lerp(a.interval_min, b.interval_min, t),

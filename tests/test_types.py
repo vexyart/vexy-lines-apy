@@ -1,4 +1,4 @@
-# this_file: tests/test_types.py
+# this_file: vexy-lines-apy/tests/test_types.py
 """Tests for vexy_lines_api.types module."""
 
 from __future__ import annotations

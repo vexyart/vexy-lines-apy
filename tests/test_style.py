@@ -1,4 +1,4 @@
-# this_file: tests/test_style.py
+# this_file: vexy-lines-apy/tests/test_style.py
 """Tests for vexy_lines_api.style module.
 
 Tests cover the style engine: extraction, compatibility checking,
@@ -22,9 +22,11 @@ from vexy_lines.types import (
     LinesDocument,
 )
 from vexy_lines_api.style import (
+    SPATIAL_PARAMS,
     Style,
     _compare_fills,
     _compare_structure,
+    _compute_relative_scale,
     _fill_params_to_dict,
     _interpolate_doc_props,
     _interpolate_fill_params,
@@ -32,6 +34,8 @@ from vexy_lines_api.style import (
     _interpolate_layer,
     _lerp,
     _lerp_color,
+    _scale_fill_params,
+    _scale_style,
     apply_style,
     extract_style,
     interpolate_style,
@@ -440,18 +444,37 @@ class TestInterpolateDocProps:
 class TestFillParamsToDict:
     """Tests for _fill_params_to_dict."""
 
-    def test_extracts_numeric_params(self):
+    def test_extracts_numeric_params_with_mcp_names(self):
         params = FillParams(fill_type="linear", color="#000000", interval=2.0, angle=45.0, smoothness=0.0)
         result = _fill_params_to_dict(params)
         assert "interval" in result
         assert "angle" in result
         assert result["interval"] == 2.0
 
-    def test_excludes_non_numeric(self):
-        params = FillParams(fill_type="linear", color="#000000")
+    def test_translates_parser_names_to_mcp_names(self):
+        params = FillParams(fill_type="linear", color="", uplimit=200.0, downlimit=50.0, multiplier=1.5)
+        result = _fill_params_to_dict(params)
+        assert "break_up" in result
+        assert result["break_up"] == 200.0
+        assert "break_down" in result
+        assert result["break_down"] == 50.0
+        assert "contrast" in result
+        assert result["contrast"] == 1.5
+        # Parser names should NOT appear
+        assert "uplimit" not in result
+        assert "downlimit" not in result
+        assert "multiplier" not in result
+
+    def test_includes_color_when_set(self):
+        params = FillParams(fill_type="linear", color="#ff0000")
+        result = _fill_params_to_dict(params)
+        assert result["color"] == "#ff0000"
+        assert result["color_mode"] == 2
+
+    def test_excludes_fill_type(self):
+        params = FillParams(fill_type="linear", color="")
         result = _fill_params_to_dict(params)
         assert "fill_type" not in result
-        assert "color" not in result
 
 
 # ---------------------------------------------------------------------------
@@ -538,3 +561,256 @@ class TestApplyStyle:
         assert mock_client.add_group.call_count == 1
         assert mock_client.add_layer.call_count == 2
         assert mock_client.add_fill.call_count == 2
+
+
+# ---------------------------------------------------------------------------
+# _scale_fill_params
+# ---------------------------------------------------------------------------
+
+
+class TestScaleFillParams:
+    """Tests for _scale_fill_params."""
+
+    def test_scale_factor_1_returns_identical_copy(self):
+        params = FillParams(fill_type="linear", color="#ff0000", interval=2.0, angle=45.0)
+        result = _scale_fill_params(params, 1.0)
+        assert result.interval == 2.0
+        assert result.angle == 45.0
+        assert result is not params  # must be a copy
+
+    def test_spatial_params_scaled(self):
+        params = FillParams(
+            fill_type="linear",
+            color="#000000",
+            interval=4.0,
+            thickness=2.0,
+            base_width=1.0,
+            dispersion=3.0,
+        )
+        result = _scale_fill_params(params, 2.0)
+        assert result.interval == 8.0, "interval should be scaled"
+        assert result.base_width == 2.0, "base_width should be scaled"
+        assert result.dispersion == 6.0, "dispersion should be scaled"
+
+    def test_non_spatial_params_unchanged(self):
+        params = FillParams(
+            fill_type="linear",
+            color="#000000",
+            angle=90.0,
+            smoothness=0.5,
+            uplimit=200.0,
+            downlimit=50.0,
+            multiplier=1.5,
+            shear=10.0,
+        )
+        result = _scale_fill_params(params, 3.0)
+        assert result.angle == 90.0, "angle should NOT be scaled"
+        assert result.smoothness == 0.5, "smoothness should NOT be scaled"
+        assert result.uplimit == 200.0, "uplimit should NOT be scaled"
+        assert result.downlimit == 50.0, "downlimit should NOT be scaled"
+        assert result.multiplier == 1.5, "multiplier should NOT be scaled"
+        assert result.shear == 10.0, "shear should NOT be scaled"
+
+    def test_color_unchanged(self):
+        params = FillParams(fill_type="linear", color="#ff0000", interval=1.0)
+        result = _scale_fill_params(params, 2.0)
+        assert result.color == "#ff0000"
+
+    def test_fill_type_unchanged(self):
+        params = FillParams(fill_type="circular", color="#000000", interval=1.0)
+        result = _scale_fill_params(params, 5.0)
+        assert result.fill_type == "circular"
+
+    def test_original_not_mutated(self):
+        params = FillParams(fill_type="linear", color="#000000", interval=2.0)
+        _scale_fill_params(params, 3.0)
+        assert params.interval == 2.0, "original should not be mutated"
+
+    def test_scale_factor_zero(self):
+        params = FillParams(fill_type="linear", color="#000000", interval=5.0, base_width=2.0)
+        result = _scale_fill_params(params, 0.0)
+        assert result.interval == 0.0
+        assert result.base_width == 0.0
+
+    def test_fractional_scale(self):
+        params = FillParams(fill_type="linear", color="#000000", interval=10.0)
+        result = _scale_fill_params(params, 0.5)
+        assert result.interval == 5.0
+
+
+# ---------------------------------------------------------------------------
+# _compute_relative_scale
+# ---------------------------------------------------------------------------
+
+
+class TestComputeRelativeScale:
+    """Tests for _compute_relative_scale."""
+
+    def test_same_dimensions_returns_1(self):
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
+        scale = _compute_relative_scale(style, 100.0, 100.0)
+        assert scale == 1.0
+
+    def test_double_dimensions(self):
+        import math
+
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
+        scale = _compute_relative_scale(style, 200.0, 200.0)
+        assert scale == pytest.approx(2.0), "doubling both dims should give scale=2.0"
+
+    def test_half_dimensions(self):
+        style = _make_style(props=_make_props(width_mm=200.0, height_mm=200.0))
+        scale = _compute_relative_scale(style, 100.0, 100.0)
+        assert scale == pytest.approx(0.5)
+
+    def test_asymmetric_scaling_uses_geometric_mean(self):
+        import math
+
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
+        # scale_x=4, scale_y=1 => geometric mean = sqrt(4*1) = 2.0
+        scale = _compute_relative_scale(style, 400.0, 100.0)
+        assert scale == pytest.approx(2.0)
+
+    def test_zero_source_width_returns_1(self):
+        style = _make_style(props=_make_props(width_mm=0.0, height_mm=100.0))
+        scale = _compute_relative_scale(style, 200.0, 200.0)
+        assert scale == 1.0
+
+    def test_zero_source_height_returns_1(self):
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=0.0))
+        scale = _compute_relative_scale(style, 200.0, 200.0)
+        assert scale == 1.0
+
+    def test_zero_target_width_returns_1(self):
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
+        scale = _compute_relative_scale(style, 0.0, 200.0)
+        assert scale == 1.0
+
+    def test_zero_target_height_returns_1(self):
+        style = _make_style(props=_make_props(width_mm=100.0, height_mm=100.0))
+        scale = _compute_relative_scale(style, 200.0, 0.0)
+        assert scale == 1.0
+
+    def test_negative_source_returns_1(self):
+        style = _make_style(props=_make_props(width_mm=-100.0, height_mm=100.0))
+        scale = _compute_relative_scale(style, 200.0, 200.0)
+        assert scale == 1.0
+
+
+# ---------------------------------------------------------------------------
+# _scale_style
+# ---------------------------------------------------------------------------
+
+
+class TestScaleStyle:
+    """Tests for _scale_style."""
+
+    def test_scale_1_returns_deep_copy(self):
+        style = _make_style()
+        result = _scale_style(style, 1.0)
+        assert result is not style
+        assert result.groups is not style.groups
+
+    def test_fills_scaled_in_nested_tree(self):
+        fill = _make_fill(interval=4.0)
+        layer = _make_layer(fills=[fill])
+        group = _make_group(children=[layer])
+        style = _make_style(groups=[group])
+
+        result = _scale_style(style, 2.0)
+        result_fill = result.groups[0].children[0].fills[0].params  # type: ignore[union-attr]
+        assert result_fill.interval == 8.0
+
+    def test_original_not_mutated(self):
+        fill = _make_fill(interval=4.0)
+        layer = _make_layer(fills=[fill])
+        group = _make_group(children=[layer])
+        style = _make_style(groups=[group])
+
+        _scale_style(style, 2.0)
+        original_fill = style.groups[0].children[0].fills[0].params  # type: ignore[union-attr]
+        assert original_fill.interval == 4.0
+
+    def test_props_not_scaled(self):
+        """Document props should be deep-copied but not scaled."""
+        style = _make_style(props=_make_props(width_mm=100.0, interval_min=1.0))
+        result = _scale_style(style, 2.0)
+        assert result.props.width_mm == 100.0
+        assert result.props.interval_min == 1.0
+
+
+# ---------------------------------------------------------------------------
+# apply_style with relative mode (mocked client)
+# ---------------------------------------------------------------------------
+
+
+class TestApplyStyleRelative:
+    """Tests for apply_style with relative=True."""
+
+    def _mock_client(self, target_width: float = 200.0, target_height: float = 200.0):
+        mock = MagicMock()
+        mock.new_document.return_value = MagicMock(
+            root_id=1, width=target_width, height=target_height, dpi=72,
+        )
+        mock.add_group.return_value = {"id": 2}
+        mock.add_layer.return_value = {"id": 3}
+        mock.add_fill.return_value = {"id": 4}
+        mock.render.return_value = True
+        mock.svg.return_value = "<svg>test</svg>"
+        return mock
+
+    def test_absolute_mode_does_not_scale(self):
+        """With relative=False (default), params are used as-is."""
+        client = self._mock_client(target_width=400.0, target_height=400.0)
+        fill = _make_fill(interval=2.0)
+        layer = _make_layer(fills=[fill])
+        group = _make_group(children=[layer])
+        style = _make_style(
+            groups=[group],
+            props=_make_props(width_mm=100.0, height_mm=100.0),
+        )
+
+        apply_style(client, style, "/fake.png", relative=False)
+
+        # Check the interval passed to set_fill_params
+        call_kwargs = client.set_fill_params.call_args
+        assert call_kwargs is not None
+        _, kwargs = call_kwargs
+        assert kwargs["interval"] == 2.0, "absolute mode should not scale interval"
+
+    def test_relative_mode_scales_params(self):
+        """With relative=True, spatial params are scaled by the dimension ratio."""
+        # Source style: 100x100, target: 200x200 => scale = 2.0
+        client = self._mock_client(target_width=200.0, target_height=200.0)
+        fill = _make_fill(interval=2.0)
+        layer = _make_layer(fills=[fill])
+        group = _make_group(children=[layer])
+        style = _make_style(
+            groups=[group],
+            props=_make_props(width_mm=100.0, height_mm=100.0),
+        )
+
+        apply_style(client, style, "/fake.png", relative=True)
+
+        call_kwargs = client.set_fill_params.call_args
+        assert call_kwargs is not None
+        _, kwargs = call_kwargs
+        assert kwargs["interval"] == pytest.approx(4.0), "relative mode should double interval"
+
+    def test_relative_mode_same_size_no_change(self):
+        """When source and target are the same size, relative mode changes nothing."""
+        client = self._mock_client(target_width=100.0, target_height=100.0)
+        fill = _make_fill(interval=5.0)
+        layer = _make_layer(fills=[fill])
+        group = _make_group(children=[layer])
+        style = _make_style(
+            groups=[group],
+            props=_make_props(width_mm=100.0, height_mm=100.0),
+        )
+
+        apply_style(client, style, "/fake.png", relative=True)
+
+        call_kwargs = client.set_fill_params.call_args
+        assert call_kwargs is not None
+        _, kwargs = call_kwargs
+        assert kwargs["interval"] == 5.0, "same size should not change interval"
