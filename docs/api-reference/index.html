@@ -819,10 +819,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#apply_styleclient-style-source_image-dpi72-relativefalse-str" class="md-nav__link">
+  <a href="#apply_styleclient-style-source_image-dpi72-relativefalse-save_lines_tonone-str" class="md-nav__link">
     <span class="md-ellipsis">
       
-        apply_style(client, style, source_image, dpi=72, relative=False) -&gt; str
+        apply_style(client, style, source_image, dpi=72, relative=False, save_lines_to=None) -&gt; str
       
     </span>
   </a>
@@ -853,6 +853,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JobFolder
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1532,10 +1543,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#apply_styleclient-style-source_image-dpi72-relativefalse-str" class="md-nav__link">
+  <a href="#apply_styleclient-style-source_image-dpi72-relativefalse-save_lines_tonone-str" class="md-nav__link">
     <span class="md-ellipsis">
       
-        apply_style(client, style, source_image, dpi=72, relative=False) -&gt; str
+        apply_style(client, style, source_image, dpi=72, relative=False, save_lines_to=None) -&gt; str
       
     </span>
   </a>
@@ -1566,6 +1577,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JobFolder
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1817,13 +1839,118 @@
 <h2 id="style-functions">Style functions<a class="headerlink" href="#style-functions" title="Permanent link">&para;</a></h2>
 <h3 id="extract_stylepath-style"><code>extract_style(path) -&gt; Style</code><a class="headerlink" href="#extract_stylepath-style" title="Permanent link">&para;</a></h3>
 <p>Parse a <code>.lines</code> file and return a <code>Style</code> containing the full group/layer/fill tree and document properties. Does not need the app.</p>
-<h3 id="apply_styleclient-style-source_image-dpi72-relativefalse-str"><code>apply_style(client, style, source_image, dpi=72, relative=False) -&gt; str</code><a class="headerlink" href="#apply_styleclient-style-source_image-dpi72-relativefalse-str" title="Permanent link">&para;</a></h3>
+<h3 id="apply_styleclient-style-source_image-dpi72-relativefalse-save_lines_tonone-str"><code>apply_style(client, style, source_image, dpi=72, relative=False, save_lines_to=None) -&gt; str</code><a class="headerlink" href="#apply_styleclient-style-source_image-dpi72-relativefalse-save_lines_tonone-str" title="Permanent link">&para;</a></h3>
 <p>Apply a style to a source image via MCP. Creates a new document, replicates the style tree, renders, and exports SVG.</p>
 <p>When <code>relative=True</code>, spatial fill parameters (interval, thickness, base_width, dispersion) are scaled by the geometric mean of width/height ratios between the source style's document and the target. Keeps styles looking consistent across different image sizes.</p>
+<p>When <code>save_lines_to</code> is provided (a file path), the intermediate <code>.lines</code> document is saved to that path after style transfer. Useful for preserving the full artifact chain or re-opening the result in the Vexy Lines app.</p>
 <h3 id="interpolate_stylea-b-t-style"><code>interpolate_style(a, b, t) -&gt; Style</code><a class="headerlink" href="#interpolate_stylea-b-t-style" title="Permanent link">&para;</a></h3>
 <p>Blend two compatible styles. <code>t=0</code> returns style A, <code>t=1</code> returns style B, <code>t=0.5</code> is the midpoint. Numeric fill parameters and hex colours interpolate linearly.</p>
 <h3 id="styles_compatiblea-b-bool"><code>styles_compatible(a, b) -&gt; bool</code><a class="headerlink" href="#styles_compatiblea-b-bool" title="Permanent link">&para;</a></h3>
 <p>Check whether two styles have matching tree structures (same groups, layers, fills, fill types). Required for interpolation.</p>
+<hr />
+<h2 id="jobfolder">JobFolder<a class="headerlink" href="#jobfolder" title="Permanent link">&para;</a></h2>
+<p>Persistent job folder for resumable export pipelines. Stores intermediate artifacts alongside the final output.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">vexy_lines_api.export</span> <span class="kn">import</span> <span class="n">JobFolder</span>
+
+<span class="n">jf</span> <span class="o">=</span> <span class="n">JobFolder</span><span class="p">(</span><span class="s2">&quot;output.mp4&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>          <span class="c1"># /path/to/output-vljob/</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">output_stem</span><span class="p">)</span>   <span class="c1"># &quot;output&quot;</span>
+</code></pre></div>
+<p><strong>Constructor args:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>output_path</code></td>
+<td><code>str \| Path</code></td>
+<td>required</td>
+<td>Final output destination (file or directory)</td>
+</tr>
+<tr>
+<td><code>force</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Delete existing job folder and start fresh</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Methods:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>asset_path(name, ext)</code></td>
+<td><code>Path</code></td>
+<td><code>{job_folder}/{name}.{ext}</code></td>
+</tr>
+<tr>
+<td><code>frame_path(name, frame_num, ext)</code></td>
+<td><code>Path</code></td>
+<td><code>{job_folder}/{name}--{N}.{ext}</code> (not zero-padded)</td>
+</tr>
+<tr>
+<td><code>frame_src_path(name, frame_num, ext)</code></td>
+<td><code>Path</code></td>
+<td><code>{job_folder}/src--{name}--{N}.{ext}</code></td>
+</tr>
+<tr>
+<td><code>existing_frames(name, ext)</code></td>
+<td><code>set[int]</code></td>
+<td>Frame numbers already on disk</td>
+</tr>
+<tr>
+<td><code>existing_src_frames(name, ext)</code></td>
+<td><code>set[int]</code></td>
+<td>Source frame numbers already on disk</td>
+</tr>
+<tr>
+<td><code>copy_to_output(src_name, dest)</code></td>
+<td><code>Path</code></td>
+<td>Copy file from job folder to destination</td>
+</tr>
+<tr>
+<td><code>cleanup()</code></td>
+<td><code>None</code></td>
+<td>Delete the entire job folder</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Path resolution:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Output type</th>
+<th>Output path</th>
+<th>Job folder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File (<code>.mp4</code>, <code>.png</code>, etc.)</td>
+<td><code>./out/video.mp4</code></td>
+<td><code>./out/video-vljob/</code></td>
+</tr>
+<tr>
+<td>Directory</td>
+<td><code>./output/</code></td>
+<td><code>./output-vljob/</code></td>
+</tr>
+</tbody>
+</table>
+<p>Override with <code>VEXY_LINES_JOB_FOLDER</code> environment variable.</p>
 <hr />
 <h2 id="dataclasses">Dataclasses<a class="headerlink" href="#dataclasses" title="Permanent link">&para;</a></h2>
 <h3 id="style"><code>Style</code><a class="headerlink" href="#style" title="Permanent link">&para;</a></h3>

@@ -180,11 +180,13 @@ except MCPError as e:
 
 Parse a `.lines` file and return a `Style` containing the full group/layer/fill tree and document properties. Does not need the app.
 
-### `apply_style(client, style, source_image, dpi=72, relative=False) -> str`
+### `apply_style(client, style, source_image, dpi=72, relative=False, save_lines_to=None) -> str`
 
 Apply a style to a source image via MCP. Creates a new document, replicates the style tree, renders, and exports SVG.
 
 When `relative=True`, spatial fill parameters (interval, thickness, base_width, dispersion) are scaled by the geometric mean of width/height ratios between the source style's document and the target. Keeps styles looking consistent across different image sizes.
+
+When `save_lines_to` is provided (a file path), the intermediate `.lines` document is saved to that path after style transfer. Useful for preserving the full artifact chain or re-opening the result in the Vexy Lines app.
 
 ### `interpolate_style(a, b, t) -> Style`
 
@@ -193,6 +195,48 @@ Blend two compatible styles. `t=0` returns style A, `t=1` returns style B, `t=0.
 ### `styles_compatible(a, b) -> bool`
 
 Check whether two styles have matching tree structures (same groups, layers, fills, fill types). Required for interpolation.
+
+---
+
+## JobFolder
+
+Persistent job folder for resumable export pipelines. Stores intermediate artifacts alongside the final output.
+
+```python
+from vexy_lines_api.export import JobFolder
+
+jf = JobFolder("output.mp4", force=False)
+print(jf.path)          # /path/to/output-vljob/
+print(jf.output_stem)   # "output"
+```
+
+**Constructor args:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `output_path` | `str \| Path` | required | Final output destination (file or directory) |
+| `force` | `bool` | `False` | Delete existing job folder and start fresh |
+
+**Methods:**
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `asset_path(name, ext)` | `Path` | `{job_folder}/{name}.{ext}` |
+| `frame_path(name, frame_num, ext)` | `Path` | `{job_folder}/{name}--{N}.{ext}` (not zero-padded) |
+| `frame_src_path(name, frame_num, ext)` | `Path` | `{job_folder}/src--{name}--{N}.{ext}` |
+| `existing_frames(name, ext)` | `set[int]` | Frame numbers already on disk |
+| `existing_src_frames(name, ext)` | `set[int]` | Source frame numbers already on disk |
+| `copy_to_output(src_name, dest)` | `Path` | Copy file from job folder to destination |
+| `cleanup()` | `None` | Delete the entire job folder |
+
+**Path resolution:**
+
+| Output type | Output path | Job folder |
+|-------------|-------------|------------|
+| File (`.mp4`, `.png`, etc.) | `./out/video.mp4` | `./out/video-vljob/` |
+| Directory | `./output/` | `./output-vljob/` |
+
+Override with `VEXY_LINES_JOB_FOLDER` environment variable.
 
 ---
 

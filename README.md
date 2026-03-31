@@ -105,6 +105,31 @@ with MCPClient() as vl:
 
 Two styles are compatible for interpolation when they share the same group/layer/fill structure with matching fill types. Check with `styles_compatible(a, b)` before blending.
 
+## Job folder (resumable exports)
+
+Long-running exports (especially video) save every intermediate artifact to a persistent **job folder** alongside the output. If a job is interrupted, re-running the same command resumes from where it left off.
+
+```python
+from vexy_lines_api.export import ExportRequest, process_export
+
+request = ExportRequest(
+    mode="video",
+    input_paths=["clip.mp4"],
+    style_path="look.lines",
+    end_style_path=None,
+    output_path="styled.mp4",
+    format="MP4",
+    size="1x",
+)
+process_export(request)
+# Creates styled-vljob/ with all intermediates:
+#   src--styled--1.png, styled--1.lines, styled--1.svg, styled--1.png, ...
+```
+
+Use `force=True` to discard previous progress and start fresh. Use `cleanup=True` to delete the job folder after the final output is written.
+
+Override the job folder location with the `VEXY_LINES_JOB_FOLDER` environment variable.
+
 ## API reference
 
 ### Document
@@ -175,13 +200,14 @@ Two styles are compatible for interpolation when they share the same group/layer
 | Function | Description |
 |---|---|
 | `extract_style(path)` | Parse a `.lines` file into a `Style` |
-| `apply_style(client, style, source_image, dpi)` | Apply style to an image, return SVG string |
+| `apply_style(client, style, source_image, dpi, save_lines_to)` | Apply style to an image, return SVG string. Optionally save the intermediate `.lines` file. |
 | `interpolate_style(a, b, t)` | Blend two styles at ratio `t` in [0, 1] |
 | `styles_compatible(a, b)` | Check if two styles can be interpolated |
+| `JobFolder(output_path, force)` | Persistent job folder for resumable exports |
 
 ### Types
 
-`DocumentInfo`, `LayerNode`, `NewDocumentResult`, `RenderStatus`, `Style`
+`DocumentInfo`, `JobFolder`, `LayerNode`, `NewDocumentResult`, `RenderStatus`, `Style`
 
 ## Dependencies
 

@@ -138,3 +138,16 @@ with MCPClient() as vl:
 ```
 
 The CLI command `vexy-lines style-transfer --style start.lines --end-style end.lines` does this automatically.
+
+## Preserving intermediates
+
+When using the export pipeline or job folder system, you can save the intermediate `.lines` file created during style transfer:
+
+```python
+svg = apply_style(client, style, "photo.jpg", save_lines_to="styled.lines")
+# styled.lines is now a valid .lines file with the style applied to photo.jpg
+```
+
+This is used automatically by the job folder system — every export saves the complete chain of `.lines` → `.svg` → final format. But you can also use it directly when you want to keep the `.lines` for later editing in the Vexy Lines app.
+
+The fast path copies the modified `.lines` (with swapped source image) before opening it. The slow path calls `save_document()` after building and rendering the fill tree.

@@ -495,6 +495,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#preserving-intermediates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preserving intermediates
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -721,6 +732,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#preserving-intermediates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preserving intermediates
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -862,6 +884,13 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">svg</span><span class="p">)</span>
 </code></pre></div>
 <p>The CLI command <code>vexy-lines style-transfer --style start.lines --end-style end.lines</code> does this automatically.</p>
+<h2 id="preserving-intermediates">Preserving intermediates<a class="headerlink" href="#preserving-intermediates" title="Permanent link">&para;</a></h2>
+<p>When using the export pipeline or job folder system, you can save the intermediate <code>.lines</code> file created during style transfer:</p>
+<div class="highlight"><pre><span></span><code><span class="n">svg</span> <span class="o">=</span> <span class="n">apply_style</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="s2">&quot;photo.jpg&quot;</span><span class="p">,</span> <span class="n">save_lines_to</span><span class="o">=</span><span class="s2">&quot;styled.lines&quot;</span><span class="p">)</span>
+<span class="c1"># styled.lines is now a valid .lines file with the style applied to photo.jpg</span>
+</code></pre></div>
+<p>This is used automatically by the job folder system — every export saves the complete chain of <code>.lines</code> → <code>.svg</code> → final format. But you can also use it directly when you want to keep the <code>.lines</code> for later editing in the Vexy Lines app.</p>
+<p>The fast path copies the modified <code>.lines</code> (with swapped source image) before opening it. The slow path calls <code>save_document()</code> after building and rendering the fill tree.</p>
 
 
 

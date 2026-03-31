@@ -413,6 +413,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -429,6 +447,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#2026-04-01-job-folder-system-issue-617" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-04-01 — Job Folder System (Issue #617)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#previous-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previous releases
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -454,6 +513,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#2026-04-01-job-folder-system-issue-617" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-04-01 — Job Folder System (Issue #617)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#previous-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previous releases
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -468,7 +557,19 @@
                   
 
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
-<p>See <a href="https://github.com/vexyart/vexy-lines/blob/main/vexy-lines-apy/CHANGELOG.md">CHANGELOG.md</a> for the full release history.</p>
+<h2 id="2026-04-01-job-folder-system-issue-617">2026-04-01 — Job Folder System (Issue #617)<a class="headerlink" href="#2026-04-01-job-folder-system-issue-617" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>feat</strong>: New <code>JobFolder</code> class in <code>export/job.py</code> — persistent intermediate file storage alongside output, replacing temp directories. Supports resume, force-clean, and cleanup modes.</li>
+<li><strong>feat</strong>: <code>ExportRequest</code> gains <code>force</code> and <code>cleanup</code> fields for controlling job folder lifecycle.</li>
+<li><strong>feat</strong>: <code>apply_style()</code> gains <code>save_lines_to</code> parameter — saves the styled <code>.lines</code> document to a specified path during style transfer.</li>
+<li><strong>feat</strong>: All export processors (lines, images, video) now save the complete artifact chain to the job folder: <code>.lines</code> → <code>.svg</code> → final format (<code>.png</code>/<code>.jpg</code>/<code>.mp4</code>).</li>
+<li><strong>feat</strong>: Video export uses a two-phase pipeline: Phase 1 saves styled PNG frames to the job folder (skipping cached frames on resume), Phase 2 assembles the MP4 from those frames.</li>
+<li><strong>feat</strong>: Source video frames stored with <code>src--</code> prefix (<code>src--{stem}--{N}.png</code>), styled output as <code>{stem}--{N}.{ext}</code>. Frame numbers are 1-based and not zero-padded.</li>
+<li><strong>feat</strong>: <code>VEXY_LINES_JOB_FOLDER</code> environment variable overrides computed job folder path.</li>
+<li><strong>test</strong>: 24 new tests for <code>JobFolder</code> — path resolution, frame naming, resume detection, force/cleanup, copy-to-output.</li>
+</ul>
+<h2 id="previous-releases">Previous releases<a class="headerlink" href="#previous-releases" title="Permanent link">&para;</a></h2>
+<p>See <a href="https://github.com/vexyart/vexy-lines-apy/releases">GitHub releases</a> for earlier versions.</p>
 
 
 
