@@ -160,28 +160,28 @@ class TestExistingFrames:
 
 
 class TestFrameSrcPath:
-    """frame_src_path returns {name}--{N}-src.{ext} paths."""
+    """frame_src_path returns src--{name}--{N}.{ext} paths."""
 
     def test_frame_src_path_format(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
-        assert jf.frame_src_path("video", 1, "png") == jf.path / "video--1-src.png"
-        assert jf.frame_src_path("video", 42, "png") == jf.path / "video--42-src.png"
+        assert jf.frame_src_path("video", 1, "png") == jf.path / "src--video--1.png"
+        assert jf.frame_src_path("video", 42, "png") == jf.path / "src--video--42.png"
 
 
 class TestExistingSrcFrames:
-    """existing_src_frames scans for {name}--{N}-src.{ext} files."""
+    """existing_src_frames scans for src--{name}--{N}.{ext} files."""
 
     def test_existing_src_frames_finds_matching(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
-        (jf.path / "video--1-src.png").write_bytes(b"")
-        (jf.path / "video--5-src.png").write_bytes(b"")
+        (jf.path / "src--video--1.png").write_bytes(b"")
+        (jf.path / "src--video--5.png").write_bytes(b"")
         result = jf.existing_src_frames("video", "png")
         assert result == {1, 5}
 
     def test_existing_src_frames_ignores_styled_frames(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
         (jf.path / "video--1.png").write_bytes(b"")  # styled, not src
-        (jf.path / "video--2-src.png").write_bytes(b"")  # src
+        (jf.path / "src--video--2.png").write_bytes(b"")  # src
         result = jf.existing_src_frames("video", "png")
         assert result == {2}
 
