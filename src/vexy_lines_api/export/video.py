@@ -250,8 +250,20 @@ def process_video_to_mp4(
                     if end_style is not None and styles_compatible(style, end_style):
                         current_style = interpolate_style(style, end_style, t)
 
+                    # Compute intermediate paths
+                    lines_dest = job_folder.frame_path(output_stem, frame_num, "lines")
+                    svg_dest = job_folder.frame_path(output_stem, frame_num, "svg")
+
                     try:
-                        svg_string = apply_style(client, current_style, str(src_path), relative=relative_style, style_mode=style_mode)
+                        svg_string = apply_style(
+                            client, current_style, str(src_path),
+                            relative=relative_style, style_mode=style_mode,
+                            save_lines_to=str(lines_dest) if not lines_dest.exists() else None,
+                        )
+                        # Save SVG intermediate
+                        if not svg_dest.exists():
+                            svg_dest.write_text(svg_string, encoding="utf-8")
+
                         styled_img = svg_to_pil(svg_string, out_width, out_height).convert("RGB")
                     except Exception:
                         logger.opt(exception=True).debug("Style failed on frame {}", frame_num)
@@ -369,7 +381,16 @@ def process_video_to_frames(
                             src_path = job_folder.frame_src_path(output_stem, frame_num, "png")
                             if not src_path.exists():
                                 src_path.write_bytes(frame_bytes)
-                            result = apply_style(client, current_style, str(src_path), relative=relative_style, style_mode=style_mode)
+
+                            # Compute intermediate paths
+                            lines_dest = job_folder.frame_path(output_stem, frame_num, "lines")
+                            svg_dest = job_folder.frame_path(output_stem, frame_num, "svg")
+
+                            result = apply_style(
+                                client, current_style, str(src_path),
+                                relative=relative_style, style_mode=style_mode,
+                                save_lines_to=str(lines_dest) if not lines_dest.exists() else None,
+                            )
                         else:
                             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
                                 tmp.write(frame_bytes)
@@ -380,6 +401,12 @@ def process_video_to_frames(
                                 tmp_path.unlink(missing_ok=True)
 
                         frame_bytes = result if isinstance(result, bytes) else result.encode()
+
+                        # Save SVG intermediate to job folder
+                        if job_folder is not None and not svg_dest.exists():
+                            svg_text = frame_bytes.decode() if isinstance(frame_bytes, bytes) else frame_bytes
+                            svg_dest.write_text(svg_text, encoding="utf-8")
+
                         try:
                             svg_str = frame_bytes.decode() if isinstance(frame_bytes, bytes) else frame_bytes
                             fw, fh = estimate_svg_dimensions(svg_str)

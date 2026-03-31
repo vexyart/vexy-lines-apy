@@ -110,7 +110,18 @@ def process_lines(
                     tmp.write(img_bytes)
                     tmp_path = Path(tmp.name)
                 try:
-                    svg_text = apply_style(client, current_style, str(tmp_path), relative=relative_style, style_mode=style_mode)
+                    # Save .lines intermediate when job folder is active
+                    lines_dest: Path | None = None
+                    if job_folder is not None:
+                        lines_dest = job_folder.asset_path(stem, "lines")
+                        if lines_dest.exists():
+                            lines_dest = None  # already saved, skip
+
+                    svg_text = apply_style(
+                        client, current_style, str(tmp_path),
+                        relative=relative_style, style_mode=style_mode,
+                        save_lines_to=str(lines_dest) if lines_dest is not None else None,
+                    )
                     width, height = estimate_svg_dimensions(svg_text)
                     image = svg_to_pil(svg_text, width, height)
                     preview_buf = io.BytesIO()
@@ -118,10 +129,16 @@ def process_lines(
                     report_preview(on_preview, preview_buf.getvalue())
 
                     if job_folder is not None:
-                        # Save to job folder first, then copy to output
+                        # Save SVG intermediate (always, unless already exists)
+                        svg_dest = job_folder.asset_path(stem, "svg")
+                        if not svg_dest.exists():
+                            svg_dest.write_text(svg_text, encoding="utf-8")
+
+                        # Save final format to job folder, then copy to output
                         jf_asset = job_folder.asset_path(stem, ext)
                         if fmt == "SVG":
-                            jf_asset.write_text(svg_text, encoding="utf-8")
+                            if not jf_asset.exists():
+                                jf_asset.write_text(svg_text, encoding="utf-8")
                         elif fmt in ("PNG", "JPG"):
                             save_image_bytes(svg_text.encode(), jf_asset, fmt, multiplier)
                         job_folder.copy_to_output(jf_asset.name, out_dir / f"{stem}.{ext}")
@@ -148,6 +165,13 @@ def process_lines(
             try:
                 client.open_document(path)
                 client.render()
+
+                # Save .lines intermediate: copy input .lines to job folder
+                if job_folder is not None:
+                    jf_lines = job_folder.asset_path(stem, "lines")
+                    if not jf_lines.exists():
+                        shutil.copy2(path, jf_lines)
+
                 if fmt == "SVG":
                     if job_folder is not None:
                         jf_dest = job_folder.asset_path(stem, "svg")
@@ -156,6 +180,13 @@ def process_lines(
                     else:
                         client.export_svg(str(out_dir / f"{stem}.svg"))
                 elif fmt == "PNG":
+                    # Save SVG intermediate to job folder alongside raster output
+                    if job_folder is not None:
+                        jf_svg = job_folder.asset_path(stem, "svg")
+                        if not jf_svg.exists():
+                            svg_text = client.svg()
+                            jf_svg.write_text(svg_text, encoding="utf-8")
+
                     if job_folder is not None:
                         jf_dest = job_folder.asset_path(stem, "png")
                         client.export_png(str(jf_dest))
@@ -170,6 +201,13 @@ def process_lines(
                         if multiplier > 1:
                             save_image_bytes(dest.read_bytes(), dest, fmt, multiplier)
                 elif fmt == "JPG":
+                    # Save SVG intermediate to job folder alongside raster output
+                    if job_folder is not None:
+                        jf_svg = job_folder.asset_path(stem, "svg")
+                        if not jf_svg.exists():
+                            svg_text = client.svg()
+                            jf_svg.write_text(svg_text, encoding="utf-8")
+
                     if job_folder is not None:
                         jf_dest = job_folder.asset_path(stem, "jpg")
                         client.export_jpeg(str(jf_dest))

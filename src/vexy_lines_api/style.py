@@ -16,6 +16,7 @@ Pipeline::
 from __future__ import annotations
 
 import copy
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
@@ -388,6 +389,7 @@ def apply_style(
     relative: bool = False,
     render_timeout: float = 300.0,
     style_mode: Literal["auto", "fast", "slow"] = "fast",
+    save_lines_to: str | Path | None = None,
 ) -> str:
     """Apply a style to a source image via MCP and return the SVG result.
 
@@ -410,6 +412,9 @@ def apply_style(
             dimensions (relative mode).  Default ``False`` (absolute mode).
         render_timeout: Maximum seconds to wait for the render to complete.
             Complex fills (Fractals) at high resolution may need 120-300s.
+        save_lines_to: If set, save the styled ``.lines`` document to this
+            path before exporting SVG.  Used by the job folder system to
+            preserve intermediate artifacts.
 
     Returns:
         SVG string of the rendered result.
@@ -437,7 +442,7 @@ def apply_style(
         if not style.source_path or not Path(style.source_path).is_file():
             logger.warning("Fast mode requested but source .lines not available; falling back to slow")
         else:
-            return _apply_style_fast(client, style, source_image, render_timeout=render_timeout)
+            return _apply_style_fast(client, style, source_image, render_timeout=render_timeout, save_lines_to=save_lines_to)
 
     # 1. Create new document with the source image
     doc_result = client.new_document(source_image=str(source_image), dpi=dpi)
@@ -470,6 +475,11 @@ def apply_style(
     # 4. Render and wait
     logger.debug("Rendering...")
     client.render(timeout=render_timeout)
+
+    # Save .lines if requested
+    if save_lines_to is not None:
+        client.save_document(str(save_lines_to))
+        logger.debug("Saved .lines to {}", save_lines_to)
 
     # 5. Export SVG
     logger.debug("Exporting SVG")
@@ -594,12 +604,21 @@ def _apply_style_fast(
     source_image: Path,
     *,
     render_timeout: float = 300.0,
+    save_lines_to: str | Path | None = None,
 ) -> str:
     """Fast path: swap source image at XML level, open modified .lines, render.
 
     If the new image has different dimensions from the original embedded source,
     it is resized to fit (downscaled if larger, padded with white if smaller).
     This preserves all fill parameters losslessly.
+
+    Args:
+        client: Connected MCP client.
+        style: Style with source_path pointing to the original .lines file.
+        source_image: Path to the new source image to swap in.
+        render_timeout: Maximum seconds to wait for render.
+        save_lines_to: If set, copy the modified .lines to this path before
+            opening it in the app.  Used to preserve intermediate artifacts.
     """
     import tempfile  # noqa: PLC0415
 
@@ -621,6 +640,12 @@ def _apply_style_fast(
             tmp_path,
             target_size=style.source_image_size,
         )
+        # Save .lines to job folder if requested
+        if save_lines_to is not None:
+            Path(save_lines_to).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(tmp_path, save_lines_to)
+            logger.debug("Saved .lines to {}", save_lines_to)
+
         client.open_document(str(tmp_path))
         client.render(timeout=render_timeout)
         return client.svg()

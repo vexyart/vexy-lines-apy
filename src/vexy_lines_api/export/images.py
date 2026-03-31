@@ -67,7 +67,18 @@ def process_images(
                     if end_style is not None and styles_compatible(style, end_style) and total > 1:
                         current_style = interpolate_style(style, end_style, idx / (total - 1))
 
-                    result = apply_style(client, current_style, path, relative=relative_style, style_mode=style_mode)
+                    # Save .lines intermediate when job folder is active
+                    lines_dest: Path | None = None
+                    if job_folder is not None:
+                        lines_dest = job_folder.asset_path(stem, "lines")
+                        if lines_dest.exists():
+                            lines_dest = None  # already saved, skip
+
+                    result = apply_style(
+                        client, current_style, path,
+                        relative=relative_style, style_mode=style_mode,
+                        save_lines_to=str(lines_dest) if lines_dest is not None else None,
+                    )
                     final_svg = result if isinstance(result, str) else result.decode()
                     width, height = estimate_svg_dimensions(final_svg)
                     preview_image = svg_to_pil(final_svg, width, height)
@@ -76,9 +87,16 @@ def process_images(
                     report_preview(on_preview, preview_buf.getvalue())
 
                     if job_folder is not None:
+                        # Save SVG intermediate (always, unless already exists)
+                        svg_dest = job_folder.asset_path(stem, "svg")
+                        if not svg_dest.exists():
+                            svg_dest.write_text(final_svg, encoding="utf-8")
+
                         jf_asset = job_folder.asset_path(stem, ext)
                         if fmt == "SVG":
-                            jf_asset.write_text(final_svg, encoding="utf-8")
+                            # SVG already saved as intermediate; copy to final asset
+                            if not jf_asset.exists():
+                                jf_asset.write_text(final_svg, encoding="utf-8")
                         else:
                             save_svg_as_image(final_svg, jf_asset, fmt, multiplier)
                         job_folder.copy_to_output(jf_asset.name, out_dir / f"{stem}.{ext}")
