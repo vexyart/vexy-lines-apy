@@ -109,13 +109,14 @@ def _make_style(
     groups: list[GroupInfo | LayerInfo] | None = None,
     props: DocumentProps | None = None,
     source_path: str | None = "/test/style.lines",
+    source_image_size: tuple[int, int] | None = None,
 ) -> Style:
     """Create a Style with sensible defaults."""
     if groups is None:
         groups = [_make_group()]
     if props is None:
         props = _make_props()
-    return Style(groups=groups, props=props, source_path=source_path)
+    return Style(groups=groups, props=props, source_path=source_path, source_image_size=source_image_size)
 
 
 # ---------------------------------------------------------------------------
@@ -618,10 +619,8 @@ class TestFastPath:
     """Tests for the fast-path style transfer (open + swap image)."""
 
     def test_dimensions_match_when_equal(self, tmp_path):
-        """Fast path triggers when image dims match document canvas."""
-        # 210mm × 297mm at 300dpi = round(210*300/25.4) × round(297*300/25.4)
-        # = 2480 × 3508
-        style = _make_style(source_path=str(tmp_path / "style.lines"))
+        """Fast path triggers when image dims match embedded source image size."""
+        style = _make_style(source_path=str(tmp_path / "style.lines"), source_image_size=(2480, 3508))
         (tmp_path / "style.lines").write_bytes(b"dummy")
 
         from PIL import Image as PILImage
@@ -634,7 +633,7 @@ class TestFastPath:
 
     def test_dimensions_mismatch(self, tmp_path):
         """Fast path does not trigger when dims differ."""
-        style = _make_style(source_path=str(tmp_path / "style.lines"))
+        style = _make_style(source_path=str(tmp_path / "style.lines"), source_image_size=(2480, 3508))
         (tmp_path / "style.lines").write_bytes(b"dummy")
 
         from PIL import Image as PILImage
@@ -645,9 +644,9 @@ class TestFastPath:
 
         assert _dimensions_match(style, img_path) is False
 
-    def test_dimensions_match_no_source_path(self, tmp_path):
-        """Fast path disabled when style has no source_path."""
-        style = _make_style(source_path=None)
+    def test_dimensions_match_no_source_image_size(self, tmp_path):
+        """Fast path disabled when style has no source_image_size."""
+        style = _make_style(source_path=None, source_image_size=None)
 
         from PIL import Image as PILImage
 
@@ -657,27 +656,26 @@ class TestFastPath:
 
         assert _dimensions_match(style, img_path) is False
 
-    def test_dimensions_match_source_file_missing(self, tmp_path):
-        """Fast path disabled when source .lines file doesn't exist."""
-        style = _make_style(source_path="/nonexistent/file.lines")
+    def test_dimensions_match_target_unreadable(self, tmp_path):
+        """Fast path disabled when target image cannot be read."""
+        style = _make_style(source_image_size=(2480, 3508))
 
-        from PIL import Image as PILImage
-
-        img = PILImage.new("RGB", (2480, 3508))
-        img_path = tmp_path / "target.png"
-        img.save(img_path)
+        img_path = tmp_path / "nonexistent.png"
+        # img_path does not exist — _get_image_dimensions returns None
 
         assert _dimensions_match(style, img_path) is False
 
     @patch("vexy_lines.editor.replace_source_image")
-    def test_apply_style_uses_fast_path_when_dims_and_dpi_match(self, mock_replace, tmp_path):
-        """apply_style uses XML swap fast path when dims AND dpi match."""
+    def test_apply_style_uses_fast_path_by_default(self, mock_replace, tmp_path):
+        """apply_style uses XML swap fast path when style_mode is 'fast' (default)."""
         mock_client = MagicMock()
         mock_client.render.return_value = True
         mock_client.svg.return_value = "<svg>fast</svg>"
 
-        # Style: 210mm × 297mm at 300dpi = 2480 × 3508
-        style = _make_style(source_path=str(tmp_path / "style.lines"))
+        style = _make_style(
+            source_path=str(tmp_path / "style.lines"),
+            source_image_size=(2480, 3508),
+        )
         (tmp_path / "style.lines").write_bytes(b"dummy")
 
         from PIL import Image as PILImage
@@ -686,7 +684,7 @@ class TestFastPath:
         img_path = tmp_path / "target.png"
         img.save(img_path)
 
-        result = apply_style(mock_client, style, str(img_path), dpi=300)
+        result = apply_style(mock_client, style, str(img_path))
 
         assert result == "<svg>fast</svg>"
         mock_replace.assert_called_once()  # XML swap happened
@@ -695,18 +693,20 @@ class TestFastPath:
         mock_client.new_document.assert_not_called()  # fast path: no new doc
         mock_client.add_group.assert_not_called()  # fast path: no tree copy
 
-    def test_apply_style_uses_slow_path_when_dpi_differs(self, tmp_path):
-        """apply_style should use slow path when dims match but dpi differs."""
+    def test_apply_style_uses_slow_path_when_style_mode_slow(self, tmp_path):
+        """apply_style uses slow path when style_mode='slow'."""
         mock_client = MagicMock()
-        mock_client.new_document.return_value = MagicMock(root_id=1, width=2480, height=3508, dpi=72)
+        mock_client.new_document.return_value = MagicMock(root_id=1, width=2480, height=3508, dpi=300)
         mock_client.add_group.return_value = {"id": 2}
         mock_client.add_layer.return_value = {"id": 3}
         mock_client.add_fill.return_value = {"id": 4}
         mock_client.render.return_value = True
         mock_client.svg.return_value = "<svg>slow</svg>"
 
-        # Style at 300dpi, but caller requests 72dpi
-        style = _make_style(source_path=str(tmp_path / "style.lines"))
+        style = _make_style(
+            source_path=str(tmp_path / "style.lines"),
+            source_image_size=(2480, 3508),
+        )
         (tmp_path / "style.lines").write_bytes(b"dummy")
 
         from PIL import Image as PILImage
@@ -715,14 +715,14 @@ class TestFastPath:
         img_path = tmp_path / "target.png"
         img.save(img_path)
 
-        result = apply_style(mock_client, style, str(img_path), dpi=72)
+        result = apply_style(mock_client, style, str(img_path), style_mode="slow")
 
         assert result == "<svg>slow</svg>"
-        mock_client.new_document.assert_called_once()  # slow path: dpi mismatch
+        mock_client.new_document.assert_called_once()  # slow path: explicit
         mock_client.open_document.assert_not_called()
 
-    def test_apply_style_uses_slow_path_when_dims_differ(self, tmp_path):
-        """apply_style should create new doc + copy tree when dims don't match."""
+    def test_apply_style_uses_slow_path_when_dims_differ_auto(self, tmp_path):
+        """apply_style creates new doc + copies tree when style_mode='auto' and dims don't match."""
         mock_client = MagicMock()
         mock_client.new_document.return_value = MagicMock(root_id=1, width=800, height=600, dpi=72)
         mock_client.add_group.return_value = {"id": 2}
@@ -731,7 +731,11 @@ class TestFastPath:
         mock_client.render.return_value = True
         mock_client.svg.return_value = "<svg>slow</svg>"
 
-        style = _make_style(source_path=str(tmp_path / "style.lines"))
+        # source_image_size=(2480, 3508) but target is 800×600 → dims don't match → slow
+        style = _make_style(
+            source_path=str(tmp_path / "style.lines"),
+            source_image_size=(2480, 3508),
+        )
         (tmp_path / "style.lines").write_bytes(b"dummy")
 
         from PIL import Image as PILImage
@@ -740,7 +744,7 @@ class TestFastPath:
         img_path = tmp_path / "target.png"
         img.save(img_path)
 
-        result = apply_style(mock_client, style, str(img_path), dpi=72)
+        result = apply_style(mock_client, style, str(img_path), dpi=72, style_mode="auto")
 
         assert result == "<svg>slow</svg>"
         mock_client.new_document.assert_called_once()  # slow path: new doc

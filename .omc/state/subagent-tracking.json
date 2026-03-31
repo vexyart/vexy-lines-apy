@@ -50,11 +50,13 @@
       "agent_type": "oh-my-claudecode:executor-low",
       "started_at": "2026-03-31T14:39:55.474Z",
       "parent_mode": "ultrawork",
-      "status": "running"
+      "status": "completed",
+      "completed_at": "2026-03-31T14:40:58.562Z",
+      "duration_ms": 63088
     }
   ],
   "total_spawned": 6,
-  "total_completed": 5,
+  "total_completed": 6,
   "total_failed": 0,
-  "last_updated": "2026-03-31T14:39:55.577Z"
+  "last_updated": "2026-03-31T14:40:58.664Z"
 }

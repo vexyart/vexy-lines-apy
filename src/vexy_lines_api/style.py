@@ -107,6 +107,7 @@ class Style:
     groups: list[GroupInfo | LayerInfo]
     props: DocumentProps
     source_path: str | None = None
+    source_image_size: tuple[int, int] | None = None  # NEW: (width, height) of embedded source image
 
 
 StyleMode = Literal["auto", "fast", "slow"]
@@ -125,6 +126,19 @@ def _parse_lines_file(path: Path) -> LinesDocument:
     return parse(path)
 
 
+def _get_image_dimensions_from_bytes(data: bytes) -> tuple[int, int] | None:
+    """Return (width, height) for image bytes, or None on failure."""
+    try:
+        import io as _io  # noqa: PLC0415
+
+        from PIL import Image as PILImage  # noqa: PLC0415
+
+        with PILImage.open(_io.BytesIO(data)) as img:
+            return img.size
+    except Exception:
+        return None
+
+
 def extract_style(path: str | Path) -> Style:
     """Extract the fill style structure from a .lines file.
 
@@ -141,10 +155,17 @@ def extract_style(path: str | Path) -> Style:
     path = Path(path)
     logger.debug("Extracting style from {}", path)
     doc: LinesDocument = _parse_lines_file(path)
+
+    # Get embedded source image pixel dimensions
+    source_image_size = None
+    if doc.source_image_data:
+        source_image_size = _get_image_dimensions_from_bytes(doc.source_image_data)
+
     return Style(
         groups=copy.deepcopy(doc.groups),
         props=copy.deepcopy(doc.props),
         source_path=str(path),
+        source_image_size=source_image_size,
     )
 
 
@@ -366,7 +387,7 @@ def apply_style(
     dpi: int = 72,
     relative: bool = False,
     render_timeout: float = 300.0,
-    style_mode: Literal["auto", "fast", "slow"] = "auto",
+    style_mode: Literal["auto", "fast", "slow"] = "fast",
 ) -> str:
     """Apply a style to a source image via MCP and return the SVG result.
 
@@ -403,14 +424,14 @@ def apply_style(
     )
 
     # Style transfer mode selection:
-    # - "fast": always swap source image at XML level (requires source_path + same dims)
+    # - "fast": always use XML swap (resize new image to match old if needed)
     # - "slow": always create new doc + copy fills via MCP
-    # - "auto": use fast if dimensions AND DPI match, otherwise slow
+    # - "auto": use fast if source image pixel dimensions match exactly, otherwise slow
     use_fast = False
     if style_mode == "fast":
         use_fast = True
     elif style_mode == "auto":
-        use_fast = dpi == (style.props.dpi or 72) and _dimensions_match(style, source_image)
+        use_fast = _dimensions_match(style, source_image)
 
     if use_fast:
         if not style.source_path or not Path(style.source_path).is_file():
@@ -558,18 +579,13 @@ def _get_image_dimensions(path: Path) -> tuple[int, int] | None:
 
 
 def _dimensions_match(style: Style, target_image: Path) -> bool:
-    """Check if target image has the same pixel dimensions as the style's source document."""
-    if not style.source_path or not Path(style.source_path).is_file():
-        return False
-    props = style.props
-    if props.dpi <= 0 or props.width_mm <= 0 or props.height_mm <= 0:
+    """Check if target image has the same pixel dimensions as the style's embedded source image."""
+    if not style.source_image_size:
         return False
     target_dims = _get_image_dimensions(target_image)
     if target_dims is None:
         return False
-    doc_w = round(props.width_mm * props.dpi / 25.4)
-    doc_h = round(props.height_mm * props.dpi / 25.4)
-    return doc_w == target_dims[0] and doc_h == target_dims[1]
+    return style.source_image_size[0] == target_dims[0] and style.source_image_size[1] == target_dims[1]
 
 
 def _apply_style_fast(
@@ -581,30 +597,30 @@ def _apply_style_fast(
 ) -> str:
     """Fast path: swap source image at XML level, open modified .lines, render.
 
-    Instead of creating a new document and copying each group/layer/fill via MCP,
-    this edits the source .lines file's XML to replace the embedded source image,
-    writes a temporary .lines file, and opens it in Vexy Lines. This preserves
-    ALL parameters losslessly and requires only 3 MCP calls.
-
-    The MCP ``set_source_image`` tool is broken (does not replace the bitmap
-    used by fill algorithms — see issues/vl193.md), so this uses direct XML
-    editing via ``vexy_lines.editor.replace_source_image`` instead.
+    If the new image has different dimensions from the original embedded source,
+    it is resized to fit (downscaled if larger, padded with white if smaller).
+    This preserves all fill parameters losslessly.
     """
     import tempfile  # noqa: PLC0415
 
     from vexy_lines.editor import replace_source_image  # noqa: PLC0415
 
     logger.info(
-        "Fast path: XML source image swap in {} (dimensions match)",
+        "Fast path: XML source image swap in {} (source_image_size={})",
         style.source_path,
+        style.source_image_size,
     )
 
-    # Create a temp .lines file with the new source image
     with tempfile.NamedTemporaryFile(suffix=".lines", delete=False) as tmp:
         tmp_path = Path(tmp.name)
 
     try:
-        replace_source_image(style.source_path, source_image, tmp_path)
+        replace_source_image(
+            style.source_path,
+            source_image,
+            tmp_path,
+            target_size=style.source_image_size,
+        )
         client.open_document(str(tmp_path))
         client.render(timeout=render_timeout)
         return client.svg()

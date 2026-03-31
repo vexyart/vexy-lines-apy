@@ -54,9 +54,6 @@ email = "opensource@vexy.art"
 [project.license]
 text = "MIT"
 
-[project.optional-dependencies]
-video = []
-
 [project.urls]
 Documentation = "https://github.com/vexyart/vexy-lines/tree/main/vexy-lines-apy#readme"
 Issues = "https://github.com/vexyart/vexy-lines/issues"
