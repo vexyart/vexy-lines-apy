@@ -41,6 +41,10 @@ dependencies = [
     "vexy-lines-py>=0.1.0",
     "loguru>=0.7.2",
     "typing-extensions>=4.0",
+    "Pillow>=10.0.0",
+    "resvg-py>=0.2.0",
+    "opencv-python-headless>=4.8.0",
+    "av>=12.0.0",
 ]
 
 [[project.authors]]
@@ -51,11 +55,7 @@ email = "opensource@vexy.art"
 text = "MIT"
 
 [project.optional-dependencies]
-video = [
-    "opencv-python-headless>=4.8.0",
-    "Pillow>=10.0.0",
-    "resvg-py>=0.2.0",
-]
+video = []
 
 [project.urls]
 Documentation = "https://github.com/vexyart/vexy-lines/tree/main/vexy-lines-apy#readme"

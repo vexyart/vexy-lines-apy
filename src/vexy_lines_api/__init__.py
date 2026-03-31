@@ -43,6 +43,8 @@ Style interpolation::
 from __future__ import annotations
 
 from vexy_lines_api.client import MCPClient, MCPError
+from vexy_lines_api.export import ExportFormat, ExportMode, ExportRequest, process_export
+from vexy_lines_api.media import extract_frame, extract_preview_from_lines, fit_image_to_box, truncate_start
 from vexy_lines_api.style import (
     Style,
     apply_style,
@@ -69,6 +71,9 @@ __all__ = [
     "LayerNode",
     "MCPClient",
     "MCPError",
+    "ExportFormat",
+    "ExportMode",
+    "ExportRequest",
     "NewDocumentResult",
     "RenderStatus",
     "Style",
@@ -77,10 +82,15 @@ __all__ = [
     "apply_style",
     "create_styled_document",
     "extract_style",
+    "extract_frame",
+    "extract_preview_from_lines",
+    "fit_image_to_box",
     "interpolate_style",
+    "process_export",
     "save_and_consolidate",
     "probe",
     "process_video",
     "process_video_with_style",
     "styles_compatible",
+    "truncate_start",
 ]
