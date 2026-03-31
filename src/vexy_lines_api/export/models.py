@@ -25,3 +25,5 @@ class ExportRequest:
     frame_range: tuple[int, int] | None = None
     relative_style: bool = False
     style_mode: str = "fast"
+    force: bool = False
+    cleanup: bool = False

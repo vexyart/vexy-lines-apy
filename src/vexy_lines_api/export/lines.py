@@ -7,7 +7,7 @@ import shutil
 import tempfile
 import threading
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from loguru import logger
 
@@ -18,6 +18,9 @@ from vexy_lines_api.export.callbacks import ProgressCallback, PreviewCallback, r
 from vexy_lines_api.export.errors import ExportAborted
 from vexy_lines_api.export.io import estimate_svg_dimensions, parse_size_multiplier, save_image_bytes
 from vexy_lines_api.video import svg_to_pil
+
+if TYPE_CHECKING:
+    from vexy_lines_api.export.job import JobFolder
 
 
 def load_style(path: str) -> Any:
@@ -41,6 +44,7 @@ def process_lines(
     abort_event: threading.Event | None = None,
     on_progress: ProgressCallback | None,
     on_preview: PreviewCallback | None = None,
+    job_folder: JobFolder | None = None,
 ) -> None:
     total = len(input_paths)
     out_dir = Path(output_path)
@@ -56,10 +60,17 @@ def process_lines(
                 raise ExportAborted("Export aborted by user")
 
             stem = Path(path).stem
+            ext = fmt.lower()
 
             if fmt == "LINES":
                 report_progress(on_progress, idx, total, f"Copying {Path(path).name}")
-                shutil.copy2(path, out_dir / Path(path).name)
+                if job_folder is not None:
+                    jf_dest = job_folder.asset_path(stem, "lines")
+                    if not jf_dest.exists():
+                        shutil.copy2(path, jf_dest)
+                    job_folder.copy_to_output(jf_dest.name, out_dir / Path(path).name)
+                else:
+                    shutil.copy2(path, out_dir / Path(path).name)
                 try:
                     doc = parse_lines(path)
                     preview_data = doc.preview_image_data or doc.source_image_data
@@ -71,6 +82,15 @@ def process_lines(
 
             if style is not None:
                 report_progress(on_progress, idx, total, f"Processing {Path(path).name}")
+
+                # Skip if job folder already has this asset
+                if job_folder is not None:
+                    jf_asset = job_folder.asset_path(stem, ext)
+                    if jf_asset.exists():
+                        logger.debug("Skipping {} (already in job folder)", stem)
+                        job_folder.copy_to_output(jf_asset.name, out_dir / f"{stem}.{ext}")
+                        continue
+
                 try:
                     doc = parse_lines(path)
                 except Exception:
@@ -96,32 +116,73 @@ def process_lines(
                     preview_buf = io.BytesIO()
                     image.save(preview_buf, format="PNG")
                     report_preview(on_preview, preview_buf.getvalue())
-                    if fmt == "SVG":
-                        (out_dir / f"{stem}.svg").write_text(svg_text, encoding="utf-8")
-                    elif fmt in ("PNG", "JPG"):
-                        save_image_bytes(svg_text.encode(), out_dir / f"{stem}.{fmt.lower()}", fmt, multiplier)
+
+                    if job_folder is not None:
+                        # Save to job folder first, then copy to output
+                        jf_asset = job_folder.asset_path(stem, ext)
+                        if fmt == "SVG":
+                            jf_asset.write_text(svg_text, encoding="utf-8")
+                        elif fmt in ("PNG", "JPG"):
+                            save_image_bytes(svg_text.encode(), jf_asset, fmt, multiplier)
+                        job_folder.copy_to_output(jf_asset.name, out_dir / f"{stem}.{ext}")
+                    else:
+                        if fmt == "SVG":
+                            (out_dir / f"{stem}.svg").write_text(svg_text, encoding="utf-8")
+                        elif fmt in ("PNG", "JPG"):
+                            save_image_bytes(svg_text.encode(), out_dir / f"{stem}.{fmt.lower()}", fmt, multiplier)
                 finally:
                     tmp_path.unlink(missing_ok=True)
                 continue
 
+            # Unstyled direct MCP export
             report_progress(on_progress, idx, total, f"Exporting {Path(path).name}")
+
+            # Skip if job folder already has this asset
+            if job_folder is not None:
+                jf_asset = job_folder.asset_path(stem, ext)
+                if jf_asset.exists():
+                    logger.debug("Skipping {} (already in job folder)", stem)
+                    job_folder.copy_to_output(jf_asset.name, out_dir / f"{stem}.{ext}")
+                    continue
+
             try:
                 client.open_document(path)
                 client.render()
                 if fmt == "SVG":
-                    client.export_svg(str(out_dir / f"{stem}.svg"))
+                    if job_folder is not None:
+                        jf_dest = job_folder.asset_path(stem, "svg")
+                        client.export_svg(str(jf_dest))
+                        job_folder.copy_to_output(jf_dest.name, out_dir / f"{stem}.svg")
+                    else:
+                        client.export_svg(str(out_dir / f"{stem}.svg"))
                 elif fmt == "PNG":
-                    dest = out_dir / f"{stem}.png"
-                    client.export_png(str(dest))
-                    report_preview(on_preview, dest.read_bytes())
-                    if multiplier > 1:
-                        save_image_bytes(dest.read_bytes(), dest, fmt, multiplier)
+                    if job_folder is not None:
+                        jf_dest = job_folder.asset_path(stem, "png")
+                        client.export_png(str(jf_dest))
+                        report_preview(on_preview, jf_dest.read_bytes())
+                        if multiplier > 1:
+                            save_image_bytes(jf_dest.read_bytes(), jf_dest, fmt, multiplier)
+                        job_folder.copy_to_output(jf_dest.name, out_dir / f"{stem}.png")
+                    else:
+                        dest = out_dir / f"{stem}.png"
+                        client.export_png(str(dest))
+                        report_preview(on_preview, dest.read_bytes())
+                        if multiplier > 1:
+                            save_image_bytes(dest.read_bytes(), dest, fmt, multiplier)
                 elif fmt == "JPG":
-                    dest = out_dir / f"{stem}.jpg"
-                    client.export_jpeg(str(dest))
-                    report_preview(on_preview, dest.read_bytes())
-                    if multiplier > 1:
-                        save_image_bytes(dest.read_bytes(), dest, fmt, multiplier)
+                    if job_folder is not None:
+                        jf_dest = job_folder.asset_path(stem, "jpg")
+                        client.export_jpeg(str(jf_dest))
+                        report_preview(on_preview, jf_dest.read_bytes())
+                        if multiplier > 1:
+                            save_image_bytes(jf_dest.read_bytes(), jf_dest, fmt, multiplier)
+                        job_folder.copy_to_output(jf_dest.name, out_dir / f"{stem}.jpg")
+                    else:
+                        dest = out_dir / f"{stem}.jpg"
+                        client.export_jpeg(str(dest))
+                        report_preview(on_preview, dest.read_bytes())
+                        if multiplier > 1:
+                            save_image_bytes(dest.read_bytes(), dest, fmt, multiplier)
             except Exception:
                 logger.opt(exception=True).warning("MCP export failed for {}", path)
 
