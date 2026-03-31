@@ -240,10 +240,10 @@ def process_video_to_mp4(
                 pil_img = PILImage.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
                 if style is not None:
-                    # Save frame to temp file for MCP
-                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-                        pil_img.save(tmp, format="PNG")
-                        tmp_path = tmp.name
+                    # Save decoded frame to job folder as src
+                    src_path = job_folder.frame_src_path(output_stem, frame_num, "png")
+                    if not src_path.exists():
+                        pil_img.save(str(src_path), format="PNG")
 
                     t = i / total if total > 1 else 0.0
                     current_style = style
@@ -251,13 +251,11 @@ def process_video_to_mp4(
                         current_style = interpolate_style(style, end_style, t)
 
                     try:
-                        svg_string = apply_style(client, current_style, tmp_path, relative=relative_style, style_mode=style_mode)
+                        svg_string = apply_style(client, current_style, str(src_path), relative=relative_style, style_mode=style_mode)
                         styled_img = svg_to_pil(svg_string, out_width, out_height).convert("RGB")
                     except Exception:
                         logger.opt(exception=True).debug("Style failed on frame {}", frame_num)
                         styled_img = pil_img.convert("RGB")
-                    finally:
-                        Path(tmp_path).unlink(missing_ok=True)
 
                     if multiplier > 1:
                         styled_img = styled_img.resize((out_width, out_height), PILImage.Resampling.LANCZOS)
@@ -272,9 +270,9 @@ def process_video_to_mp4(
                     styled_img.save(preview_buf, format="PNG")
                     report_preview(on_preview, preview_buf.getvalue())
 
-                # Save to job folder
-                frame_dest = job_folder.frame_path(output_stem, frame_num, "png")
-                styled_img.save(str(frame_dest), format="PNG")
+                # Save styled output to job folder
+                styled_dest = job_folder.frame_path(output_stem, frame_num, "png")
+                styled_img.save(str(styled_dest), format="PNG")
     finally:
         cap.release()
 
@@ -366,23 +364,31 @@ def process_video_to_frames(
                         if end_style is not None and styles_compatible(style, end_style):
                             current_style = interpolate_style(style, end_style, t)
 
-                        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-                            tmp.write(frame_bytes)
-                            tmp_path = Path(tmp.name)
-                        try:
-                            result = apply_style(client, current_style, str(tmp_path), relative=relative_style, style_mode=style_mode)
-                            frame_bytes = result if isinstance(result, bytes) else result.encode()
+                        if job_folder is not None:
+                            # Save decoded frame to job folder as src
+                            src_path = job_folder.frame_src_path(output_stem, frame_num, "png")
+                            if not src_path.exists():
+                                src_path.write_bytes(frame_bytes)
+                            result = apply_style(client, current_style, str(src_path), relative=relative_style, style_mode=style_mode)
+                        else:
+                            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                                tmp.write(frame_bytes)
+                                tmp_path = Path(tmp.name)
                             try:
-                                svg_str = frame_bytes.decode() if isinstance(frame_bytes, bytes) else frame_bytes
-                                fw, fh = estimate_svg_dimensions(svg_str)
-                                preview_img = svg_to_pil(svg_str, fw, fh)
-                                preview_buf = io.BytesIO()
-                                preview_img.save(preview_buf, format="PNG")
-                                report_preview(on_preview, preview_buf.getvalue())
-                            except Exception:
-                                pass
-                        finally:
-                            tmp_path.unlink(missing_ok=True)
+                                result = apply_style(client, current_style, str(tmp_path), relative=relative_style, style_mode=style_mode)
+                            finally:
+                                tmp_path.unlink(missing_ok=True)
+
+                        frame_bytes = result if isinstance(result, bytes) else result.encode()
+                        try:
+                            svg_str = frame_bytes.decode() if isinstance(frame_bytes, bytes) else frame_bytes
+                            fw, fh = estimate_svg_dimensions(svg_str)
+                            preview_img = svg_to_pil(svg_str, fw, fh)
+                            preview_buf = io.BytesIO()
+                            preview_img.save(preview_buf, format="PNG")
+                            report_preview(on_preview, preview_buf.getvalue())
+                        except Exception:
+                            pass
                     except Exception:
                         logger.opt(exception=True).debug("Style failed on frame {}", start + i)
 
