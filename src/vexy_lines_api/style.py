@@ -18,7 +18,7 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from loguru import logger
 
@@ -107,6 +107,10 @@ class Style:
     groups: list[GroupInfo | LayerInfo]
     props: DocumentProps
     source_path: str | None = None
+
+
+StyleMode = Literal["auto", "fast", "slow"]
+"""Style transfer mode: ``"auto"`` (default), ``"fast"`` (XML swap), ``"slow"`` (MCP copy)."""
 
 
 # ---------------------------------------------------------------------------
@@ -362,6 +366,7 @@ def apply_style(
     dpi: int = 72,
     relative: bool = False,
     render_timeout: float = 300.0,
+    style_mode: Literal["auto", "fast", "slow"] = "auto",
 ) -> str:
     """Apply a style to a source image via MCP and return the SVG result.
 
@@ -396,6 +401,22 @@ def apply_style(
         source_image,
         dpi,
     )
+
+    # Style transfer mode selection:
+    # - "fast": always swap source image at XML level (requires source_path + same dims)
+    # - "slow": always create new doc + copy fills via MCP
+    # - "auto": use fast if dimensions AND DPI match, otherwise slow
+    use_fast = False
+    if style_mode == "fast":
+        use_fast = True
+    elif style_mode == "auto":
+        use_fast = dpi == (style.props.dpi or 72) and _dimensions_match(style, source_image)
+
+    if use_fast:
+        if not style.source_path or not Path(style.source_path).is_file():
+            logger.warning("Fast mode requested but source .lines not available; falling back to slow")
+        else:
+            return _apply_style_fast(client, style, source_image, render_timeout=render_timeout)
 
     # 1. Create new document with the source image
     doc_result = client.new_document(source_image=str(source_image), dpi=dpi)
@@ -518,6 +539,77 @@ def save_and_consolidate(
 
     logger.debug("Consolidation step 4/4: final save to {}", resolved_path_str)
     client.save_document(resolved_path_str)
+
+
+# ---------------------------------------------------------------------------
+# Internal: fast-path helpers
+# ---------------------------------------------------------------------------
+
+
+def _get_image_dimensions(path: Path) -> tuple[int, int] | None:
+    """Return (width, height) in pixels for an image file, or None on failure."""
+    try:
+        from PIL import Image as PILImage  # noqa: PLC0415
+
+        with PILImage.open(path) as img:
+            return img.size
+    except Exception:
+        return None
+
+
+def _dimensions_match(style: Style, target_image: Path) -> bool:
+    """Check if target image has the same pixel dimensions as the style's source document."""
+    if not style.source_path or not Path(style.source_path).is_file():
+        return False
+    props = style.props
+    if props.dpi <= 0 or props.width_mm <= 0 or props.height_mm <= 0:
+        return False
+    target_dims = _get_image_dimensions(target_image)
+    if target_dims is None:
+        return False
+    doc_w = round(props.width_mm * props.dpi / 25.4)
+    doc_h = round(props.height_mm * props.dpi / 25.4)
+    return doc_w == target_dims[0] and doc_h == target_dims[1]
+
+
+def _apply_style_fast(
+    client: MCPClient,
+    style: Style,
+    source_image: Path,
+    *,
+    render_timeout: float = 300.0,
+) -> str:
+    """Fast path: swap source image at XML level, open modified .lines, render.
+
+    Instead of creating a new document and copying each group/layer/fill via MCP,
+    this edits the source .lines file's XML to replace the embedded source image,
+    writes a temporary .lines file, and opens it in Vexy Lines. This preserves
+    ALL parameters losslessly and requires only 3 MCP calls.
+
+    The MCP ``set_source_image`` tool is broken (does not replace the bitmap
+    used by fill algorithms — see issues/vl193.md), so this uses direct XML
+    editing via ``vexy_lines.editor.replace_source_image`` instead.
+    """
+    import tempfile  # noqa: PLC0415
+
+    from vexy_lines.editor import replace_source_image  # noqa: PLC0415
+
+    logger.info(
+        "Fast path: XML source image swap in {} (dimensions match)",
+        style.source_path,
+    )
+
+    # Create a temp .lines file with the new source image
+    with tempfile.NamedTemporaryFile(suffix=".lines", delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+
+    try:
+        replace_source_image(style.source_path, source_image, tmp_path)
+        client.open_document(str(tmp_path))
+        client.render(timeout=render_timeout)
+        return client.svg()
+    finally:
+        tmp_path.unlink(missing_ok=True)
 
 
 # ---------------------------------------------------------------------------

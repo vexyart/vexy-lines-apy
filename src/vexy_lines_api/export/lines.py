@@ -37,6 +37,7 @@ def process_lines(
     fmt: str,
     size: str,
     relative_style: bool = False,
+    style_mode: str = "auto",
     abort_event: threading.Event | None = None,
     on_progress: ProgressCallback | None,
     on_preview: PreviewCallback | None = None,
@@ -89,7 +90,7 @@ def process_lines(
                     tmp.write(img_bytes)
                     tmp_path = Path(tmp.name)
                 try:
-                    svg_text = apply_style(client, current_style, str(tmp_path), relative=relative_style)
+                    svg_text = apply_style(client, current_style, str(tmp_path), relative=relative_style, style_mode=style_mode)
                     width, height = estimate_svg_dimensions(svg_text)
                     image = svg_to_pil(svg_text, width, height)
                     preview_buf = io.BytesIO()

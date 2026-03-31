@@ -31,6 +31,7 @@ def process_video(
     audio: bool,
     frame_range: tuple[int, int] | None,
     relative_style: bool = False,
+    style_mode: str = "auto",
     abort_event: threading.Event | None = None,
     on_progress: ProgressCallback | None,
     on_preview: PreviewCallback | None = None,
@@ -45,6 +46,7 @@ def process_video(
             audio=audio,
             frame_range=frame_range,
             relative_style=relative_style,
+            style_mode=style_mode,
             abort_event=abort_event,
             on_progress=on_progress,
             on_preview=on_preview,
@@ -60,6 +62,7 @@ def process_video(
         size=size,
         frame_range=frame_range,
         relative_style=relative_style,
+        style_mode=style_mode,
         abort_event=abort_event,
         on_progress=on_progress,
         on_preview=on_preview,
@@ -76,6 +79,7 @@ def process_video_to_mp4(
     audio: bool,
     frame_range: tuple[int, int] | None,
     relative_style: bool = False,
+    style_mode: str = "auto",
     abort_event: threading.Event | None = None,
     on_progress: ProgressCallback | None,
     on_preview: PreviewCallback | None = None,
@@ -108,6 +112,7 @@ def process_video_to_mp4(
         include_audio=audio,
         size_multiplier=parse_size_multiplier(size),
         relative=relative_style,
+        style_mode=style_mode,
         abort_event=abort_event,
         on_progress=_on_frame,
         on_frame_image=_on_frame_image if on_preview else None,
@@ -124,6 +129,7 @@ def process_video_to_frames(
     size: str,
     frame_range: tuple[int, int] | None,
     relative_style: bool = False,
+    style_mode: str = "auto",
     abort_event: threading.Event | None = None,
     on_progress: ProgressCallback | None,
     on_preview: PreviewCallback | None = None,
@@ -170,7 +176,7 @@ def process_video_to_frames(
                             tmp.write(frame_bytes)
                             tmp_path = Path(tmp.name)
                         try:
-                            result = apply_style(client, current_style, str(tmp_path), relative=relative_style)
+                            result = apply_style(client, current_style, str(tmp_path), relative=relative_style, style_mode=style_mode)
                             frame_bytes = result if isinstance(result, bytes) else result.encode()
                             try:
                                 svg_str = frame_bytes.decode() if isinstance(frame_bytes, bytes) else frame_bytes

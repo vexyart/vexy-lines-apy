@@ -24,3 +24,4 @@ class ExportRequest:
     audio: bool = True
     frame_range: tuple[int, int] | None = None
     relative_style: bool = False
+    style_mode: str = "auto"

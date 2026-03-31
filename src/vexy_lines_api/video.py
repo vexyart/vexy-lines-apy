@@ -353,6 +353,7 @@ def process_video_with_style(
     include_audio: bool = True,
     size_multiplier: int = 1,
     relative: bool = False,
+    style_mode: str = "auto",
     abort_event: Any = None,
     on_progress: Any = None,
     on_frame_image: Any = None,
@@ -451,7 +452,7 @@ def process_video_with_style(
                     current_style = interpolate_style(style, end_style, t)
 
                 try:
-                    svg_string = apply_style(client, current_style, tmp_path, relative=relative)
+                    svg_string = apply_style(client, current_style, tmp_path, relative=relative, style_mode=style_mode)
                     styled_img = svg_to_pil(svg_string, out_width, out_height).convert("RGB")
                 except Exception:
                     logger.opt(exception=True).debug("Style failed on frame {}", frame_idx)

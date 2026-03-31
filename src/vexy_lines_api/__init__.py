@@ -47,6 +47,7 @@ from vexy_lines_api.export import ExportFormat, ExportMode, ExportRequest, proce
 from vexy_lines_api.media import extract_frame, extract_preview_from_lines, fit_image_to_box, truncate_start
 from vexy_lines_api.style import (
     Style,
+    StyleMode,
     apply_style,
     create_styled_document,
     extract_style,
@@ -77,6 +78,7 @@ __all__ = [
     "NewDocumentResult",
     "RenderStatus",
     "Style",
+    "StyleMode",
     "VideoInfo",
     "svg_to_pil",
     "apply_style",

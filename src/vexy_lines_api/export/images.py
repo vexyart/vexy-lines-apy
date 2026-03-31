@@ -26,6 +26,7 @@ def process_images(
     fmt: str,
     size: str,
     relative_style: bool = False,
+    style_mode: str = "auto",
     abort_event: threading.Event | None = None,
     on_progress: ProgressCallback | None,
     on_preview: PreviewCallback | None = None,
@@ -52,7 +53,7 @@ def process_images(
                     if end_style is not None and styles_compatible(style, end_style) and total > 1:
                         current_style = interpolate_style(style, end_style, idx / (total - 1))
 
-                    result = apply_style(client, current_style, path, relative=relative_style)
+                    result = apply_style(client, current_style, path, relative=relative_style, style_mode=style_mode)
                     final_svg = result if isinstance(result, str) else result.decode()
                     width, height = estimate_svg_dimensions(final_svg)
                     preview_image = svg_to_pil(final_svg, width, height)
