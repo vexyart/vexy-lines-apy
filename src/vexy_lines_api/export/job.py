@@ -16,9 +16,16 @@ from pathlib import Path
 from loguru import logger
 
 # Extensions recognised as single-file export targets (not directories).
-_FILE_EXTENSIONS: frozenset[str] = frozenset({
-    ".mp4", ".png", ".jpg", ".jpeg", ".svg", ".lines",
-})
+_FILE_EXTENSIONS: frozenset[str] = frozenset(
+    {
+        ".mp4",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".svg",
+        ".lines",
+    }
+)
 
 
 class JobFolder:
@@ -45,12 +52,14 @@ class JobFolder:
             self._path = output.parent / f"{output.name}-vljob"
 
         self._output_stem = output.stem if output.suffix.lower() in _FILE_EXTENSIONS else output.name
+        self._src_path = self._path / "src"
 
         if force and self._path.exists():
             logger.info("Force-cleaning job folder: {}", self._path)
             shutil.rmtree(self._path)
 
         self._path.mkdir(parents=True, exist_ok=True)
+        self._src_path.mkdir(parents=True, exist_ok=True)
         logger.debug("Job folder: {}", self._path)
 
     # ------------------------------------------------------------------
@@ -67,6 +76,11 @@ class JobFolder:
         """Base name used for naming intermediate files."""
         return self._output_stem
 
+    @property
+    def src_path(self) -> Path:
+        """Directory that stores extracted raw video frames."""
+        return self._src_path
+
     # ------------------------------------------------------------------
     # Path helpers
     # ------------------------------------------------------------------
@@ -75,13 +89,21 @@ class JobFolder:
         """Return ``{job_folder}/{name}.{ext}``."""
         return self._path / f"{name}.{ext}"
 
-    def frame_path(self, name: str, frame_num: int, ext: str) -> Path:
-        """Return ``{job_folder}/{name}--{frame_num}.{ext}`` (NOT zero-padded)."""
-        return self._path / f"{name}--{frame_num}.{ext}"
+    @staticmethod
+    def _format_frame_num(frame_num: int, pad_width: int) -> str:
+        width = max(pad_width, 1)
+        return f"{frame_num:0{width}d}"
 
-    def frame_src_path(self, name: str, frame_num: int, ext: str) -> Path:
-        """Return ``{job_folder}/src--{name}--{frame_num}.{ext}`` for raw decoded frames."""
-        return self._path / f"src--{name}--{frame_num}.{ext}"
+    def frame_path(self, name: str, frame_num: int, ext: str, *, pad_width: int) -> Path:
+        """Return ``{job_folder}/{name}--{NNN}.{ext}`` using the requested zero-padding width."""
+        frame_label = self._format_frame_num(frame_num, pad_width)
+        return self._path / f"{name}--{frame_label}.{ext}"
+
+    def frame_src_path(self, name: str, frame_num: int, ext: str, *, pad_width: int) -> Path:
+        """Return ``{job_folder}/src/src--{name}--{NNN}.{ext}`` for raw decoded frames."""
+        self._src_path.mkdir(parents=True, exist_ok=True)
+        frame_label = self._format_frame_num(frame_num, pad_width)
+        return self._src_path / f"src--{name}--{frame_label}.{ext}"
 
     def existing_frames(self, name: str, ext: str) -> set[int]:
         """Scan the job folder for ``{name}--{N}.{ext}`` files.
@@ -100,12 +122,12 @@ class JobFolder:
         return found
 
     def existing_src_frames(self, name: str, ext: str) -> set[int]:
-        """Scan the job folder for ``src--{name}--{N}.{ext}`` files."""
+        """Scan ``{job_folder}/src`` for ``src--{name}--{N}.{ext}`` files."""
         pattern = re.compile(rf"^src--{re.escape(name)}--(\d+)\.{re.escape(ext)}$")
         found: set[int] = set()
-        if not self._path.exists():
+        if not self._src_path.exists():
             return found
-        for entry in self._path.iterdir():
+        for entry in self._src_path.iterdir():
             m = pattern.match(entry.name)
             if m:
                 found.add(int(m.group(1)))

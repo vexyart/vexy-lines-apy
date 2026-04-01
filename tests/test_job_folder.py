@@ -38,9 +38,7 @@ class TestPathResolution:
         assert jf.path == tmp_path / "output-vljob"
         assert jf.path.is_dir()
 
-    def test_job_folder_env_override_when_env_set(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_job_folder_env_override_when_env_set(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         override = tmp_path / "custom-job"
         monkeypatch.setenv("VEXY_LINES_JOB_FOLDER", str(override))
         out = tmp_path / "video.mp4"
@@ -113,11 +111,11 @@ class TestAssetPaths:
         result = jf.asset_path("thumbnail", "png")
         assert result == jf.path / "thumbnail.png"
 
-    def test_frame_path_not_zero_padded(self, tmp_path: Path) -> None:
+    def test_frame_path_zero_pads_with_requested_width(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
-        assert jf.frame_path("video", 1, "png") == jf.path / "video--1.png"
-        assert jf.frame_path("video", 42, "png") == jf.path / "video--42.png"
-        assert jf.frame_path("video", 1000, "png") == jf.path / "video--1000.png"
+        assert jf.frame_path("video", 1, "png", pad_width=2) == jf.path / "video--01.png"
+        assert jf.frame_path("video", 42, "png", pad_width=4) == jf.path / "video--0042.png"
+        assert jf.frame_path("video", 1000, "png", pad_width=4) == jf.path / "video--1000.png"
 
 
 # ---------------------------------------------------------------------------
@@ -135,8 +133,8 @@ class TestExistingFrames:
     def test_existing_frames_finds_matching_files(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
         # Write frame files directly into the job folder.
-        (jf.path / "video--1.png").write_bytes(b"")
-        (jf.path / "video--5.png").write_bytes(b"")
+        (jf.path / "video--01.png").write_bytes(b"")
+        (jf.path / "video--05.png").write_bytes(b"")
         (jf.path / "video--23.png").write_bytes(b"")
 
         result = jf.existing_frames("video", "png")
@@ -145,10 +143,10 @@ class TestExistingFrames:
     def test_existing_frames_ignores_wrong_pattern(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
         # Wrong extension, wrong separator, wrong name.
-        (jf.path / "video--1.jpg").write_bytes(b"")    # wrong ext
-        (jf.path / "video-1.png").write_bytes(b"")     # single dash
-        (jf.path / "other--1.png").write_bytes(b"")    # wrong name
-        (jf.path / "video--1.png").write_bytes(b"")    # correct
+        (jf.path / "video--1.jpg").write_bytes(b"")  # wrong ext
+        (jf.path / "video-1.png").write_bytes(b"")  # single dash
+        (jf.path / "other--1.png").write_bytes(b"")  # wrong name
+        (jf.path / "video--01.png").write_bytes(b"")  # correct
 
         result = jf.existing_frames("video", "png")
         assert result == {1}
@@ -164,8 +162,8 @@ class TestFrameSrcPath:
 
     def test_frame_src_path_format(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
-        assert jf.frame_src_path("video", 1, "png") == jf.path / "src--video--1.png"
-        assert jf.frame_src_path("video", 42, "png") == jf.path / "src--video--42.png"
+        assert jf.frame_src_path("video", 1, "png", pad_width=2) == jf.path / "src" / "src--video--01.png"
+        assert jf.frame_src_path("video", 42, "png", pad_width=4) == jf.path / "src" / "src--video--0042.png"
 
 
 class TestExistingSrcFrames:
@@ -173,15 +171,15 @@ class TestExistingSrcFrames:
 
     def test_existing_src_frames_finds_matching(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
-        (jf.path / "src--video--1.png").write_bytes(b"")
-        (jf.path / "src--video--5.png").write_bytes(b"")
+        (jf.src_path / "src--video--01.png").write_bytes(b"")
+        (jf.src_path / "src--video--05.png").write_bytes(b"")
         result = jf.existing_src_frames("video", "png")
         assert result == {1, 5}
 
     def test_existing_src_frames_ignores_styled_frames(self, tmp_path: Path) -> None:
         jf = JobFolder(tmp_path / "video.mp4")
         (jf.path / "video--1.png").write_bytes(b"")  # styled, not src
-        (jf.path / "src--video--2.png").write_bytes(b"")  # src
+        (jf.src_path / "src--video--02.png").write_bytes(b"")
         result = jf.existing_src_frames("video", "png")
         assert result == {2}
 
@@ -241,8 +239,8 @@ class TestCleanup:
 class TestExportRequest:
     """ExportRequest dataclass includes force and cleanup with correct defaults."""
 
-    def _make_request(self, **overrides) -> ExportRequest:
-        defaults = dict(
+    def _make_request(self, *, force: bool = False, cleanup: bool = False) -> ExportRequest:
+        return ExportRequest(
             mode="video",
             input_paths=["/tmp/input.lines"],
             style_path=None,
@@ -250,9 +248,9 @@ class TestExportRequest:
             output_path="/tmp/output.mp4",
             format="MP4",
             size="1920x1080",
+            force=force,
+            cleanup=cleanup,
         )
-        defaults.update(overrides)
-        return ExportRequest(**defaults)
 
     def test_export_request_force_defaults_to_false(self) -> None:
         req = self._make_request()

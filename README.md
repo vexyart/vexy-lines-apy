@@ -123,7 +123,7 @@ request = ExportRequest(
 )
 process_export(request)
 # Creates styled-vljob/ with all intermediates:
-#   src--styled--1.png, styled--1.lines, styled--1.svg, styled--1.png, ...
+#   src/src--styled--001.png, styled--001.lines, styled--001.svg, styled--001.png, ...
 ```
 
 Use `force=True` to discard previous progress and start fresh. Use `cleanup=True` to delete the job folder after the final output is written.

@@ -1897,14 +1897,14 @@
 <td><code>{job_folder}/{name}.{ext}</code></td>
 </tr>
 <tr>
-<td><code>frame_path(name, frame_num, ext)</code></td>
+<td><code>frame_path(name, frame_num, ext, pad_width=...)</code></td>
 <td><code>Path</code></td>
-<td><code>{job_folder}/{name}--{N}.{ext}</code> (not zero-padded)</td>
+<td><code>{job_folder}/{name}--{NNN}.{ext}</code></td>
 </tr>
 <tr>
-<td><code>frame_src_path(name, frame_num, ext)</code></td>
+<td><code>frame_src_path(name, frame_num, ext, pad_width=...)</code></td>
 <td><code>Path</code></td>
-<td><code>{job_folder}/src--{name}--{N}.{ext}</code></td>
+<td><code>{job_folder}/src/src--{name}--{NNN}.{ext}</code></td>
 </tr>
 <tr>
 <td><code>existing_frames(name, ext)</code></td>

@@ -222,8 +222,8 @@ print(jf.output_stem)   # "output"
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `asset_path(name, ext)` | `Path` | `{job_folder}/{name}.{ext}` |
-| `frame_path(name, frame_num, ext)` | `Path` | `{job_folder}/{name}--{N}.{ext}` (not zero-padded) |
-| `frame_src_path(name, frame_num, ext)` | `Path` | `{job_folder}/src--{name}--{N}.{ext}` |
+| `frame_path(name, frame_num, ext, pad_width=...)` | `Path` | `{job_folder}/{name}--{NNN}.{ext}` |
+| `frame_src_path(name, frame_num, ext, pad_width=...)` | `Path` | `{job_folder}/src/src--{name}--{NNN}.{ext}` |
 | `existing_frames(name, ext)` | `set[int]` | Frame numbers already on disk |
 | `existing_src_frames(name, ext)` | `set[int]` | Source frame numbers already on disk |
 | `copy_to_output(src_name, dest)` | `Path` | Copy file from job folder to destination |

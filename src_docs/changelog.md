@@ -6,8 +6,8 @@
 - **feat**: `ExportRequest` gains `force` and `cleanup` fields for controlling job folder lifecycle.
 - **feat**: `apply_style()` gains `save_lines_to` parameter — saves the styled `.lines` document to a specified path during style transfer.
 - **feat**: All export processors (lines, images, video) now save the complete artifact chain to the job folder: `.lines` → `.svg` → final format (`.png`/`.jpg`/`.mp4`).
-- **feat**: Video export uses a two-phase pipeline: Phase 1 saves styled PNG frames to the job folder (skipping cached frames on resume), Phase 2 assembles the MP4 from those frames.
-- **feat**: Source video frames stored with `src--` prefix (`src--{stem}--{N}.png`), styled output as `{stem}--{N}.{ext}`. Frame numbers are 1-based and not zero-padded.
+- **feat**: Video export now extracts all requested source frames into the job folder before styling or assembly, then reuses those cached raw frames for resume.
+- **feat**: Source video frames now live under `src/` with the `src--` prefix (`src/src--{stem}--{NNN}.png`), and job-folder frame artifacts use zero-padded numbering derived from the video's total frame count.
 - **feat**: `VEXY_LINES_JOB_FOLDER` environment variable overrides computed job folder path.
 - **test**: 24 new tests for `JobFolder` — path resolution, frame naming, resume detection, force/cleanup, copy-to-output.
 
