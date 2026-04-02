@@ -62,7 +62,7 @@ def process_lines(
             stem = Path(path).stem
             ext = fmt.lower()
 
-            if fmt == "LINES":
+            if fmt == "LINES" and style is None:
                 report_progress(on_progress, idx, total, f"Copying {Path(path).name}")
                 if job_folder is not None:
                     jf_dest = job_folder.asset_path(stem, "lines")
@@ -110,12 +110,14 @@ def process_lines(
                     tmp.write(img_bytes)
                     tmp_path = Path(tmp.name)
                 try:
-                    # Save .lines intermediate when job folder is active
+                    # Save .lines: as intermediate for job folder, or as final output for LINES format
                     lines_dest: Path | None = None
                     if job_folder is not None:
                         lines_dest = job_folder.asset_path(stem, "lines")
                         if lines_dest.exists():
                             lines_dest = None  # already saved, skip
+                    elif fmt == "LINES":
+                        lines_dest = out_dir / f"{stem}.lines"
 
                     svg_text = apply_style(
                         client, current_style, str(tmp_path),
@@ -128,7 +130,13 @@ def process_lines(
                     image.save(preview_buf, format="PNG")
                     report_preview(on_preview, preview_buf.getvalue())
 
-                    if job_folder is not None:
+                    if fmt == "LINES":
+                        # .lines already saved via save_lines_to above
+                        if job_folder is not None:
+                            jf_asset = job_folder.asset_path(stem, "lines")
+                            if jf_asset.exists():
+                                job_folder.copy_to_output(jf_asset.name, out_dir / f"{stem}.lines")
+                    elif job_folder is not None:
                         # Save SVG intermediate (always, unless already exists)
                         svg_dest = job_folder.asset_path(stem, "svg")
                         if not svg_dest.exists():

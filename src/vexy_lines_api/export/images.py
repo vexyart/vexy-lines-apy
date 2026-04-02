@@ -67,12 +67,14 @@ def process_images(
                     if end_style is not None and styles_compatible(style, end_style) and total > 1:
                         current_style = interpolate_style(style, end_style, idx / (total - 1))
 
-                    # Save .lines intermediate when job folder is active
+                    # Save .lines: as intermediate for job folder, or as final output for LINES format
                     lines_dest: Path | None = None
                     if job_folder is not None:
                         lines_dest = job_folder.asset_path(stem, "lines")
                         if lines_dest.exists():
                             lines_dest = None  # already saved, skip
+                    elif fmt == "LINES":
+                        lines_dest = out_dir / f"{stem}.lines"
 
                     result = apply_style(
                         client, current_style, path,
@@ -86,7 +88,13 @@ def process_images(
                     preview_image.save(preview_buf, format="PNG")
                     report_preview(on_preview, preview_buf.getvalue())
 
-                    if job_folder is not None:
+                    if fmt == "LINES":
+                        # .lines already saved via save_lines_to above
+                        if job_folder is not None:
+                            jf_asset = job_folder.asset_path(stem, "lines")
+                            if jf_asset.exists():
+                                job_folder.copy_to_output(jf_asset.name, out_dir / f"{stem}.lines")
+                    elif job_folder is not None:
                         # Save SVG intermediate (always, unless already exists)
                         svg_dest = job_folder.asset_path(stem, "svg")
                         if not svg_dest.exists():
@@ -116,6 +124,10 @@ def process_images(
                     else:
                         save_image_bytes(img_data, out_dir / f"{stem}.{ext}", fmt, multiplier)
     else:
+        if fmt == "LINES":
+            logger.warning("LINES export requires a style when input is images")
+            report_progress(on_progress, total, total, "Done")
+            return
         for idx, path in enumerate(input_paths):
             if abort_event and abort_event.is_set():
                 raise ExportAborted("Export aborted by user")
