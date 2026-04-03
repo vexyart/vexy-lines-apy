@@ -429,6 +429,11 @@ def process_video_to_frames(
     ext = fmt.lower()
     pad_width = _frame_pad_width(info.total_frames)
 
+    if fmt == "LINES" and style is None:
+        logger.warning("LINES export requires a style when input is video")
+        report_progress(on_progress, total, total, "Done")
+        return
+
     # Determine which frames already exist in the job folder
     existing: set[int] = set()
     output_stem: str = ""
@@ -496,12 +501,14 @@ def process_video_to_frames(
                             tmp.write(frame_bytes)
                             tmp_path = Path(tmp.name)
                         try:
+                            lines_out = out_dir / f"frame_{frame_num:06d}.lines" if fmt == "LINES" else None
                             result = apply_style(
                                 client,
                                 current_style,
                                 str(tmp_path),
                                 relative=relative_style,
                                 style_mode=effective_style_mode,
+                                save_lines_to=str(lines_out) if lines_out is not None else None,
                             )
                         finally:
                             tmp_path.unlink(missing_ok=True)
@@ -523,11 +530,12 @@ def process_video_to_frames(
                 except Exception:
                     logger.opt(exception=True).debug("Style failed on frame {}", frame_num)
 
-            if job_folder is not None:
-                jf_dest = job_folder.frame_path(output_stem, frame_num, ext, pad_width=pad_width)
-                save_image_bytes(frame_bytes, jf_dest, fmt, multiplier)
-            else:
-                save_image_bytes(frame_bytes, out_dir / f"frame_{frame_num:06d}.{ext}", fmt, multiplier)
+            if fmt != "LINES":
+                if job_folder is not None:
+                    jf_dest = job_folder.frame_path(output_stem, frame_num, ext, pad_width=pad_width)
+                    save_image_bytes(frame_bytes, jf_dest, fmt, multiplier)
+                else:
+                    save_image_bytes(frame_bytes, out_dir / f"frame_{frame_num:06d}.{ext}", fmt, multiplier)
 
     # Copy all frames from job folder to output dir
     if job_folder is not None:

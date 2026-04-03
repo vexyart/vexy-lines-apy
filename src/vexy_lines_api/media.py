@@ -2,11 +2,6 @@
 
 from __future__ import annotations
 
-import base64
-import contextlib
-import xml.etree.ElementTree as ET
-import zlib
-
 import cv2
 from PIL import Image
 
@@ -24,19 +19,7 @@ def extract_preview_from_lines(filepath: str) -> bytes | None:
         doc = parse(filepath)
         return doc.preview_image_data or doc.source_image_data
     except Exception:
-        with contextlib.suppress(Exception):
-            tree = ET.parse(str(filepath))  # noqa: S314
-            root = tree.getroot()
-            preview_doc = root.find("PreviewDoc")
-            if preview_doc is not None and preview_doc.text:
-                return base64.b64decode(preview_doc.text.strip())
-            source_pict = root.find("SourcePict")
-            if source_pict is not None:
-                image_data = source_pict.find("ImageData")
-                if image_data is not None and image_data.text:
-                    raw = base64.b64decode(image_data.text.strip())
-                    return zlib.decompress(raw[4:])
-    return None
+        return None
 
 
 def extract_frame(video_path: str, frame_number: int = 1) -> Image.Image | None:
