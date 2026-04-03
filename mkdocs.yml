@@ -21,7 +21,11 @@ docs_dir: src_docs
 site_dir: docs
 markdown_extensions:
   - pymdownx.highlight:
-      auto_title: false
+      auto_title: true
+      auto_title_map:
+        Python: ""
+        Bash: ""
+        JSON: ""
   - pymdownx.superfences
   - admonition
   - toc:
