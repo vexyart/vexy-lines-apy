@@ -302,10 +302,10 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
-  <a href="#two-entry-points" class="md-nav__link">
+  <a href="#three-entry-points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two entry points
+        Three entry points
       
     </span>
   </a>
@@ -339,6 +339,17 @@
     <span class="md-ellipsis">
       
         Quick start: style interpolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-resumable-batch-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick start: resumable batch export
       
     </span>
   </a>
@@ -553,10 +564,10 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
-  <a href="#two-entry-points" class="md-nav__link">
+  <a href="#three-entry-points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two entry points
+        Three entry points
       
     </span>
   </a>
@@ -597,6 +608,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-start-resumable-batch-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick start: resumable batch export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -626,14 +648,15 @@
 <p><a href="https://www.vexy.art/lines/"><img alt="Vexy Lines" src="https://i.vexy.art/vl/websiteart/vexy-lines-hero-poster.png" /></a></p>
 <h1 id="vexy-lines-apy">vexy-lines-apy<a class="headerlink" href="#vexy-lines-apy" title="Permanent link">&para;</a></h1>
 <p>Python bindings to the <a href="https://vexy.art">Vexy Lines</a> MCP API and style engine.</p>
-<p>Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images — all from Python.</p>
+<p>Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images -- all from Python.</p>
 <ul>
 <li><a href="https://github.com/vexyart/vexy-lines-apy">On Github</a></li>
 <li><a href="https://pypi.org/project/vexy-lines-apy/">On PyPI</a></li>
 </ul>
-<h2 id="two-entry-points">Two entry points<a class="headerlink" href="#two-entry-points" title="Permanent link">&para;</a></h2>
+<h2 id="three-entry-points">Three entry points<a class="headerlink" href="#three-entry-points" title="Permanent link">&para;</a></h2>
 <p><strong>MCPClient</strong> -- a context-managed TCP client that speaks JSON-RPC 2.0 to the Vexy Lines embedded server. Open documents, manipulate layers, tweak fill parameters, render, export. The app auto-launches if it isn't running.</p>
 <p><strong>Style engine</strong> -- extract a fill style from a <code>.lines</code> file, apply it to any source image, or blend two styles at any mix ratio. No GUI interaction needed.</p>
+<p><strong>JobFolder</strong> -- persistent intermediate storage for resumable export pipelines. Stores <code>.lines</code>, <code>.svg</code>, and frame artifacts alongside the final output instead of in temp directories.</p>
 <h2 id="quick-start-mcp-client">Quick start: MCP client<a class="headerlink" href="#quick-start-mcp-client" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span>
 
@@ -664,13 +687,28 @@
 <span class="n">b</span> <span class="o">=</span> <span class="n">extract_style</span><span class="p">(</span><span class="s2">&quot;technical.lines&quot;</span><span class="p">)</span>
 <span class="n">mid</span> <span class="o">=</span> <span class="n">interpolate_style</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>   <span class="c1"># halfway between both</span>
 </code></pre></div>
+<h2 id="quick-start-resumable-batch-export">Quick start: resumable batch export<a class="headerlink" href="#quick-start-resumable-batch-export" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api.export</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobFolder</span><span class="p">,</span> <span class="n">ExportRequest</span><span class="p">,</span> <span class="n">process_export</span>
+
+<span class="n">request</span> <span class="o">=</span> <span class="n">ExportRequest</span><span class="p">(</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;images&quot;</span><span class="p">,</span>
+    <span class="n">input_paths</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;photo1.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;photo2.jpg&quot;</span><span class="p">],</span>
+    <span class="n">style_path</span><span class="o">=</span><span class="s2">&quot;artistic.lines&quot;</span><span class="p">,</span>
+    <span class="n">end_style_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">,</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;SVG&quot;</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="s2">&quot;1x&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">process_export</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">on_progress</span><span class="o">=</span><span class="k">lambda</span> <span class="n">cur</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">cur</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+</code></pre></div>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="installation/">Installation</a> -- install options and optional extras</li>
-<li><a href="api-reference/">API Reference</a> -- every class, method, and function</li>
-<li><a href="style-engine/">Style Engine</a> -- how extraction, application, and interpolation work</li>
-<li><a href="mcp-protocol/">MCP Protocol</a> -- the 25 tools in 5 groups</li>
-<li><a href="examples/">Examples</a> -- real-world usage patterns</li>
+<li><a href="installation/">Installation</a> -- install options, dependencies, and optional extras</li>
+<li><a href="api-reference/">API Reference</a> -- every class, method, function, and constant</li>
+<li><a href="style-engine/">Style Engine</a> -- how extraction, application, interpolation, and relative scaling work</li>
+<li><a href="mcp-protocol/">MCP Protocol</a> -- the 25 tools in 5 groups, wire format, parameter reference, bridge setup</li>
+<li><a href="examples/">Examples</a> -- real-world usage patterns including batch processing, video, and error handling</li>
 </ul>
 
 

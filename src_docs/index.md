@@ -7,17 +7,19 @@
 
 Python bindings to the [Vexy Lines](https://vexy.art) MCP API and style engine.
 
-Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images — all from Python.
+Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images -- all from Python.
 
 - [On Github](https://github.com/vexyart/vexy-lines-apy)
 - [On PyPI](https://pypi.org/project/vexy-lines-apy/)
 
 
-## Two entry points
+## Three entry points
 
 **MCPClient** -- a context-managed TCP client that speaks JSON-RPC 2.0 to the Vexy Lines embedded server. Open documents, manipulate layers, tweak fill parameters, render, export. The app auto-launches if it isn't running.
 
 **Style engine** -- extract a fill style from a `.lines` file, apply it to any source image, or blend two styles at any mix ratio. No GUI interaction needed.
+
+**JobFolder** -- persistent intermediate storage for resumable export pipelines. Stores `.lines`, `.svg`, and frame artifacts alongside the final output instead of in temp directories.
 
 ## Quick start: MCP client
 
@@ -58,10 +60,28 @@ b = extract_style("technical.lines")
 mid = interpolate_style(a, b, t=0.5)   # halfway between both
 ```
 
+## Quick start: resumable batch export
+
+```python
+from vexy_lines_api.export import JobFolder, ExportRequest, process_export
+
+request = ExportRequest(
+    mode="images",
+    input_paths=["photo1.jpg", "photo2.jpg"],
+    style_path="artistic.lines",
+    end_style_path=None,
+    output_path="./output/",
+    format="SVG",
+    size="1x",
+)
+
+process_export(request, on_progress=lambda cur, total, msg: print(f"[{cur}/{total}] {msg}"))
+```
+
 ## Next steps
 
-- [Installation](installation.md) -- install options and optional extras
-- [API Reference](api-reference.md) -- every class, method, and function
-- [Style Engine](style-engine.md) -- how extraction, application, and interpolation work
-- [MCP Protocol](mcp-protocol.md) -- the 25 tools in 5 groups
-- [Examples](examples.md) -- real-world usage patterns
+- [Installation](installation.md) -- install options, dependencies, and optional extras
+- [API Reference](api-reference.md) -- every class, method, function, and constant
+- [Style Engine](style-engine.md) -- how extraction, application, interpolation, and relative scaling work
+- [MCP Protocol](mcp-protocol.md) -- the 25 tools in 5 groups, wire format, parameter reference, bridge setup
+- [Examples](examples.md) -- real-world usage patterns including batch processing, video, and error handling

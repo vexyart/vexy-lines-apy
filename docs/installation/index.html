@@ -353,6 +353,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#runtime-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runtime dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-works-without-the-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What works without the app
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#optional-extras" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -375,19 +403,19 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#runtime-dependencies" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#external-tools-optional-not-python-packages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime dependencies
+        External tools (optional, not Python packages)
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -616,6 +644,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#runtime-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runtime dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-works-without-the-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What works without the app
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#optional-extras" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -638,19 +694,19 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#runtime-dependencies" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#external-tools-optional-not-python-packages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime dependencies
+        External tools (optional, not Python packages)
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -706,7 +762,7 @@
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Python 3.11 or newer</li>
-<li>The <a href="https://vexy.art">Vexy Lines</a> desktop app (macOS or Windows) for all MCP operations</li>
+<li>The <a href="https://vexy.art/lines/">Vexy Lines</a> desktop app (macOS or Windows) for all MCP operations</li>
 </ul>
 <h2 id="install-from-pypi">Install from PyPI<a class="headerlink" href="#install-from-pypi" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>vexy-lines-apy
@@ -714,37 +770,109 @@
 <p>Or with <code>uv</code>:</p>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>vexy-lines-apy
 </code></pre></div>
-<h2 id="optional-extras">Optional extras<a class="headerlink" href="#optional-extras" title="Permanent link">&para;</a></h2>
-<h3 id="svg-manipulation">SVG manipulation<a class="headerlink" href="#svg-manipulation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;vexy-lines-apy[svg]&quot;</span>
-</code></pre></div>
-<p>Adds the <code>svglab</code> package, enabling <code>client.svg_parsed()</code> which returns a full SVG DOM object you can traverse, edit, and render.</p>
 <h2 id="runtime-dependencies">Runtime dependencies<a class="headerlink" href="#runtime-dependencies" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Package</th>
+<th>Version</th>
 <th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>vexy-lines-py</code></td>
-<td><code>.lines</code> file parser and types</td>
+<td><code>&gt;=0.1.0</code></td>
+<td><code>.lines</code> file parser and types (<code>GroupInfo</code>, <code>LayerInfo</code>, <code>FillNode</code>, <code>FillParams</code>, <code>DocumentProps</code>)</td>
 </tr>
 <tr>
 <td><code>loguru</code></td>
+<td><code>&gt;=0.7.2</code></td>
 <td>Structured debug logging</td>
 </tr>
 <tr>
 <td><code>typing-extensions</code></td>
+<td><code>&gt;=4.0</code></td>
 <td>Backported type hints for Python 3.11</td>
+</tr>
+<tr>
+<td><code>Pillow</code></td>
+<td><code>&gt;=10.0.0</code></td>
+<td>Image manipulation (source image dimensions, frame extraction, resizing)</td>
+</tr>
+<tr>
+<td><code>resvg-py</code></td>
+<td><code>&gt;=0.2.0</code></td>
+<td>SVG rasterisation for video frame pipeline</td>
+</tr>
+<tr>
+<td><code>opencv-python-headless</code></td>
+<td><code>&gt;=4.8.0</code></td>
+<td>Video decoding/encoding and frame extraction</td>
+</tr>
+<tr>
+<td><code>av</code></td>
+<td><code>&gt;=12.0.0</code></td>
+<td>Additional video container support</td>
 </tr>
 </tbody>
 </table>
+<h3 id="what-works-without-the-app">What works without the app<a class="headerlink" href="#what-works-without-the-app" title="Permanent link">&para;</a></h3>
+<p>These functions work offline (no Vexy Lines app required):</p>
+<ul>
+<li><code>extract_style()</code> -- parse <code>.lines</code> files</li>
+<li><code>interpolate_style()</code> -- blend two styles</li>
+<li><code>styles_compatible()</code> -- check style compatibility</li>
+<li><code>probe()</code> -- read video metadata</li>
+<li><code>svg_to_pil()</code> -- rasterise SVG strings</li>
+<li><code>extract_preview_from_lines()</code> -- extract embedded images</li>
+</ul>
+<p>These require a running Vexy Lines app:</p>
+<ul>
+<li><code>MCPClient</code> and all its methods</li>
+<li><code>apply_style()</code> -- style transfer via MCP</li>
+<li><code>create_styled_document()</code> -- document creation via MCP</li>
+<li><code>save_and_consolidate()</code> -- save/reopen/render cycle</li>
+<li><code>process_video_with_style()</code> -- per-frame style transfer</li>
+</ul>
+<h2 id="optional-extras">Optional extras<a class="headerlink" href="#optional-extras" title="Permanent link">&para;</a></h2>
+<h3 id="svg-manipulation">SVG manipulation<a class="headerlink" href="#svg-manipulation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;vexy-lines-apy[svg]&quot;</span>
+</code></pre></div>
+<p>Adds the <code>svglab</code> package, enabling <code>client.svg_parsed()</code> which returns a full SVG DOM object you can traverse, edit, and render.</p>
+<h3 id="external-tools-optional-not-python-packages">External tools (optional, not Python packages)<a class="headerlink" href="#external-tools-optional-not-python-packages" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Used by</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ffprobe</code></td>
+<td><code>probe()</code></td>
+<td>Audio stream detection in video files</td>
+</tr>
+<tr>
+<td><code>ffmpeg</code></td>
+<td><code>process_video()</code></td>
+<td>Audio stream merging in output videos</td>
+</tr>
+</tbody>
+</table>
+<p>Both are optional. Without them, <code>VideoInfo.has_audio</code> defaults to <code>False</code> and video output will have no audio track.</p>
 <h2 id="verify-the-install">Verify the install<a class="headerlink" href="#verify-the-install" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span><span class="p">,</span> <span class="n">extract_style</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;vexy-lines-apy is ready&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>To verify the MCP connection:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span>
+
+<span class="k">with</span> <span class="n">MCPClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">get_document_info</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected: </span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">width_mm</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">height_mm</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> mm&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="the-vexy-lines-app">The Vexy Lines app<a class="headerlink" href="#the-vexy-lines-app" title="Permanent link">&para;</a></h2>
 <p>The MCP client connects to a TCP server embedded in the Vexy Lines desktop app at <code>localhost:47384</code>. By default, <code>MCPClient</code> auto-launches the app if it isn't running.</p>
@@ -752,7 +880,30 @@
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">MCPClient</span><span class="p">(</span><span class="n">auto_launch</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
     <span class="o">...</span>
 </code></pre></div>
-<p>The style extraction functions (<code>extract_style</code>, <code>interpolate_style</code>, <code>styles_compatible</code>) work offline -- they parse <code>.lines</code> files directly and don't need the app. Only <code>apply_style</code> and <code>MCPClient</code> methods require a running app.</p>
+<p>Auto-launch behaviour by platform:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS</td>
+<td><code>open -a "Vexy Lines"</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>Searches standard install paths for <code>Vexy Lines.exe</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>Not supported (raises <code>MCPError</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>After launching, the client polls the TCP port for up to 30 seconds with exponential back-off before giving up.</p>
 <h2 id="development-install">Development install<a class="headerlink" href="#development-install" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/vexyart/vexy-lines.git
 <span class="nb">cd</span><span class="w"> </span>vexy-lines/vexy-lines-apy
@@ -761,6 +912,12 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
 </code></pre></div>
 <p>Run tests:</p>
 <div class="highlight"><pre><span></span><code>uvx<span class="w"> </span>hatch<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p>Run type checking:</p>
+<div class="highlight"><pre><span></span><code>uvx<span class="w"> </span>hatch<span class="w"> </span>run<span class="w"> </span>lint:typing
+</code></pre></div>
+<p>Run linting:</p>
+<div class="highlight"><pre><span></span><code>uvx<span class="w"> </span>hatch<span class="w"> </span>fmt
 </code></pre></div>
 
 
