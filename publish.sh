@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
+# publish.sh - Build, version, and publish vexy-lines-apy
+# Vexy Lines is a macOS vector art application.
+# Python bindings to the Vexy Lines MCP API and style engine.
+# Calls build.sh + install.sh, bumps version with gitnextver, then publishes to PyPI.
 set -euo pipefail
-cd "$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+echo "==> Running build..."
+"$SCRIPT_DIR/build.sh"
+
+echo "==> Running install..."
+"$SCRIPT_DIR/install.sh"
+
 python -m mkdocs build
 git add -A
 git diff --cached --quiet || git commit -m "chore: Build docs for release"

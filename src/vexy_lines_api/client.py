@@ -1,18 +1,42 @@
 # this_file: vexy-lines-apy/src/vexy_lines_api/client.py
 """TCP client for the Vexy Lines MCP server (JSON-RPC 2.0).
 
-The Vexy Lines macOS app embeds an MCP server on ``localhost:47384``.
-This module speaks newline-delimited JSON-RPC 2.0 over a raw TCP socket,
-handles the MCP initialize/initialized handshake, and exposes all 25 tools
-as typed Python methods.
+The Vexy Lines macOS app embeds a JSON-RPC 2.0 server on ``localhost:47384``
+(TCP, newline-delimited framing). This module performs the MCP
+``initialize``/``initialized`` handshake, then exposes all 25 tools as typed
+Python methods grouped by function:
+
+**Document** (5 tools)
+  ``new_document``, ``open_document``, ``save_document``,
+  ``export_document``, ``get_document_info``
+
+**Structure** (5 tools)
+  ``get_layer_tree``, ``add_group``, ``add_layer``, ``add_fill``,
+  ``delete_object``
+
+**Fill params** (2 tools)
+  ``get_fill_params``, ``set_fill_params``
+
+**Visual** (7 tools)
+  ``set_source_image``, ``set_caption``, ``set_visible``,
+  ``set_layer_mask``, ``get_layer_mask``, ``transform_layer``,
+  ``set_layer_warp``
+
+**Control** (6 tools)
+  ``render_all``, ``get_render_status``, ``undo``, ``redo``,
+  ``get_selection``, ``select_object``
+
+All spatial parameters use pixels at document DPI; origin is top-left.
+If the app is not running, ``MCPClient`` will attempt to launch it and
+wait up to 30 seconds for the server to become ready.
 
 Example::
 
     with MCPClient() as vl:
-        info = vl.get_document_info()   # DocumentInfo
-        tree = vl.get_layer_tree()      # LayerNode tree
+        info = vl.get_document_info()       # DocumentInfo
+        tree = vl.get_layer_tree()          # LayerNode tree
         vl.set_fill_params(fill_id, color="#ff0000")
-        vl.render()                     # render + wait
+        vl.render()                         # render + wait for completion
         vl.export_svg("out.svg")
 """
 
