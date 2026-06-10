@@ -71,6 +71,24 @@ with MCPClient() as vl:
     vl.export_png("result.png")
 ```
 
+## Edit image filters
+
+Fills can carry an ordered source-image filter chain. The MCP API uses names
+such as `brightness`, `levels`, `invert`, `color`, and `gradient`.
+
+```python
+with MCPClient() as vl:
+    vl.open_document("art.lines")
+    fill_id = 42
+
+    vl.set_image_filters(fill_id, [
+        {"type": "brightness", "params": {"value": 25.0}},
+        {"type": "levels", "params": {"left": 10, "right": 240}},
+    ])
+
+    filters = vl.get_image_filters(fill_id)
+```
+
 ## Style engine
 
 Extract the complete fill structure from a `.lines` file and apply it to any source image — no GUI required.
@@ -103,7 +121,7 @@ with MCPClient() as vl:
     svg = apply_style(vl, mid, "photo.jpg")
 ```
 
-Two styles are compatible for interpolation when they share the same group/layer/fill structure with matching fill types. Check with `styles_compatible(a, b)` before blending.
+Two styles are compatible for interpolation when they share the same group/layer/fill structure with matching fill types and matching image-filter chains. Check with `styles_compatible(a, b)` before blending.
 
 ## Job folder (resumable exports)
 
@@ -158,6 +176,10 @@ Override the job folder location with the `VEXY_LINES_JOB_FOLDER` environment va
 |---|---|
 | `get_fill_params(fill_id)` | Get all params as a dict |
 | `set_fill_params(fill_id, **params)` | Set params by keyword |
+| `get_image_filters(fill_id)` | Get a fill's image-filter chain |
+| `set_image_filters(fill_id, filters)` | Replace a fill's image-filter chain |
+| `add_image_filter(fill_id, filter_type, params, index)` | Add one image filter |
+| `remove_image_filter(fill_id, index)` | Remove one image filter |
 
 ### Visual
 
@@ -201,7 +223,7 @@ Override the job folder location with the `VEXY_LINES_JOB_FOLDER` environment va
 |---|---|
 | `extract_style(path)` | Parse a `.lines` file into a `Style` |
 | `apply_style(client, style, source_image, dpi, save_lines_to)` | Apply style to an image, return SVG string. Optionally save the intermediate `.lines` file. |
-| `interpolate_style(a, b, t)` | Blend two styles at ratio `t` in [0, 1] |
+| `interpolate_style(a, b, t)` | Blend two styles at ratio `t` in [0, 1], including matching image filters |
 | `styles_compatible(a, b)` | Check if two styles can be interpolated |
 | `JobFolder(output_path, force)` | Persistent job folder for resumable exports |
 

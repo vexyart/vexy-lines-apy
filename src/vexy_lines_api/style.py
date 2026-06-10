@@ -29,6 +29,8 @@ from vexy_lines.types import (
     FillNode,
     FillParams,
     GroupInfo,
+    ImageFilterEntry,
+    ImageFilterParamValue,
     LayerInfo,
     LinesDocument,
 )
@@ -85,6 +87,8 @@ MCP_MM_PARAMS: frozenset[str] = frozenset({"thickness", "thickness_min"})
 # Server converts incoming pixel values: px * 72 / dpi → pt.
 # To send correct values: pt_value * (source_dpi / 72.0) → pixels.
 MCP_PT_PARAMS: frozenset[str] = frozenset({"interval", "dispersion"})
+
+IMAGE_FILTER_INT_PARAMS: frozenset[str] = frozenset({"left", "right", "direction"})
 
 
 # ---------------------------------------------------------------------------
@@ -352,6 +356,7 @@ def _scale_style(style: Style, scale: float) -> Style:
                         xml_tag=f.xml_tag,
                         caption=f.caption,
                         params=_scale_fill_params(f.params, scale),
+                        image_filters=copy.deepcopy(f.image_filters),
                         object_id=f.object_id,
                     )
                     for f in node.fills
@@ -442,7 +447,9 @@ def apply_style(
         if not style.source_path or not Path(style.source_path).is_file():
             logger.warning("Fast mode requested but source .lines not available; falling back to slow")
         else:
-            return _apply_style_fast(client, style, source_image, render_timeout=render_timeout, save_lines_to=save_lines_to)
+            return _apply_style_fast(
+                client, style, source_image, render_timeout=render_timeout, save_lines_to=save_lines_to
+            )
 
     # 1. Create new document with the source image
     doc_result = client.new_document(source_image=str(source_image), dpi=dpi)
@@ -705,6 +712,11 @@ def _apply_fill(client: MCPClient, fill: FillNode, layer_id: int, source_dpi: in
     if init_params:
         client.set_fill_params(fill_id, **init_params)
 
+    if fill.image_filters:
+        filters = _image_filters_to_mcp(fill.image_filters)
+        if filters:
+            client.set_image_filters(fill_id, filters)
+
 
 def _fill_params_to_dict(params: FillParams, source_dpi: int = 72) -> dict[str, object]:
     """Extract numeric values from FillParams, converted to MCP pixel units.
@@ -742,6 +754,27 @@ def _fill_params_to_dict(params: FillParams, source_dpi: int = 72) -> dict[str, 
     if params.color:
         result["color"] = params.color
         result["color_mode"] = 2  # static colour
+    return result
+
+
+def _image_filter_to_mcp(filter_entry: ImageFilterEntry) -> dict[str, object] | None:
+    """Convert a parsed image filter to the MCP ``set_image_filters`` shape."""
+    if filter_entry.name.startswith("unknown_"):
+        logger.warning("Skipping unknown image filter type_id={}", filter_entry.type_id)
+        return None
+    return {
+        "type": filter_entry.name,
+        "params": copy.deepcopy(filter_entry.params),
+    }
+
+
+def _image_filters_to_mcp(filters: list[ImageFilterEntry]) -> list[dict[str, object]]:
+    """Convert parsed image-filter entries to MCP filter-chain entries."""
+    result: list[dict[str, object]] = []
+    for filter_entry in filters:
+        mcp_filter = _image_filter_to_mcp(filter_entry)
+        if mcp_filter is not None:
+            result.append(mcp_filter)
     return result
 
 
@@ -834,6 +867,51 @@ def _interpolate_fill_params(a: FillParams, b: FillParams, t: float) -> FillPara
     return result
 
 
+def _is_number(value: object) -> bool:
+    """Return True for numeric image-filter params, excluding booleans."""
+    return not isinstance(value, bool) and isinstance(value, (int, float))
+
+
+def _interpolate_image_filter_param(
+    key: str,
+    a: ImageFilterParamValue,
+    b: ImageFilterParamValue,
+    t: float,
+) -> ImageFilterParamValue:
+    """Interpolate one image-filter parameter where the type supports it."""
+    if key == "color" and isinstance(a, str) and isinstance(b, str) and a.startswith("#") and b.startswith("#"):
+        return _lerp_color(a, b, t)
+    if _is_number(a) and _is_number(b):
+        interpolated = _lerp(float(a), float(b), t)
+        if key in IMAGE_FILTER_INT_PARAMS:
+            return round(interpolated)
+        return interpolated
+    return copy.deepcopy(a)
+
+
+def _interpolate_image_filter(a: ImageFilterEntry, b: ImageFilterEntry, t: float) -> ImageFilterEntry:
+    """Interpolate two matching image-filter entries."""
+    result = copy.deepcopy(a)
+    for key, value_a in a.params.items():
+        if key in b.params:
+            result.params[key] = _interpolate_image_filter_param(key, value_a, b.params[key], t)
+    return result
+
+
+def _interpolate_image_filters(
+    a_filters: list[ImageFilterEntry],
+    b_filters: list[ImageFilterEntry],
+    t: float,
+) -> list[ImageFilterEntry]:
+    """Interpolate matching image-filter chains."""
+    if not _image_filter_chains_compatible(a_filters, b_filters):
+        return copy.deepcopy(a_filters)
+    return [
+        _interpolate_image_filter(a_filter, b_filter, t)
+        for a_filter, b_filter in zip(a_filters, b_filters, strict=True)
+    ]
+
+
 def _interpolate_group(a: GroupInfo, b: GroupInfo, t: float) -> GroupInfo:
     """Recursively interpolate fills within matching group structures.
 
@@ -881,6 +959,7 @@ def _interpolate_layer(a: LayerInfo, b: LayerInfo, t: float) -> LayerInfo:
                 xml_tag=fill_a.xml_tag,
                 caption=fill_a.caption,
                 params=interpolated_params,
+                image_filters=_interpolate_image_filters(fill_a.image_filters, fill_b.image_filters, t),
                 object_id=None,
             )
         )
@@ -931,6 +1010,16 @@ def _compare_structure(a_nodes: list[GroupInfo | LayerInfo], b_nodes: list[Group
     return True
 
 
+def _image_filter_chains_compatible(a_filters: list[ImageFilterEntry], b_filters: list[ImageFilterEntry]) -> bool:
+    """Return True when two image-filter chains can be interpolated/applied as peers."""
+    if len(a_filters) != len(b_filters):
+        return False
+    return all(
+        a_filter.type_id == b_filter.type_id and a_filter.name == b_filter.name
+        for a_filter, b_filter in zip(a_filters, b_filters, strict=True)
+    )
+
+
 def _compare_fills(a_fills: list[FillNode], b_fills: list[FillNode]) -> bool:
     """Check if two fill lists have matching types.
 
@@ -943,7 +1032,11 @@ def _compare_fills(a_fills: list[FillNode], b_fills: list[FillNode]) -> bool:
     """
     if len(a_fills) != len(b_fills):
         return False
-    return all(fa.params.fill_type == fb.params.fill_type for fa, fb in zip(a_fills, b_fills, strict=True))
+    return all(
+        fa.params.fill_type == fb.params.fill_type
+        and _image_filter_chains_compatible(fa.image_filters, fb.image_filters)
+        for fa, fb in zip(a_fills, b_fills, strict=True)
+    )
 
 
 # ---------------------------------------------------------------------------

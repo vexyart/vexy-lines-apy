@@ -4,12 +4,13 @@
 Two entry points:
 
 - :class:`MCPClient` — TCP client for the JSON-RPC 2.0 server embedded in the
-  Vexy Lines macOS app (default port 47384). Exposes all 25 MCP tools as typed
+  Vexy Lines macOS app (default port 47384). Exposes all 29 MCP tools as typed
   Python methods.
 
 - Style engine (:func:`extract_style`, :func:`apply_style`,
   :func:`interpolate_style`) — extract a fill style from a ``.lines`` file,
-  apply it to any source image, or blend two styles at an arbitrary mix ratio.
+  apply it to any source image, or blend two styles at an arbitrary mix ratio,
+  including matching image-filter chains.
 
 Basic document workflow::
 
@@ -63,36 +64,36 @@ from vexy_lines_api.types import (
     NewDocumentResult,
     RenderStatus,
 )
-from vexy_lines_api.video import VideoInfo, svg_to_pil, probe, process_video, process_video_with_style
+from vexy_lines_api.video import VideoInfo, probe, process_video, process_video_with_style, svg_to_pil
 
 __all__ = [
     "FILL_TYPES",
     "FILL_TYPE_PARAMS",
     "DocumentInfo",
-    "LayerNode",
-    "MCPClient",
-    "MCPError",
     "ExportFormat",
     "ExportMode",
     "ExportRequest",
+    "LayerNode",
+    "MCPClient",
+    "MCPError",
     "NewDocumentResult",
     "RenderStatus",
     "Style",
     "StyleMode",
     "VideoInfo",
-    "svg_to_pil",
     "apply_style",
     "create_styled_document",
-    "extract_style",
     "extract_frame",
     "extract_preview_from_lines",
+    "extract_style",
     "fit_image_to_box",
     "interpolate_style",
-    "process_export",
-    "save_and_consolidate",
     "probe",
+    "process_export",
     "process_video",
     "process_video_with_style",
+    "save_and_consolidate",
     "styles_compatible",
+    "svg_to_pil",
     "truncate_start",
 ]

@@ -19,6 +19,7 @@ from vexy_lines.types import (
     FillNode,
     FillParams,
     GroupInfo,
+    ImageFilterEntry,
     LayerInfo,
     LinesDocument,
 )
@@ -67,6 +68,13 @@ def _make_fill(fill_type: str = "linear", color: str = "#000000", interval: floa
             dispersion=0.0,
             shear=0.0,
         ),
+    )
+
+
+def _make_filter(type_id: int = 0, name: str = "brightness", value: float = 0.0) -> ImageFilterEntry:
+    """Create an ImageFilterEntry with a single numeric value param."""
+    return ImageFilterEntry(
+        type_id=type_id, name=name, params={"value": value}, raw={"type": str(type_id), "value": str(value)}
     )
 
 
@@ -265,6 +273,13 @@ class TestCompareFills:
     def test_empty_lists(self):
         assert _compare_fills([], []) is True
 
+    def test_different_image_filter_types(self):
+        a_fill = _make_fill("linear")
+        b_fill = _make_fill("linear")
+        a_fill.image_filters = [_make_filter(0, "brightness")]
+        b_fill.image_filters = [_make_filter(1, "contrast")]
+        assert _compare_fills([a_fill], [b_fill]) is False
+
 
 # ---------------------------------------------------------------------------
 # styles_compatible
@@ -362,6 +377,33 @@ class TestInterpolateStyle:
         result = interpolate_style(a, b, 0.5)
         assert result.props.width_mm == 150.0
         assert result.props.thickness_min == 1.0
+
+    def test_matching_image_filters_interpolated(self):
+        fill_a = _make_fill("linear")
+        fill_b = _make_fill("linear")
+        fill_a.image_filters = [
+            ImageFilterEntry(type_id=0, name="brightness", params={"value": 0.0}, raw={"type": "0", "value": "0"}),
+            ImageFilterEntry(type_id=4, name="levels", params={"left": 10, "right": 200}, raw={"type": "4"}),
+            ImageFilterEntry(type_id=8, name="color", params={"color": "#000000", "tolerance": 0.0}, raw={"type": "8"}),
+        ]
+        fill_b.image_filters = [
+            ImageFilterEntry(type_id=0, name="brightness", params={"value": 100.0}, raw={"type": "0", "value": "100"}),
+            ImageFilterEntry(type_id=4, name="levels", params={"left": 20, "right": 240}, raw={"type": "4"}),
+            ImageFilterEntry(
+                type_id=8, name="color", params={"color": "#ffffff", "tolerance": 10.0}, raw={"type": "8"}
+            ),
+        ]
+        result = interpolate_style(
+            _make_style(groups=[_make_layer(fills=[fill_a])]),
+            _make_style(groups=[_make_layer(fills=[fill_b])]),
+            0.5,
+        )
+
+        result_fill = result.groups[0].fills[0]
+        assert isinstance(result_fill, FillNode)
+        assert result_fill.image_filters[0].params == {"value": 50.0}
+        assert result_fill.image_filters[1].params == {"left": 15, "right": 220}
+        assert result_fill.image_filters[2].params == {"color": "#808080", "tolerance": 5.0}
 
     def test_dpi_kept_from_a(self):
         props_a = _make_props(dpi=72)
@@ -608,6 +650,33 @@ class TestApplyStyle:
         assert mock_client.add_group.call_count == 1
         assert mock_client.add_layer.call_count == 2
         assert mock_client.add_fill.call_count == 2
+
+    def test_apply_style_sets_image_filters_on_created_fill(self):
+        mock_client = MagicMock()
+        mock_client.new_document.return_value = MagicMock(root_id=1, width=100, height=100, dpi=72)
+        mock_client.add_layer.return_value = {"id": 20}
+        mock_client.add_fill.return_value = {"id": 30}
+        mock_client.render.return_value = True
+        mock_client.svg.return_value = "<svg/>"
+
+        fill = _make_fill("linear")
+        fill.image_filters = [
+            ImageFilterEntry(type_id=0, name="brightness", params={"value": 25.0}, raw={"type": "0", "value": "25"}),
+            ImageFilterEntry(
+                type_id=6, name="invert", params={"inverted": True}, raw={"type": "6", "inverted": "true"}
+            ),
+        ]
+        style = _make_style(groups=[_make_layer(fills=[fill])])
+
+        apply_style(mock_client, style, "/fake.png", style_mode="slow")
+
+        mock_client.set_image_filters.assert_called_once_with(
+            30,
+            [
+                {"type": "brightness", "params": {"value": 25.0}},
+                {"type": "invert", "params": {"inverted": True}},
+            ],
+        )
 
 
 # ---------------------------------------------------------------------------

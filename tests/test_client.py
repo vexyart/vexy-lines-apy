@@ -356,6 +356,68 @@ class TestTypedMethods:
         result = client.add_fill(layer_id=11, fill_type="linear", color="#ff0000")
         assert result["id"] == 12
 
+    def test_get_image_filters(self):
+        resp = _tool_response(
+            {
+                "id": 12,
+                "count": 2,
+                "filters": [
+                    {"type": "brightness", "params": {"value": 25.0}},
+                    {"type": "invert", "params": {"inverted": True}},
+                ],
+            },
+            request_id=2,
+        )
+        client = self._make_connected_client([resp])
+        result = client.get_image_filters(12)
+        assert result["count"] == 2
+        assert result["filters"][0]["type"] == "brightness"
+
+    def test_set_image_filters(self):
+        resp = _tool_response(
+            {
+                "status": "ok",
+                "id": 12,
+                "count": 1,
+                "filters": [{"type": "levels", "params": {"left": 10, "right": 240}}],
+            },
+            request_id=2,
+        )
+        client = self._make_connected_client([resp])
+        result = client.set_image_filters(12, [{"type": "levels", "params": {"left": 10, "right": 240}}])
+        assert result["status"] == "ok"
+        assert result["filters"][0]["params"] == {"left": 10, "right": 240}
+
+    def test_add_image_filter(self):
+        resp = _tool_response(
+            {
+                "status": "ok",
+                "id": 12,
+                "count": 1,
+                "filters": [{"type": "brightness", "params": {"value": 25.0}}],
+            },
+            request_id=2,
+        )
+        client = self._make_connected_client([resp])
+        result = client.add_image_filter(12, "brightness", {"value": 25.0}, index=0)
+        assert result["status"] == "ok"
+        assert result["filters"][0]["type"] == "brightness"
+
+    def test_remove_image_filter(self):
+        resp = _tool_response(
+            {
+                "status": "ok",
+                "id": 12,
+                "count": 0,
+                "filters": [],
+            },
+            request_id=2,
+        )
+        client = self._make_connected_client([resp])
+        result = client.remove_image_filter(12, 0)
+        assert result["status"] == "ok"
+        assert result["count"] == 0
+
 
 # ---------------------------------------------------------------------------
 # Constants tests

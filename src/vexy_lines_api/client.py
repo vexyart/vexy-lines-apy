@@ -3,7 +3,7 @@
 
 The Vexy Lines macOS app embeds a JSON-RPC 2.0 server on ``localhost:47384``
 (TCP, newline-delimited framing). This module performs the MCP
-``initialize``/``initialized`` handshake, then exposes all 25 tools as typed
+``initialize``/``initialized`` handshake, then exposes all 29 tools as typed
 Python methods grouped by function:
 
 **Document** (5 tools)
@@ -14,8 +14,9 @@ Python methods grouped by function:
   ``get_layer_tree``, ``add_group``, ``add_layer``, ``add_fill``,
   ``delete_object``
 
-**Fill params** (2 tools)
-  ``get_fill_params``, ``set_fill_params``
+**Fill params** (6 tools)
+  ``get_fill_params``, ``set_fill_params``, ``get_image_filters``,
+  ``set_image_filters``, ``add_image_filter``, ``remove_image_filter``
 
 **Visual** (7 tools)
   ``set_source_image``, ``set_caption``, ``set_visible``,
@@ -577,6 +578,72 @@ class MCPClient:
         args: dict[str, object] = {"id": fill_id, "params": dict(params)}
         result = self.call_tool("set_fill_params", args)
         return result if isinstance(result, str) else str(result)
+
+    def get_image_filters(self, fill_id: int) -> dict[str, object]:
+        """Get the image-filter chain attached to a fill.
+
+        Args:
+            fill_id: Fill object ID.
+
+        Returns:
+            Server response dict with ``"filters"`` and ``"count"``.
+        """
+        data = self.call_tool("get_image_filters", {"id": fill_id})
+        return data if isinstance(data, dict) else {"result": data}
+
+    def set_image_filters(self, fill_id: int, filters: list[dict[str, object]]) -> dict[str, object]:
+        """Replace the image-filter chain attached to a fill.
+
+        Filter entries use the MCP shape ``{"type": name, "params": {...}}``.
+
+        Args:
+            fill_id: Fill object ID.
+            filters: Ordered filter entries.
+
+        Returns:
+            Server response dict with updated filter data.
+        """
+        data = self.call_tool("set_image_filters", {"id": fill_id, "filters": filters})
+        return data if isinstance(data, dict) else {"result": data}
+
+    def add_image_filter(
+        self,
+        fill_id: int,
+        filter_type: str,
+        params: dict[str, object] | None = None,
+        index: int | None = None,
+    ) -> dict[str, object]:
+        """Add one image filter to a fill's filter chain.
+
+        Args:
+            fill_id: Fill object ID.
+            filter_type: MCP filter name, e.g. ``"brightness"`` or ``"levels"``.
+            params: Optional filter parameter dict.
+            index: Optional insertion index; omitted appends to the chain.
+
+        Returns:
+            Server response dict with updated filter data.
+        """
+        args: dict[str, object] = {"id": fill_id, "type": filter_type}
+        if params is not None:
+            args["params"] = params
+        if index is not None:
+            args["index"] = index
+        data = self.call_tool("add_image_filter", args)
+        return data if isinstance(data, dict) else {"result": data}
+
+    def remove_image_filter(self, fill_id: int, index: int) -> dict[str, object]:
+        """Remove an image filter from a fill's filter chain.
+
+        Args:
+            fill_id: Fill object ID.
+            index: Zero-based filter-chain index to remove.
+
+        Returns:
+            Server response dict with updated filter data.
+        """
+        data = self.call_tool("remove_image_filter", {"id": fill_id, "index": index})
+        return data if isinstance(data, dict) else {"result": data}
 
     # -- visual -----------------------------------------------------------
 
