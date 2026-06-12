@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 ExportMode = Literal["lines", "images", "video"]
-ExportFormat = Literal["LINES", "SVG", "PNG", "JPG", "MP4"]
+ExportFormat = Literal["LINES", "SVG", "PNG", "JPG", "MP4", "BUNDLE"]
 
 
 @dataclass(frozen=True)

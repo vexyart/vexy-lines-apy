@@ -96,6 +96,10 @@ def process_export(
             cleanup=cleanup,
         )
 
+        if req.format == "BUNDLE" and req.mode != "lines":
+            report_error(on_error, "BUNDLE format is only available for .lines inputs")
+            return
+
         job_folder = JobFolder(req.output_path, force=req.force)
 
         if req.mode == "lines":

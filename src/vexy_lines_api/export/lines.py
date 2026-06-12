@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING, Any
 from loguru import logger
 
 from vexy_lines import parse as parse_lines
+from vexy_lines_api.bundle import export_bundle
 from vexy_lines_api.client import MCPClient
 from vexy_lines_api.style import apply_style, extract_style, interpolate_style, styles_compatible
 from vexy_lines_api.export.callbacks import ProgressCallback, PreviewCallback, report_preview, report_progress
@@ -61,6 +62,19 @@ def process_lines(
 
             stem = Path(path).stem
             ext = fmt.lower()
+
+            if fmt == "BUNDLE":
+                if style is not None:
+                    raise ExportAborted("BUNDLE format does not support style transfer")
+                report_progress(on_progress, idx, total, f"Bundling {Path(path).name}")
+                try:
+                    results = export_bundle(path, out_dir, client=client)
+                    png = results.get("png")
+                    if png is not None:
+                        report_preview(on_preview, png.read_bytes())
+                except Exception:
+                    logger.opt(exception=True).warning("Bundle export failed for {}", path)
+                continue
 
             if fmt == "LINES" and style is None:
                 report_progress(on_progress, idx, total, f"Copying {Path(path).name}")

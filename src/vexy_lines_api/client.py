@@ -791,13 +791,22 @@ class MCPClient:
 
     # -- control ----------------------------------------------------------
 
-    def render_all(self) -> str:
+    def render_all(self, *, blocking: bool = False, timeout: float = 600.0) -> str:
         """Trigger a full render of the document.
+
+        Args:
+            blocking: If ``True``, the server blocks until rendering completes
+                (or *timeout* elapses) before replying. More reliable than
+                polling :meth:`get_render_status`.
+            timeout: Maximum seconds the server waits when *blocking* is set.
 
         Returns:
             Server status string.
         """
-        result = self.call_tool("render_all")
+        args: dict[str, object] = {}
+        if blocking:
+            args = {"blocking": True, "timeout": timeout}
+        result = self.call_tool("render_all", args or None)
         return result if isinstance(result, str) else str(result)
 
     def wait_for_render(self, timeout: float = 120.0, poll_interval: float = 0.5) -> bool:
@@ -860,7 +869,10 @@ class MCPClient:
     def render(self, timeout: float = 120.0) -> bool:
         """Render all layers and wait for completion.
 
-        Combines :meth:`render_all` + :meth:`wait_for_render` into a single call.
+        Uses the server's blocking ``render_all`` mode, which replies only
+        once rendering finishes. The socket timeout is raised for the
+        duration of the call so a long render cannot trip the client-side
+        timeout (disconnecting mid-call can crash the app's MCP session).
 
         Args:
             timeout: Maximum wait time in seconds.
@@ -868,8 +880,14 @@ class MCPClient:
         Returns:
             ``True`` if render completed, ``False`` if timed out.
         """
-        self.render_all()
-        return self.wait_for_render(timeout=timeout)
+        if self._sock is not None:
+            self._sock.settimeout(timeout + 30.0)
+        try:
+            result = self.render_all(blocking=True, timeout=timeout)
+        finally:
+            if self._sock is not None:
+                self._sock.settimeout(self._timeout)
+        return "timeout" not in result.lower()
 
     def export_svg(self, path: str, *, dpi: int | None = None) -> Path:
         """Export the document as SVG.
