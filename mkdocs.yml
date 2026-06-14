@@ -34,6 +34,7 @@ nav:
   - Overview: index.md
   - Installation: installation.md
   - API Reference: api-reference.md
+  - AI Rename: ai-rename.md
   - Style Engine: style-engine.md
   - MCP Protocol: mcp-protocol.md
   - Examples: examples.md

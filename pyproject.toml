@@ -47,6 +47,14 @@ dependencies = [
     "av>=12.0.0",
 ]
 
+[project.optional-dependencies]
+# AI-assisted renaming: OpenAI-compatible LLM client + name slugging.
+ai = [
+    "openai>=1.40.0",
+    "pathvalidate>=3.0.0",
+    "python-slugify>=8.0.0",
+]
+
 [[project.authors]]
 name = "Fontlab Ltd."
 email = "opensource@vexy.art"

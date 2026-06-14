@@ -123,6 +123,24 @@ with MCPClient() as vl:
 
 Two styles are compatible for interpolation when they share the same group/layer/fill structure with matching fill types and matching image-filter chains. Check with `styles_compatible(a, b)` before blending.
 
+## AI-assisted rename of layers & fills
+
+Rename a document's [layers and fills](https://help.vexy.art/lines/articles/document-structure-overview/) based on what each fill actually draws. The renamer renders each fill in isolation, builds an "inspection image" (the fill framed by a red box over the faint full artwork), asks a vision model to describe it in three words, and writes a renamed copy of the `.lines` — preserving every fill parameter, mask, and image.
+
+```python
+from vexy_lines_api import rename_lines
+
+plan = rename_lines("road-12.lines")          # -> road-12-renamed.lines
+for f in plan.fills:
+    print(f.object_id, f.old_caption, "->", f.new_caption, f"({f.description})")
+```
+
+The renamer uses any OpenAI-compatible `/v1` endpoint, configured from the environment: `VEXY_LINES_LLM_API_URL`, `VEXY_LINES_LLM_API_KEY`, `VEXY_LINES_LLM_MODEL_VISION` (vision), and `VEXY_LINES_VLM_MODEL` (text). Install the extra with `pip install "vexy-lines-apy[ai]"`.
+
+> Visibility is baked into a temporary copy of the `.lines` (`vexy_lines.set_visibility`) rather than toggled live over MCP — `set_visible` does not affect the export.
+
+Full guide: [AI Rename](https://vexy.dev/vexy-lines-apy/ai-rename/). Also available as `vexy-lines-cli ai-rename` and *Lines ▸ AI Rename Layers & Fills…* in the GUI.
+
 ## Job folder (resumable exports)
 
 Long-running exports (especially video) save every intermediate artifact to a persistent **job folder** alongside the output. If a job is interrupted, re-running the same command resumes from where it left off.

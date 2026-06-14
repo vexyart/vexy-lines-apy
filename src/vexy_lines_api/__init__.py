@@ -47,6 +47,15 @@ from vexy_lines_api.bundle import export_bundle
 from vexy_lines_api.client import MCPClient, MCPError
 from vexy_lines_api.export import ExportFormat, ExportMode, ExportRequest, process_export
 from vexy_lines_api.media import extract_frame, extract_preview_from_lines, fit_image_to_box, truncate_start
+from vexy_lines_api.rename import (
+    FillRename,
+    LayerRename,
+    RenamePlan,
+    VLMConfig,
+    apply_rename_plan,
+    build_rename_plan,
+    rename_lines,
+)
 from vexy_lines_api.style import (
     Style,
     StyleMode,
@@ -74,15 +83,21 @@ __all__ = [
     "ExportFormat",
     "ExportMode",
     "ExportRequest",
+    "FillRename",
     "LayerNode",
+    "LayerRename",
     "MCPClient",
     "MCPError",
     "NewDocumentResult",
+    "RenamePlan",
     "RenderStatus",
     "Style",
     "StyleMode",
+    "VLMConfig",
     "VideoInfo",
+    "apply_rename_plan",
     "apply_style",
+    "build_rename_plan",
     "create_styled_document",
     "export_bundle",
     "extract_frame",
@@ -94,6 +109,7 @@ __all__ = [
     "process_export",
     "process_video",
     "process_video_with_style",
+    "rename_lines",
     "save_and_consolidate",
     "styles_compatible",
     "svg_to_pil",

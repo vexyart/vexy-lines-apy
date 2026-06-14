@@ -82,6 +82,7 @@ process_export(request, on_progress=lambda cur, total, msg: print(f"[{cur}/{tota
 
 - [Installation](installation.md) -- install options, dependencies, and optional extras
 - [API Reference](api-reference.md) -- every class, method, function, and constant
+- [AI Rename](ai-rename.md) -- describe each fill with a vision model and rename layers & fills
 - [Style Engine](style-engine.md) -- how extraction, application, interpolation, and relative scaling work
 - [MCP Protocol](mcp-protocol.md) -- the 25 tools in 5 groups, wire format, parameter reference, bridge setup
 - [Examples](examples.md) -- real-world usage patterns including batch processing, video, and error handling
