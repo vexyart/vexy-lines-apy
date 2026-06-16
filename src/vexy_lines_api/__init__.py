@@ -46,6 +46,13 @@ from __future__ import annotations
 from vexy_lines_api.bundle import export_bundle
 from vexy_lines_api.client import MCPClient, MCPError
 from vexy_lines_api.export import ExportFormat, ExportMode, ExportRequest, process_export
+from vexy_lines_api.interpolation import (
+    InterpolationVideoResult,
+    ScreenRecordingResult,
+    interpolate_lines,
+    record_interpolation_screen,
+    render_interpolation_video,
+)
 from vexy_lines_api.media import extract_frame, extract_preview_from_lines, fit_image_to_box, truncate_start
 from vexy_lines_api.rename import (
     FillRename,
@@ -84,6 +91,7 @@ __all__ = [
     "ExportMode",
     "ExportRequest",
     "FillRename",
+    "InterpolationVideoResult",
     "LayerNode",
     "LayerRename",
     "MCPClient",
@@ -91,6 +99,7 @@ __all__ = [
     "NewDocumentResult",
     "RenamePlan",
     "RenderStatus",
+    "ScreenRecordingResult",
     "Style",
     "StyleMode",
     "VLMConfig",
@@ -104,12 +113,15 @@ __all__ = [
     "extract_preview_from_lines",
     "extract_style",
     "fit_image_to_box",
+    "interpolate_lines",
     "interpolate_style",
     "probe",
     "process_export",
     "process_video",
     "process_video_with_style",
+    "record_interpolation_screen",
     "rename_lines",
+    "render_interpolation_video",
     "save_and_consolidate",
     "styles_compatible",
     "svg_to_pil",

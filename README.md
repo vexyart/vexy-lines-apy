@@ -123,6 +123,38 @@ with MCPClient() as vl:
 
 Two styles are compatible for interpolation when they share the same group/layer/fill structure with matching fill types and matching image-filter chains. Check with `styles_compatible(a, b)` before blending.
 
+### Explicit `.lines` interpolation
+
+Generate an actual intermediate `.lines` file between two compatible documents without opening the app:
+
+```python
+from vexy_lines_api import interpolate_lines
+
+interpolate_lines("start.lines", "end.lines", "mid.lines", t=0.5)
+```
+
+The output keeps the XML structure and embedded images from `start.lines`, then rewrites matching interpolatable numeric XML attributes across the document, layers, fills, image filters, masks, and grid edges. Structural IDs, enum-like modes, flags, captions, and text are left intact. Native `.lines` colours are blended in their XML format, including `#AARRGGBB`. `t=0` is the start document, `t=1` is the end document.
+
+For rendered timelines, the app is required:
+
+```python
+from vexy_lines_api import render_interpolation_video, record_interpolation_screen
+
+render_interpolation_video("start.lines", "end.lines", "blend.mp4", frames=120, fps=30)
+
+record_interpolation_screen(
+    "start.lines",
+    "end.lines",
+    "screen-frames/",
+    frames=120,
+    fps=30,
+    zoom_steps=2,
+    video_path="screen-recording.mp4",
+)
+```
+
+`render_interpolation_video()` renders generated `.lines` frames via MCP, exports SVG from the app, rasterizes PNG frames locally, resizes mismatched frame dimensions to the first frame, and assembles an MP4. `record_interpolation_screen()` opens the start document in the GUI, applies optional zoom keystrokes on macOS, steps through generated interpolation documents, and captures the Vexy Lines window; pass `video_path` to assemble those screenshots into MP4. If temporary work is auto-cleaned, returned intermediate frame/`.lines` paths are omitted unless `keep_work=True` or `work_dir` is provided.
+
 ## AI-assisted rename of layers & fills
 
 Rename a document's [layers and fills](https://help.vexy.art/lines/articles/document-structure-overview/) based on what each fill actually draws. The renamer renders each fill in isolation, builds an "inspection image" (the fill framed by a red box over the faint full artwork), asks a vision model to describe it in three words, and writes a renamed copy of the `.lines` — preserving every fill parameter, mask, and image.
@@ -242,12 +274,15 @@ Override the job folder location with the `VEXY_LINES_JOB_FOLDER` environment va
 | `extract_style(path)` | Parse a `.lines` file into a `Style` |
 | `apply_style(client, style, source_image, dpi, save_lines_to)` | Apply style to an image, return SVG string. Optionally save the intermediate `.lines` file. |
 | `interpolate_style(a, b, t)` | Blend two styles at ratio `t` in [0, 1], including matching image filters |
+| `interpolate_lines(start, end, output, t)` | Write one intermediate `.lines` file between compatible documents, interpolating matching numeric XML attributes and native colours |
+| `render_interpolation_video(start, end, output, frames, fps)` | Render a full `.lines` interpolation timeline to MP4 |
+| `record_interpolation_screen(start, end, output, frames, fps, zoom_steps)` | Capture Vexy Lines window screenshots, optionally assembled to video |
 | `styles_compatible(a, b)` | Check if two styles can be interpolated |
 | `JobFolder(output_path, force)` | Persistent job folder for resumable exports |
 
 ### Types
 
-`DocumentInfo`, `JobFolder`, `LayerNode`, `NewDocumentResult`, `RenderStatus`, `Style`
+`DocumentInfo`, `InterpolationVideoResult`, `JobFolder`, `LayerNode`, `NewDocumentResult`, `RenderStatus`, `ScreenRecordingResult`, `Style`
 
 ## Dependencies
 
