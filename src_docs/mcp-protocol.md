@@ -601,7 +601,7 @@ Server errors are returned as JSON-RPC error objects:
 
 ## Bridge binary
 
-For Claude Desktop and Cursor integration, the `vexylines-mcp` bridge binary converts between stdio and TCP. It reads JSON-RPC from stdin, forwards to the TCP server at `localhost:47384`, and writes responses to stdout.
+For Claude Desktop and Cursor integration, the `vexy-lines-mcp` bridge binary converts between stdio and TCP. It reads JSON-RPC from stdin, forwards to the TCP server at `localhost:47384`, and writes responses to stdout.
 
 ### Claude Desktop setup
 
@@ -611,7 +611,7 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "vexy-lines": {
-      "command": "/path/to/vexylines-mcp"
+      "command": "/path/to/vexy-lines-mcp"
     }
   }
 }
@@ -619,8 +619,8 @@ Add to your `claude_desktop_config.json`:
 
 The bridge binary is bundled with the Vexy Lines app. Typical locations:
 
-- **macOS**: `/Applications/Vexy Lines.app/Contents/Resources/vexylines-mcp`
-- **Windows**: `C:\Program Files\Vexy Lines\vexylines-mcp.exe`
+- **macOS**: `/Applications/Vexy Lines.app/Contents/Resources/vexy-lines-mcp`
+- **Windows**: `C:\Program Files\Vexy Lines\vexy-lines-mcp.exe`
 
 ### Cursor setup
 
@@ -630,7 +630,7 @@ Add to `.cursor/mcp.json` in your project:
 {
   "mcpServers": {
     "vexy-lines": {
-      "command": "/path/to/vexylines-mcp"
+      "command": "/path/to/vexy-lines-mcp"
     }
   }
 }
@@ -638,4 +638,4 @@ Add to `.cursor/mcp.json` in your project:
 
 The bridge handles the MCP handshake transparently. All 25 tools are exposed with their JSON Schema parameter definitions via `tools/list`.
 
-See the [CLI docs](https://github.com/vexyart/vexy-lines/tree/main/vexy-lines-cli) for additional setup instructions and the `vexy-lines mcp-serve` command which provides an alternative Python-based bridge.
+See the [CLI docs](https://github.com/vexyart/vexy-lines/tree/main/vexy-lines-cli) for additional setup instructions and the `vexy-lines-cli mcp-serve` command, or run the installed `vexy-lines-mcp` script directly.

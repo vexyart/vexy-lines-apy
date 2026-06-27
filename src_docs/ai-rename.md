@@ -152,5 +152,5 @@ pip install "vexy-lines-apy[ai]"     # openai + pathvalidate + python-slugify
 ## See also
 
 - Official Vexy Lines help: [Document Structure](https://help.vexy.art/lines/articles/document-structure-overview/) · [Fill Properties](https://help.vexy.art/lines/articles/fill-properties-1/) · [Layers Panel](https://help.vexy.art/lines/articles/layers-panel/) · [Export](https://help.vexy.art/lines/articles/exporting-the-artwork/)
-- [.lines file format](file-format.md) reference in `vexy-lines-py`
+- [.lines parser reference](https://vexy.dev/vexy-lines-py/) in `vexy-lines-py`
 - [MCP Protocol](mcp-protocol.md) — the tools the renamer drives

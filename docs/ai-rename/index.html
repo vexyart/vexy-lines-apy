@@ -1,0 +1,1121 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <meta name="description" content="Python bindings to the Vexy Lines MCP API and style engine">
+
+
+
+
+        <link rel="prev" href="../api-reference/">
+
+
+        <link rel="next" href="../style-engine/">
+
+
+
+
+
+
+
+
+
+
+          <link rel="icon" href="../assets/images/favicon.png">
+
+
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-materialx-10.1.7">
+
+
+
+        <title>AI Rename - vexy-lines-apy</title>
+
+
+
+      <link rel="stylesheet" href="../assets/stylesheets/main.ad98c137.min.css">
+
+
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+
+
+
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+
+
+
+
+
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="indigo" data-mx-topbar="glass">
+
+
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+
+
+        <a href="#ai-assisted-rename-of-layers-fills" class="md-skip">
+          Skip to content
+        </a>
+
+    </div>
+    <div data-md-component="announce">
+
+    </div>
+
+
+<div class="vexy-top-nav" style="width: 100%;">
+  <script src="https://i.vexy.art/vl/webcode/vexy-lines-menu.js"></script>
+  <vexy-lines-menu></vexy-lines-menu>
+</div>
+
+
+
+
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="vexy-lines-apy" class="md-header__button md-logo" aria-label="vexy-lines-apy" data-md-component="logo">
+
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            vexy-lines-apy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+
+              AI Rename
+
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+        <form class="md-header__option" data-md-component="palette">
+
+
+
+
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_0">
+
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+
+
+
+
+
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_1">
+
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+
+
+</form>
+
+
+
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+
+
+
+
+
+        <label class="md-header__button md-icon" for="__search">
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  </nav>
+
+</header>
+
+
+    <div class="md-container" data-md-component="container">
+
+
+
+
+
+
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+
+
+
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="vexy-lines-apy" class="md-nav__button md-logo" aria-label="vexy-lines-apy" data-md-component="logo">
+
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    vexy-lines-apy
+  </label>
+
+  <ul class="md-nav__list">
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Overview
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Installation
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../api-reference/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    API Reference
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--active">
+
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+
+
+
+
+
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+
+
+
+  <span class="md-ellipsis">
+
+
+    AI Rename
+
+
+
+  </span>
+
+
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+
+      <a href="./" class="md-nav__link md-nav__link--active">
+
+
+
+  <span class="md-ellipsis">
+
+
+    AI Rename
+
+
+
+  </span>
+
+
+
+      </a>
+
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+
+
+
+
+
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        How it works
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Quick start
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#configuring-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Configuring the model
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Artifacts
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        API reference
+
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="API reference">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#rename_lineslines_path-output_pathnone-clientnone-confignone-work_dirnone-dpi72-dry_runfalse-plan_kwargs-renameplan" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        rename_lines(lines_path, output_path=None, *, client=None, config=None, work_dir=None, dpi=72, dry_run=False, **plan_kwargs) -&gt; RenamePlan
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#build_rename_planlines_path-client-confignone-work_dirnone-dpi72-render_timeout6000-render_lines_pngnone-describenone-suggestnone-save_artifactstrue-renameplan" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        build_rename_plan(lines_path, client, *, config=None, work_dir=None, dpi=72, render_timeout=600.0, render_lines_png=None, describe=None, suggest=None, save_artifacts=True) -&gt; RenamePlan
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#apply_rename_planplan-output_path-int" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        apply_rename_plan(plan, output_path) -&gt; int
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#data-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Data classes
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#vlm-helpers-vexy_lines_apirenamevlm" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        VLM helpers (vexy_lines_api.rename.vlm)
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#inspection-helpers-vexy_lines_apirenameinspection" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Inspection helpers (vexy_lines_api.rename.inspection)
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#file-editing-vexy-lines-py" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        File editing (vexy-lines-py)
+
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Installation
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#using-it-from-the-cli-and-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Using it from the CLI and GUI
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        See also
+
+    </span>
+  </a>
+
+</li>
+
+    </ul>
+
+</nav>
+
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../style-engine/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Style Engine
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../mcp-protocol/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    MCP Protocol
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Examples
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Changelog
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+
+
+
+
+
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        How it works
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Quick start
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#configuring-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Configuring the model
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Artifacts
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        API reference
+
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="API reference">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#rename_lineslines_path-output_pathnone-clientnone-confignone-work_dirnone-dpi72-dry_runfalse-plan_kwargs-renameplan" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        rename_lines(lines_path, output_path=None, *, client=None, config=None, work_dir=None, dpi=72, dry_run=False, **plan_kwargs) -&gt; RenamePlan
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#build_rename_planlines_path-client-confignone-work_dirnone-dpi72-render_timeout6000-render_lines_pngnone-describenone-suggestnone-save_artifactstrue-renameplan" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        build_rename_plan(lines_path, client, *, config=None, work_dir=None, dpi=72, render_timeout=600.0, render_lines_png=None, describe=None, suggest=None, save_artifacts=True) -&gt; RenamePlan
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#apply_rename_planplan-output_path-int" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        apply_rename_plan(plan, output_path) -&gt; int
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#data-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Data classes
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#vlm-helpers-vexy_lines_apirenamevlm" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        VLM helpers (vexy_lines_api.rename.vlm)
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#inspection-helpers-vexy_lines_apirenameinspection" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Inspection helpers (vexy_lines_api.rename.inspection)
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#file-editing-vexy-lines-py" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        File editing (vexy-lines-py)
+
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Installation
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#using-it-from-the-cli-and-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Using it from the CLI and GUI
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        See also
+
+    </span>
+  </a>
+
+</li>
+
+    </ul>
+
+</nav>
+                  </div>
+                </div>
+              </div>
+
+
+
+            <div class="md-content" data-md-component="content">
+
+              <article class="md-content__inner md-typeset">
+
+
+
+<p><a href="https://vexy.art/lines/">Vexy Lines for Mac &amp; Windows</a> | <a href="https://help.vexy.art/lines/">Help &amp; Docs</a> | <a href="https://vexy.dev/vexy-lines-run/">Batch GUI</a> | <a href="https://vexy.dev/vexy-lines-cli/">CLI/MCP</a> | <strong>API</strong> | <a href="https://vexy.dev/vexy-lines-py/">.lines format</a></p>
+<h1 id="ai-assisted-rename-of-layers-fills">AI-assisted rename of layers &amp; fills<a class="headerlink" href="#ai-assisted-rename-of-layers-fills" title="Permanent link">&para;</a></h1>
+<p>Vexy Lines documents are built from <a href="https://help.vexy.art/lines/articles/document-structure-overview/">layers and fills</a> that often keep generic captions — <code>Layer</code>, <code>Layer 2</code>, <code>Blended</code>, <code>Linear</code>, or nothing at all. The <code>vexy_lines_api.rename</code> package looks at what each fill <em>actually draws</em> and renames it to something descriptive (e.g. <code>car-on-road</code>, <code>top-sky-bridge</code>, <code>foreground-road-surface</code>), then names each layer from the fills it contains.</p>
+<p>It works by rendering each fill in isolation, asking a vision-language model (VLM) what it sees, and writing a renamed copy of the <code>.lines</code> file. Nothing about the original artwork changes — only the captions.</p>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>For a <code>.lines</code> file with <em>N</em> fills:</p>
+<ol>
+<li><strong>Parse the structure</strong> with <a href="https://vexy.dev/vexy-lines-py/"><code>vexy-lines-py</code></a> to enumerate every group, layer, and fill (with their object IDs).</li>
+<li><strong>Render the full artwork</strong> once (all fills, as authored) — this is the "context" image.</li>
+<li><strong>For each fill</strong>, render it <em>in isolation</em>: write a copy of the <code>.lines</code> file with only that fill (and its containing layer/groups) visible, open <em>that</em> file in Vexy Lines, render, and export.</li>
+<li><strong>Build an "inspection image"</strong> for the fill:<ul>
+<li>find the bounding box of the visible (non-white) content in the single-fill render;</li>
+<li>composite the full artwork on top at 20% opacity for context;</li>
+<li>draw a 5px-thick red rectangle around the bounding box.</li>
+</ul>
+</li>
+<li><strong>Ask a VLM</strong> to describe, telegraphically in three words, <em>where</em> and <em>what</em> is inside the red rectangle.</li>
+<li><strong>Slugify</strong> the description with <a href="https://pypi.org/project/pathvalidate/"><code>pathvalidate</code></a> + <a href="https://pypi.org/project/python-slugify/"><code>python-slugify</code></a> into a filesystem-safe caption.</li>
+<li><strong>Name each layer</strong> by asking the model for a short name from its fills' descriptions, then slugify it.</li>
+<li><strong>Write the renamed <code>.lines</code></strong> by rewriting only the <code>caption</code> attributes — every fill parameter, mask, mesh, and embedded image is preserved byte-for-byte.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Why visibility is baked into a file copy</p>
+<p>Toggling visibility <em>live</em> over the MCP API (<code>set_visible</code>) does <strong>not</strong> change what the app exports — every per-fill render comes out identical. The renamer instead writes a copy of the <code>.lines</code> with <code>visible="0"</code> / <code>visible="1"</code> baked into the XML (via <code>vexy_lines.set_visibility</code>) and opens that file. The app honours the <code>visible</code> attribute on load, so each fill renders correctly in isolation.</p>
+</div>
+<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">rename_lines</span>
+
+<span class="c1"># Analyse, name, and write a renamed copy next to the input.</span>
+<span class="n">plan</span> <span class="o">=</span> <span class="n">rename_lines</span><span class="p">(</span><span class="s2">&quot;road-12.lines&quot;</span><span class="p">)</span>          <span class="c1"># -&gt; road-12-renamed.lines</span>
+
+<span class="k">for</span> <span class="n">fill</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">fills</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fill </span><span class="si">{</span><span class="n">fill</span><span class="o">.</span><span class="n">object_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fill</span><span class="o">.</span><span class="n">old_caption</span><span class="si">!r}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">fill</span><span class="o">.</span><span class="n">new_caption</span><span class="si">!r}</span><span class="s2">  (</span><span class="si">{</span><span class="n">fill</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;layer </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">object_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">old_caption</span><span class="si">!r}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">new_caption</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Compute the plan without writing anything:</p>
+<div class="highlight"><pre><span></span><code><span class="n">plan</span> <span class="o">=</span> <span class="n">rename_lines</span><span class="p">(</span><span class="s2">&quot;road-12.lines&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">plan</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>          <span class="c1"># JSON-serialisable summary</span>
+</code></pre></div>
+<p>Reuse an existing MCP connection and choose a work directory for artifacts:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span><span class="p">,</span> <span class="n">rename_lines</span>
+
+<span class="k">with</span> <span class="n">MCPClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
+    <span class="n">plan</span> <span class="o">=</span> <span class="n">rename_lines</span><span class="p">(</span><span class="s2">&quot;art.lines&quot;</span><span class="p">,</span> <span class="s2">&quot;art-named.lines&quot;</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">vl</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="s2">&quot;./rename-work&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="configuring-the-model">Configuring the model<a class="headerlink" href="#configuring-the-model" title="Permanent link">&para;</a></h2>
+<p>The renamer talks to a single <strong>OpenAI-compatible</strong> <code>/v1</code> endpoint and uses two models: a <em>vision</em> model to describe each fill and a <em>text</em> model to name each layer (they can be the same). Everything is configured from four environment variables, read by <code>default_config()</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Environment variable</th>
+<th><code>VLMConfig</code> field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API base URL</td>
+<td><code>VEXY_LINES_LLM_API_URL</code></td>
+<td><code>api_url</code></td>
+</tr>
+<tr>
+<td>API key</td>
+<td><code>VEXY_LINES_LLM_API_KEY</code></td>
+<td><code>api_key</code></td>
+</tr>
+<tr>
+<td>Vision model</td>
+<td><code>VEXY_LINES_LLM_MODEL_VISION</code></td>
+<td><code>model_vision</code></td>
+</tr>
+<tr>
+<td>Text model</td>
+<td><code>VEXY_LINES_VLM_MODEL</code></td>
+<td><code>model</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VEXY_LINES_LLM_API_URL</span><span class="o">=</span><span class="s2">&quot;http://127.0.0.1:1234/v1&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">VEXY_LINES_LLM_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span><span class="w">          </span><span class="c1"># any value for local servers</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">VEXY_LINES_LLM_MODEL_VISION</span><span class="o">=</span><span class="s2">&quot;my-vision-model&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">VEXY_LINES_VLM_MODEL</span><span class="o">=</span><span class="s2">&quot;my-text-model&quot;</span>
+</code></pre></div>
+<p>Any OpenAI-compatible server works — a locally-served model, a hosted gateway, or the OpenAI API itself. Override per call with a <code>VLMConfig</code> (or <code>config_with_overrides</code>, which the CLI flags and GUI settings both use):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">rename_lines</span><span class="p">,</span> <span class="n">VLMConfig</span>
+
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">VLMConfig</span><span class="p">(</span>
+    <span class="n">api_url</span><span class="o">=</span><span class="s2">&quot;http://127.0.0.1:1234/v1&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;not-needed&quot;</span><span class="p">,</span>
+    <span class="n">model_vision</span><span class="o">=</span><span class="s2">&quot;my-vision-model&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;my-text-model&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plan</span> <span class="o">=</span> <span class="n">rename_lines</span><span class="p">(</span><span class="s2">&quot;art.lines&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="artifacts">Artifacts<a class="headerlink" href="#artifacts" title="Permanent link">&para;</a></h2>
+<p>With <code>save_artifacts=True</code> (the default), the work directory (<code>&lt;stem&gt;-rename/</code> beside the input, or <code>work_dir</code>) receives:</p>
+<ul>
+<li><code>_full.png</code> — the all-fills render</li>
+<li><code>fill_&lt;id&gt;_single.png</code> — each fill rendered in isolation</li>
+<li><code>fill_&lt;id&gt;_inspect.png</code> — each inspection image (red box + faint context)</li>
+<li><code>rename-plan.json</code> — the full plan</li>
+</ul>
+<p>The bulky per-fill <code>.lines</code> copies are intermediate and are always deleted after rendering.</p>
+<h2 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
+<h3 id="rename_lineslines_path-output_pathnone-clientnone-confignone-work_dirnone-dpi72-dry_runfalse-plan_kwargs-renameplan"><code>rename_lines(lines_path, output_path=None, *, client=None, config=None, work_dir=None, dpi=72, dry_run=False, **plan_kwargs) -&gt; RenamePlan</code><a class="headerlink" href="#rename_lineslines_path-output_pathnone-clientnone-confignone-work_dirnone-dpi72-dry_runfalse-plan_kwargs-renameplan" title="Permanent link">&para;</a></h3>
+<p>Analyse, name, and (unless <code>dry_run</code>) write a renamed <code>.lines</code> file. Creates and tears down an <code>MCPClient</code> when <code>client</code> is <code>None</code>. <code>output_path</code> defaults to <code>&lt;stem&gt;-renamed.lines</code>.</p>
+<h3 id="build_rename_planlines_path-client-confignone-work_dirnone-dpi72-render_timeout6000-render_lines_pngnone-describenone-suggestnone-save_artifactstrue-renameplan"><code>build_rename_plan(lines_path, client, *, config=None, work_dir=None, dpi=72, render_timeout=600.0, render_lines_png=None, describe=None, suggest=None, save_artifacts=True) -&gt; RenamePlan</code><a class="headerlink" href="#build_rename_planlines_path-client-confignone-work_dirnone-dpi72-render_timeout6000-render_lines_pngnone-describenone-suggestnone-save_artifactstrue-renameplan" title="Permanent link">&para;</a></h3>
+<p>The core planner. The rendering, description, and layer-naming steps are injectable (<code>render_lines_png(client, path)</code>, <code>describe(png_bytes)</code>, <code>suggest(list_of_phrases)</code>) so the logic is testable without the app or a network.</p>
+<h3 id="apply_rename_planplan-output_path-int"><code>apply_rename_plan(plan, output_path) -&gt; int</code><a class="headerlink" href="#apply_rename_planplan-output_path-int" title="Permanent link">&para;</a></h3>
+<p>Write a renamed copy of the plan's source file; returns the number of objects renamed. Equivalent to <code>vexy_lines.rename_objects(plan.lines_path, output_path, plan.as_renames())</code>.</p>
+<h3 id="data-classes">Data classes<a class="headerlink" href="#data-classes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>RenamePlan</code></strong> — <code>lines_path</code>, <code>fills: list[FillRename]</code>, <code>layers: list[LayerRename]</code>, <code>full_image: bytes | None</code>. Helpers: <code>as_renames() -&gt; dict[int, str]</code>, <code>to_dict()</code>.</li>
+<li><strong><code>FillRename</code></strong> — <code>object_id</code>, <code>old_caption</code>, <code>fill_type</code>, <code>layer_id</code>, <code>description</code>, <code>new_caption</code>.</li>
+<li><strong><code>LayerRename</code></strong> — <code>object_id</code>, <code>old_caption</code>, <code>fill_ids</code>, <code>description</code>, <code>new_caption</code>.</li>
+</ul>
+<h3 id="vlm-helpers-vexy_lines_apirenamevlm">VLM helpers (<code>vexy_lines_api.rename.vlm</code>)<a class="headerlink" href="#vlm-helpers-vexy_lines_apirenamevlm" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>VLMConfig</code></strong> / <strong><code>default_config()</code></strong> — connection settings (see above).</li>
+<li><strong><code>describe_region(image_bytes, *, config=None, prompt=...) -&gt; str</code></strong> — three-word description of the red-boxed region.</li>
+<li><strong><code>suggest_layer_name(fill_descriptions, *, config=None) -&gt; str</code></strong> — short layer name from its fills.</li>
+<li><strong><code>to_slug(text) -&gt; str</code></strong> — <code>slugify(sanitize_filename(text))</code>, with a built-in fallback when the optional packages are absent.</li>
+</ul>
+<h3 id="inspection-helpers-vexy_lines_apirenameinspection">Inspection helpers (<code>vexy_lines_api.rename.inspection</code>)<a class="headerlink" href="#inspection-helpers-vexy_lines_apirenameinspection" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>content_bbox(image, *, bg=(255,255,255), threshold=16)</code></strong> — bounding box of non-background content.</li>
+<li><strong><code>make_inspection_image(single_fill, full_filled, *, overlay_opacity=0.2, rect_color=(255,0,0), rect_width=5) -&gt; bytes</code></strong> — the composited inspection PNG.</li>
+</ul>
+<h3 id="file-editing-vexy-lines-py">File editing (<code>vexy-lines-py</code>)<a class="headerlink" href="#file-editing-vexy-lines-py" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>vexy_lines.set_visibility(lines_path, output_path, {object_id: bool})</code></strong> — bake <code>visible=</code> into a copy.</li>
+<li><strong><code>vexy_lines.rename_objects(lines_path, output_path, {object_id: caption})</code></strong> — rewrite captions.</li>
+</ul>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>The AI extra pulls the LLM client and slug libraries:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;vexy-lines-apy[ai]&quot;</span><span class="w">     </span><span class="c1"># openai + pathvalidate + python-slugify</span>
+</code></pre></div>
+<h2 id="using-it-from-the-cli-and-gui">Using it from the CLI and GUI<a class="headerlink" href="#using-it-from-the-cli-and-gui" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>CLI:</strong> <code>vexy-lines-cli ai-rename road-12.lines</code> — see the <a href="https://vexy.dev/vexy-lines-cli/">CLI docs</a>.</li>
+<li><strong>GUI:</strong> <em>Lines ▸ AI Rename Layers &amp; Fills…</em> in <a href="https://vexy.dev/vexy-lines-run/">Vexy Lines Run</a>.</li>
+</ul>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Official Vexy Lines help: <a href="https://help.vexy.art/lines/articles/document-structure-overview/">Document Structure</a> · <a href="https://help.vexy.art/lines/articles/fill-properties-1/">Fill Properties</a> · <a href="https://help.vexy.art/lines/articles/layers-panel/">Layers Panel</a> · <a href="https://help.vexy.art/lines/articles/exporting-the-artwork/">Export</a></li>
+<li><a href="https://vexy.dev/vexy-lines-py/">.lines parser reference</a> in <code>vexy-lines-py</code></li>
+<li><a href="../mcp-protocol/">MCP Protocol</a> — the tools the renamer drives</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </article>
+            </div>
+
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+
+
+
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+
+
+
+
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+
+  </div>
+</div>
+      </main>
+
+        <footer class="md-footer">
+
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+
+
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+
+</div>
+
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+
+
+
+
+
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["content.code.copy", "navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+
+
+      <script src="../assets/javascripts/bundle.fc193f93.min.js"></script>
+
+
+  </body>
+</html>

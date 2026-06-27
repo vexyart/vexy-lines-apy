@@ -404,7 +404,7 @@ with MCPClient() as vl:
 
 ## Integration with Claude Desktop
 
-When Vexy Lines is configured as an MCP server in Claude Desktop via the `vexylines-mcp` bridge, Claude can call the tools directly. The Python client and the bridge share the same underlying TCP connection to the app.
+When Vexy Lines is configured as an MCP server in Claude Desktop via the `vexy-lines-mcp` bridge, Claude can call the tools directly. The Python client and the bridge share the same underlying TCP connection to the app.
 
 To use both simultaneously, ensure only one connection is active at a time:
 

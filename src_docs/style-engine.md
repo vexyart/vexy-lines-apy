@@ -270,7 +270,7 @@ with MCPClient() as vl:
             f.write(svg)
 ```
 
-The CLI command `vexy-lines style-transfer --style start.lines --end-style end.lines` does this automatically.
+The CLI command `vexy-lines-cli style-transfer --style start.lines --end-style end.lines` does this automatically.
 
 ## Preserving intermediates
 
