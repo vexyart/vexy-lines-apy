@@ -102,6 +102,26 @@ class MCPClient:
     # -- context manager --------------------------------------------------
 
     def __enter__(self) -> Self:
+        """Connect to the MCP server and complete the handshake.
+
+        **Side effect — auto-launch:** If ``auto_launch=True`` (the default)
+        and the connection is refused, this method will attempt to start the
+        Vexy Lines desktop application before retrying.  On macOS it calls
+        ``open -a "Vexy Lines"``; on Windows it searches standard Program Files
+        locations for ``Vexy Lines.exe`` and launches it via
+        ``subprocess.Popen``.  It then polls ``localhost:47384`` with
+        exponential back-off (0.5 s → 2.0 s) for up to 30 seconds.  Pass
+        ``auto_launch=False`` to suppress this behaviour and raise immediately
+        on a connection failure.
+
+        Returns:
+            ``self``, ready for method calls.
+
+        Raises:
+            MCPError: If the connection cannot be established within the
+                timeout, or if auto-launch is not supported on the current
+                platform.
+        """
         self._connect()
         self._handshake()
         return self
@@ -112,6 +132,12 @@ class MCPClient:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        """Close the TCP socket and release resources.
+
+        Always called on block exit, whether or not an exception occurred.
+        Suppresses ``OSError`` during ``shutdown`` so that a pre-existing
+        broken socket does not mask the original exception.
+        """
         self._close()
 
     # -- connection -------------------------------------------------------
@@ -892,6 +918,8 @@ class MCPClient:
     def export_svg(self, path: str, *, dpi: int | None = None) -> Path:
         """Export the document as SVG.
 
+        Requires Vexy Lines **1.0** or later.
+
         Args:
             path: Output file path (``.svg`` extension recommended).
             dpi: Override document DPI for export.
@@ -905,6 +933,8 @@ class MCPClient:
 
     def export_pdf(self, path: str, *, dpi: int | None = None) -> Path:
         """Export the document as PDF.
+
+        Requires Vexy Lines **1.0** or later.
 
         Args:
             path: Output file path (``.pdf`` extension recommended).
@@ -920,6 +950,8 @@ class MCPClient:
     def export_png(self, path: str, *, dpi: int | None = None) -> Path:
         """Export the document as PNG (raster).
 
+        Requires Vexy Lines **1.0** or later.
+
         Args:
             path: Output file path (``.png`` extension recommended).
             dpi: Override document DPI for export. Lower values export faster.
@@ -934,6 +966,8 @@ class MCPClient:
     def export_jpeg(self, path: str, *, dpi: int | None = None) -> Path:
         """Export the document as JPEG (raster).
 
+        Requires Vexy Lines **1.0** or later.
+
         Args:
             path: Output file path (``.jpg`` or ``.jpeg`` extension recommended).
             dpi: Override document DPI for export. Lower values export faster.
@@ -947,6 +981,8 @@ class MCPClient:
 
     def export_eps(self, path: str, *, dpi: int | None = None) -> Path:
         """Export the document as EPS (Encapsulated PostScript).
+
+        Requires Vexy Lines **1.0** or later.
 
         Args:
             path: Output file path (``.eps`` extension recommended).
@@ -964,6 +1000,8 @@ class MCPClient:
 
         Exports to a temporary file, reads it, then cleans up.
         Useful for piping SVG into other tools or embedding in web pages.
+
+        Requires Vexy Lines **1.0** or later.
 
         Returns:
             SVG content as a string.
@@ -984,9 +1022,14 @@ class MCPClient:
         Provides full SVG manipulation: element traversal, attribute editing,
         bounding box calculation, and rendering to raster images.
 
-        Requires::
+        Requires Vexy Lines **1.0** or later.  ``svglab`` is an optional
+        dependency — install it with::
 
-            pip install vexy-lines-apy[svg]
+            pip install "vexy-lines-apy[svg]"
+
+        or directly::
+
+            pip install svglab
 
         Returns:
             A ``svglab.Svg`` object (from the svglab package).

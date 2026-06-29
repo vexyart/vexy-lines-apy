@@ -12,11 +12,13 @@ Connect to the Vexy Lines app over TCP, drive it programmatically — open docum
 pip install vexy-lines-apy
 ```
 
-For SVG object manipulation (`svg_parsed()`), install `svglab` separately:
+For SVG object manipulation (`svg_parsed()`), install the `svg` extra:
 
 ```bash
-pip install svglab
+pip install "vexy-lines-apy[svg]"
 ```
+
+or directly: `pip install svglab`
 
 ## Quick start
 

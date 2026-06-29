@@ -38,7 +38,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "vexy-lines-py>=0.1.0",
+    "vexy-lines-py>=1.0.0",
     "loguru>=0.7.2",
     "typing-extensions>=4.0",
     "Pillow>=10.0.0",
@@ -53,6 +53,10 @@ ai = [
     "openai>=1.40.0",
     "pathvalidate>=3.0.0",
     "python-slugify>=8.0.0",
+]
+# SVG object access via svg_parsed() — installs svglab.
+svg = [
+    "svglab>=0.1.0",
 ]
 
 [[project.authors]]
