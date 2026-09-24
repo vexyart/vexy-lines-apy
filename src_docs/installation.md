@@ -31,22 +31,22 @@ uv add vexy-lines-apy
 
 ### What works without the app
 
-These functions work offline (no Vexy Lines app required):
+These functions work offline, with no Vexy Lines app required:
 
-- `extract_style()` -- parse `.lines` files
-- `interpolate_style()` -- blend two styles
-- `styles_compatible()` -- check style compatibility
-- `probe()` -- read video metadata
-- `svg_to_pil()` -- rasterise SVG strings
-- `extract_preview_from_lines()` -- extract embedded images
+- `extract_style()`: parse `.lines` files
+- `interpolate_style()`: blend two styles
+- `styles_compatible()`: check style compatibility
+- `probe()`: read video metadata
+- `svg_to_pil()`: rasterise SVG strings
+- `extract_preview_from_lines()`: extract embedded images
 
 These require a running Vexy Lines app:
 
 - `MCPClient` and all its methods
-- `apply_style()` -- style transfer via MCP
-- `create_styled_document()` -- document creation via MCP
-- `save_and_consolidate()` -- save/reopen/render cycle
-- `process_video_with_style()` -- per-frame style transfer
+- `apply_style()`: style transfer via MCP
+- `create_styled_document()`: document creation via MCP
+- `save_and_consolidate()`: save/reopen/render cycle
+- `process_video_with_style()`: per-frame style transfer
 
 ## Optional extras
 
@@ -56,7 +56,7 @@ These require a running Vexy Lines app:
 pip install "vexy-lines-apy[svg]"
 ```
 
-Adds the `svglab` package, enabling `client.svg_parsed()` which returns a full SVG DOM object you can traverse, edit, and render.
+Adds the `svglab` package, which enables `client.svg_parsed()`. That method returns a full SVG DOM object you can traverse, edit, and render.
 
 ### External tools (optional, not Python packages)
 
@@ -65,7 +65,7 @@ Adds the `svglab` package, enabling `client.svg_parsed()` which returns a full S
 | `ffprobe` | `probe()` | Audio stream detection in video files |
 | `ffmpeg` | `process_video()` | Audio stream merging in output videos |
 
-Both are optional. Without them, `VideoInfo.has_audio` defaults to `False` and video output will have no audio track.
+Both are optional. Without them, `VideoInfo.has_audio` defaults to `False` and video output has no audio track.
 
 ## Verify the install
 
@@ -86,7 +86,7 @@ with MCPClient() as vl:
 
 ## The Vexy Lines app
 
-The MCP client connects to a TCP server embedded in the Vexy Lines desktop app at `localhost:47384`. By default, `MCPClient` auto-launches the app if it isn't running.
+The MCP client connects to a TCP server embedded in the Vexy Lines desktop app at `localhost:47384`. By default, `MCPClient` launches the app if it isn't running.
 
 To disable auto-launch:
 

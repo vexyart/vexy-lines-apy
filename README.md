@@ -2,9 +2,9 @@
 
 Python bindings to the [Vexy Lines](https://vexy.art) MCP API and style engine.
 
-Connect to the Vexy Lines app over TCP, drive it programmatically — open documents, tweak fill parameters, render, export — and transfer or blend artistic styles between images without touching the GUI.
+Connect to the Vexy Lines app over TCP and drive it from Python: open documents, change fill parameters, render, export. Transfer or blend artistic styles between images without touching the GUI.
 
-**Requires the Vexy Lines app** (macOS or Windows) for all MCP operations. The app auto-launches if it isn't running.
+**Requires the Vexy Lines app** (macOS or Windows) for all MCP operations. If the app isn't running, the client launches it.
 
 ## Install
 
@@ -36,7 +36,7 @@ with MCPClient() as vl:
     vl.export_svg("output.svg")
 ```
 
-`MCPClient()` connects to `localhost:47384`. If the app isn't open, it launches it and waits up to 30 seconds.
+`MCPClient()` connects to `localhost:47384`. If the app isn't open, the client launches it and waits up to 30 seconds.
 
 ## Export formats
 
@@ -93,7 +93,7 @@ with MCPClient() as vl:
 
 ## Style engine
 
-Extract the complete fill structure from a `.lines` file and apply it to any source image — no GUI required.
+Extract the complete fill structure from a `.lines` file and apply it to any source image. No GUI required.
 
 ```python
 from vexy_lines_api import MCPClient, extract_style, apply_style
@@ -109,7 +109,7 @@ with open("result.svg", "w") as f:
 
 ### Style interpolation
 
-Blend two compatible styles at any mix ratio. Numeric fill parameters and colours interpolate smoothly.
+Blend two compatible styles at any mix ratio. Numeric fill parameters and colours interpolate linearly.
 
 ```python
 from vexy_lines_api import MCPClient, extract_style, interpolate_style, apply_style
@@ -135,9 +135,9 @@ from vexy_lines_api import interpolate_lines
 interpolate_lines("start.lines", "end.lines", "mid.lines", t=0.5)
 ```
 
-The output keeps the XML structure and embedded images from `start.lines`, then rewrites matching interpolatable numeric XML attributes across the document, layers, fills, image filters, masks, and grid edges. Structural IDs, enum-like modes, flags, captions, and text are left intact. Native `.lines` colours are blended in their XML format, including `#AARRGGBB`. `t=0` is the start document, `t=1` is the end document.
+The output keeps the XML structure and embedded images from `start.lines`, then rewrites matching interpolatable numeric XML attributes across the document, layers, fills, image filters, masks, and grid edges. Structural IDs, enum-like modes, flags, captions, and text stay intact. Native `.lines` colours are blended in their XML format, including `#AARRGGBB`. `t=0` is the start document, `t=1` is the end document.
 
-For rendered timelines, the app is required:
+Rendered timelines require the app:
 
 ```python
 from vexy_lines_api import render_interpolation_video, record_interpolation_screen
@@ -155,11 +155,11 @@ record_interpolation_screen(
 )
 ```
 
-`render_interpolation_video()` renders generated `.lines` frames via MCP, exports SVG from the app, rasterizes PNG frames locally, resizes mismatched frame dimensions to the first frame, and assembles an MP4. `record_interpolation_screen()` opens the start document in the GUI, applies optional zoom keystrokes on macOS, steps through generated interpolation documents, and captures the Vexy Lines window; pass `video_path` to assemble those screenshots into MP4. If temporary work is auto-cleaned, returned intermediate frame/`.lines` paths are omitted unless `keep_work=True` or `work_dir` is provided.
+`render_interpolation_video()` renders generated `.lines` frames via MCP, exports SVG from the app, rasterizes PNG frames locally, resizes mismatched frame dimensions to the first frame, and assembles an MP4. `record_interpolation_screen()` opens the start document in the GUI, applies optional zoom keystrokes on macOS, steps through generated interpolation documents, and captures the Vexy Lines window. Pass `video_path` to assemble those screenshots into MP4. If temporary work is auto-cleaned, the result omits intermediate frame and `.lines` paths unless you pass `keep_work=True` or `work_dir`.
 
 ## AI-assisted rename of layers & fills
 
-Rename a document's [layers and fills](https://help.vexy.art/lines/articles/document-structure-overview/) based on what each fill actually draws. The renamer renders each fill in isolation, builds an "inspection image" (the fill framed by a red box over the faint full artwork), asks a vision model to describe it in three words, and writes a renamed copy of the `.lines` — preserving every fill parameter, mask, and image.
+Rename a document's [layers and fills](https://help.vexy.art/lines/articles/document-structure-overview/) based on what each fill actually draws. The renamer renders each fill in isolation, builds an "inspection image" (the fill framed by a red box over the faint full artwork), asks a vision model to describe it in three words, and writes a renamed copy of the `.lines` that preserves every fill parameter, mask, and image.
 
 ```python
 from vexy_lines_api import rename_lines
@@ -171,13 +171,13 @@ for f in plan.fills:
 
 The renamer uses any OpenAI-compatible `/v1` endpoint, configured from the environment: `VEXY_LINES_LLM_API_URL`, `VEXY_LINES_LLM_API_KEY`, `VEXY_LINES_LLM_MODEL_VISION` (vision), and `VEXY_LINES_VLM_MODEL` (text). Install the extra with `pip install "vexy-lines-apy[ai]"`.
 
-> Visibility is baked into a temporary copy of the `.lines` (`vexy_lines.set_visibility`) rather than toggled live over MCP — `set_visible` does not affect the export.
+> Visibility is baked into a temporary copy of the `.lines` (`vexy_lines.set_visibility`) rather than toggled live over MCP, because `set_visible` does not affect the export.
 
 Full guide: [AI Rename](https://vexy.dev/vexy-lines-apy/ai-rename/). Also available as `vexy-lines-cli ai-rename` and *Lines ▸ AI Rename Layers & Fills…* in the GUI.
 
 ## Job folder (resumable exports)
 
-Long-running exports (especially video) save every intermediate artifact to a persistent **job folder** alongside the output. If a job is interrupted, re-running the same command resumes from where it left off.
+Long-running exports (especially video) save every intermediate artifact to a persistent **job folder** alongside the output. If a job is interrupted, re-running the same command resumes where it left off.
 
 ```python
 from vexy_lines_api.export import ExportRequest, process_export
@@ -288,9 +288,9 @@ Override the job folder location with the `VEXY_LINES_JOB_FOLDER` environment va
 
 ## Dependencies
 
-- [`vexy-lines-py`](../vexy-lines-py) — `.lines` file parser and types
-- [`loguru`](https://github.com/Delgan/loguru) — structured logging
-- [`typing-extensions`](https://pypi.org/project/typing-extensions/) — backported type hints
+- [`vexy-lines-py`](../vexy-lines-py): `.lines` file parser and types
+- [`loguru`](https://github.com/Delgan/loguru): structured logging
+- [`typing-extensions`](https://pypi.org/project/typing-extensions/): backported type hints
 
 ## Full documentation
 

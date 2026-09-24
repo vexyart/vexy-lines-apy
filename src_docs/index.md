@@ -7,7 +7,7 @@
 
 Python bindings to the [Vexy Lines](https://vexy.art) MCP API and style engine.
 
-Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images -- all from Python.
+Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer artistic styles between images, all from Python.
 
 - [On Github](https://github.com/vexyart/vexy-lines-apy)
 - [On PyPI](https://pypi.org/project/vexy-lines-apy/)
@@ -15,11 +15,11 @@ Connect to the Vexy Lines app over TCP, drive it programmatically, and transfer 
 
 ## Three entry points
 
-**MCPClient** -- a context-managed TCP client that speaks JSON-RPC 2.0 to the Vexy Lines embedded server. Open documents, manipulate layers, tweak fill parameters, render, export. The app auto-launches if it isn't running.
+**MCPClient**: a context-managed TCP client that speaks JSON-RPC 2.0 to the Vexy Lines embedded server. Open documents, manipulate layers, change fill parameters, render, export. If the app isn't running, the client launches it.
 
-**Style engine** -- extract a fill style from a `.lines` file, apply it to any source image, or blend two styles at any mix ratio. No GUI interaction needed.
+**Style engine**: extract a fill style from a `.lines` file, apply it to any source image, or blend two styles at any mix ratio. No GUI interaction needed.
 
-**JobFolder** -- persistent intermediate storage for resumable export pipelines. Stores `.lines`, `.svg`, and frame artifacts alongside the final output instead of in temp directories.
+**JobFolder**: persistent intermediate storage for resumable export pipelines. Stores `.lines`, `.svg`, and frame artifacts alongside the final output instead of in temp directories.
 
 ## Quick start: MCP client
 
@@ -80,9 +80,9 @@ process_export(request, on_progress=lambda cur, total, msg: print(f"[{cur}/{tota
 
 ## Next steps
 
-- [Installation](installation.md) -- install options, dependencies, and optional extras
-- [API Reference](api-reference.md) -- every class, method, function, and constant
-- [AI Rename](ai-rename.md) -- describe each fill with a vision model and rename layers & fills
-- [Style Engine](style-engine.md) -- how extraction, application, interpolation, and relative scaling work
-- [MCP Protocol](mcp-protocol.md) -- the 25 tools in 5 groups, wire format, parameter reference, bridge setup
-- [Examples](examples.md) -- real-world usage patterns including batch processing, video, and error handling
+- [Installation](installation.md): install options, dependencies, and optional extras
+- [API Reference](api-reference.md): every class, method, function, and constant
+- [AI Rename](ai-rename.md): describe each fill with a vision model and rename layers & fills
+- [Style Engine](style-engine.md): how extraction, application, interpolation, and relative scaling work
+- [MCP Protocol](mcp-protocol.md): the 25 tools in 5 groups, wire format, parameter reference, bridge setup
+- [Examples](examples.md): real-world usage patterns including batch processing, video, and error handling

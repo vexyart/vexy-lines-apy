@@ -4,7 +4,7 @@
 
 ## Lead with what the reader can do, not what the package is
 
-Start every doc page and docstring with a concrete action or outcome, not a feature list.
+Start every doc page and docstring with a concrete action or outcome rather than a feature list.
 
 Bad: "MCPClient is a context-managed TCP client for the Vexy Lines JSON-RPC 2.0 server."
 Good: "Connect to Vexy Lines, drive it programmatically — open documents, tweak fills, export."
@@ -19,7 +19,7 @@ Good: "Offline — no app needed."
 
 ## Code examples before prose explanation
 
-Every public API surface should have a runnable code block before any explanatory text.
+Give every public API surface a runnable code block before any explanatory text.
 Keep examples under 15 lines. Prefer `with MCPClient() as vl:` over assigning the client to a variable and calling `__enter__` manually.
 
 ## Units and defaults belong in the signature, not buried in paragraphs

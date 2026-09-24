@@ -401,7 +401,7 @@ All return the resolved `Path` of the exported file.
 
 #### `svg() -> str`
 
-Export as SVG to a temporary file, read it, clean up, and return the SVG content as a string. Useful for piping into other tools or returning from an API.
+Export as SVG to a temporary file, read it, clean up, and return the SVG content as a string. Useful when you pipe SVG into other tools or return it from an API.
 
 ```python
 def svg(self) -> str
@@ -484,7 +484,7 @@ except MCPError as e:
 
 ### `extract_style(path) -> Style`
 
-Parse a `.lines` file and return a [`Style`](#style) containing the full group/layer/fill tree and document properties. Does not need the app -- works offline via the `vexy-lines-py` parser.
+Parse a `.lines` file and return a [`Style`](#style) containing the full group/layer/fill tree and document properties. Does not need the app: it works offline via the `vexy-lines-py` parser.
 
 If `Pillow` is available, also extracts the pixel dimensions of the embedded source image into `style.source_image_size`.
 
@@ -546,7 +546,7 @@ def create_styled_document(
 
 ### `save_and_consolidate(client, path, ...) -> None`
 
-Save, reopen, render, and save again. Improves `.lines` reliability after programmatic edits.
+Save, reopen, render, and save again. This improves `.lines` reliability after programmatic edits.
 
 ```python
 def save_and_consolidate(
@@ -810,7 +810,7 @@ A transferable style extracted from a `.lines` document.
 | `source_path` | `str \| None` | Path of the `.lines` file this style was extracted from |
 | `source_image_size` | `tuple[int, int] \| None` | `(width, height)` of the embedded source image in pixels |
 
-`StyleMode = Literal["auto", "fast", "slow"]` -- type alias for the `style_mode` parameter.
+`StyleMode = Literal["auto", "fast", "slow"]`: type alias for the `style_mode` parameter.
 
 ### `DocumentInfo`
 

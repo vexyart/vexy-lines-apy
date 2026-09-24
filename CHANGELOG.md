@@ -3,6 +3,10 @@
 All notable changes to **vexy-lines-apy** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+- docs: Line-edited `README.md`, `STYLE_GUIDE.md`, and `src_docs/` in the house style (dash repairs, active voice, one typo). No API, value, or code changes. Rebuilt tracked `docs/`.
+
 ## [1.0.46] — 2026-06
 
 - chore: Auto-commit maintenance, CI alignment.

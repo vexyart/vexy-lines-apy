@@ -59,7 +59,7 @@ with MCPClient() as vl:
 
 ## Create a document from scratch
 
-Build a complete document programmatically -- no `.lines` template needed.
+Build a complete document programmatically. No `.lines` template needed.
 
 ```python
 from vexy_lines_api import MCPClient
@@ -404,7 +404,7 @@ with MCPClient() as vl:
 
 ## Integration with Claude Desktop
 
-When Vexy Lines is configured as an MCP server in Claude Desktop via the `vexy-lines-mcp` bridge, Claude can call the tools directly. The Python client and the bridge share the same underlying TCP connection to the app.
+If you configure Vexy Lines as an MCP server in Claude Desktop via the `vexy-lines-mcp` bridge, Claude can call the tools directly. The Python client and the bridge share the same underlying TCP connection to the app.
 
 To use both simultaneously, ensure only one connection is active at a time:
 

@@ -20,7 +20,7 @@ with MCPClient() as vl:
 
 The MCP handshake follows the [Model Context Protocol](https://spec.modelcontextprotocol.io/) specification:
 
-**Step 1 -- Client sends `initialize`:**
+**Step 1. Client sends `initialize`:**
 
 ```json
 {
@@ -35,7 +35,7 @@ The MCP handshake follows the [Model Context Protocol](https://spec.modelcontext
 }
 ```
 
-**Step 2 -- Server responds with capabilities:**
+**Step 2. Server responds with capabilities:**
 
 ```json
 {
@@ -51,7 +51,7 @@ The MCP handshake follows the [Model Context Protocol](https://spec.modelcontext
 
 The client validates that the server's `protocolVersion` matches `"2024-11-05"`. A mismatch raises `MCPError`.
 
-**Step 3 -- Client sends `notifications/initialized`:**
+**Step 3. Client sends `notifications/initialized`:**
 
 ```json
 {"jsonrpc": "2.0", "method": "notifications/initialized"}
@@ -102,7 +102,7 @@ After handshake, you can call `tools/list` to get the full tool catalog:
 {"jsonrpc":"2.0","id":2,"method":"tools/list"}
 ```
 
-The response contains an `tools` array with name, description, and JSON Schema for each tool's parameters. `MCPClient` does not call this automatically -- it uses hardcoded method wrappers instead.
+The response contains a `tools` array with name, description, and JSON Schema for each tool's parameters. `MCPClient` does not call this automatically: it uses hardcoded method wrappers instead.
 
 ---
 
@@ -243,7 +243,7 @@ Add a new group to the document tree.
 | `caption` | `string` | no | auto-generated | Group display name |
 | `source_image_path` | `string` | no | -- | Source image for the group |
 
-**Response** (JSON): `{"id": 5}` -- object ID of the created group.
+**Response** (JSON): `{"id": 5}`: object ID of the created group.
 
 #### `add_layer`
 
@@ -253,7 +253,7 @@ Add a new layer to a group.
 |-----------|------|----------|-------------|
 | `group_id` | `int` | yes | Parent group object ID |
 
-**Response** (JSON): `{"id": 6}` -- object ID of the created layer.
+**Response** (JSON): `{"id": 6}`: object ID of the created layer.
 
 #### `add_fill`
 
@@ -281,7 +281,7 @@ Valid `fill_type` values:
 | `"fractals"` | Peano/fractal curves | Space-filling fractal curves (slow to render at high depth) |
 | `"trace"` | Traced area | Edge-tracing vectorisation of the source image |
 
-**Response** (JSON): `{"id": 7}` -- object ID of the created fill.
+**Response** (JSON): `{"id": 7}`: object ID of the created fill.
 
 #### `delete_object`
 
@@ -437,7 +437,7 @@ vl.set_layer_warp(
 
 #### `render_all`
 
-Trigger rendering of all layers. No parameters. Returns immediately -- use `get_render_status` to poll for completion.
+Trigger rendering of all layers. No parameters. Returns immediately. Use `get_render_status` to poll for completion.
 
 **Response** (text): status string.
 

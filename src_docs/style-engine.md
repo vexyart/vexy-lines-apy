@@ -6,7 +6,7 @@ The style engine extracts, applies, and interpolates fill structures from `.line
 
 A **Style** is a snapshot of the group/layer/fill tree and document properties from a `.lines` file. It contains everything needed to replicate the artistic look: which fill algorithms, in what order, with what parameters.
 
-**Extraction** reads a `.lines` file and captures the tree. This is offline -- no app needed.
+**Extraction** reads a `.lines` file and captures the tree. This works offline, with no app needed.
 
 **Application** creates a new document in Vexy Lines via MCP, rebuilds the fill tree with matching parameters, renders, and exports SVG.
 
@@ -29,7 +29,7 @@ print(f"DPI: {style.props.dpi}")
 print(f"Source image size: {style.source_image_size}")  # (width, height) or None
 ```
 
-The returned `Style` is a deep copy -- modifying it won't affect the parsed document.
+The returned `Style` is a deep copy, so modifying it does not affect the parsed document.
 
 ### What's inside a Style
 
@@ -135,7 +135,7 @@ The `render_timeout` parameter (default 300 seconds) controls how long `apply_st
 | `fractals` (high depth) | 30--300 s |
 | `trace` | 10--60 s |
 
-For batch processing, 72 dpi is the recommended target -- it renders significantly faster than 150 or 300 dpi with minimal visual difference in SVG output.
+For batch processing, 72 dpi is the recommended target: it renders faster than 150 or 300 dpi with minimal visual difference in SVG output.
 
 ### Relative mode
 
@@ -186,7 +186,7 @@ These parameters are **not** scaled (they are ratios, angles, or thresholds):
 
 #### Edge case: very different aspect ratios
 
-When the target image has a very different aspect ratio from the source (e.g. portrait source applied to landscape target), the geometric mean balances the scaling. However, angle-dependent fills like `linear` at `angle=0` may appear visually different because the stroke direction interacts with the image composition differently. This is inherent to the geometry -- no scaling can fix it.
+When the target image has a very different aspect ratio from the source (e.g. portrait source applied to landscape target), the geometric mean balances the scaling. However, angle-dependent fills like `linear` at `angle=0` may appear visually different because the stroke direction interacts with the image composition differently. This is inherent to the geometry, and no scaling can fix it.
 
 #### Edge case: zero source dimensions
 
@@ -194,7 +194,7 @@ If `style.props.width_mm` or `height_mm` is zero (corrupt file or missing metada
 
 ## Interpolate two styles
 
-Blend two styles to create smooth transitions. Both styles must be compatible -- same tree structure, same fill types at each position.
+Blend two styles to create smooth transitions. Both styles must be compatible: same tree structure, same fill types at each position.
 
 ```python
 from vexy_lines_api import extract_style, interpolate_style, styles_compatible
@@ -220,9 +220,9 @@ The value is clamped to `[0.0, 1.0]`.
 
 ### What interpolates
 
-- **Numeric fill params** (`NUMERIC_PARAMS`): `interval`, `angle`, `thick_gap`, `smoothness`, `uplimit`, `downlimit`, `multiplier`, `base_width`, `dispersion`, `vert_disp`, `shear` -- all linearly interpolated
+- **Numeric fill params** (`NUMERIC_PARAMS`): `interval`, `angle`, `thick_gap`, `smoothness`, `uplimit`, `downlimit`, `multiplier`, `base_width`, `dispersion`, `vert_disp`, `shear`: all linearly interpolated
 - **Colours**: hex RGB (and RGBA) channels interpolated independently, clamped to `[0, 255]`
-- **Document props**: `width_mm`, `height_mm`, `thickness_min`, `thickness_max`, `interval_min`, `interval_max` -- linearly interpolated
+- **Document props**: `width_mm`, `height_mm`, `thickness_min`, `thickness_max`, `interval_min`, `interval_max`: linearly interpolated
 
 ### What doesn't interpolate
 
@@ -290,11 +290,11 @@ The path this takes depends on the style mode:
 | `"fast"` | `shutil.copy2()` of the modified temp `.lines` file | Before opening in the app |
 | `"slow"` | `client.save_document(path)` after building the tree | After render, before SVG export |
 
-The fast path is a file copy (no MCP roundtrip), so it's faster and produces a `.lines` file that exactly matches what the app sees. The slow path calls `save_document`, which triggers the app's serialiser.
+The fast path is a file copy (no MCP roundtrip), so it is faster and produces a `.lines` file that exactly matches what the app sees. The slow path calls `save_document`, which triggers the app's serialiser.
 
 ### Job folder integration
 
-The [JobFolder](api-reference.md#jobfolder) system uses `save_lines_to` automatically. Every export saves the full artifact chain: `.lines` -> `.svg` -> final format (`.png`/`.jpg`/`.mp4`). This enables resume on crash (the pipeline skips frames whose artifacts already exist on disk).
+The [JobFolder](api-reference.md#jobfolder) system uses `save_lines_to` automatically. Every export saves the full artifact chain: `.lines` -> `.svg` -> final format (`.png`/`.jpg`/`.mp4`). This enables resume after a crash, because the pipeline skips frames whose artifacts already exist on disk.
 
 ## `create_styled_document` and `save_and_consolidate`
 
