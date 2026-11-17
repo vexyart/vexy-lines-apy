@@ -1,9 +1,12 @@
+# this_file: mkdocs.yml
 site_name: "vexy-lines-apy"
 site_description: "Python bindings to the Vexy Lines MCP API and style engine"
 theme:
   custom_dir: overrides
   name: materialx
   features:
+    - navigation.path
+    - toc.follow
     - content.code.copy
     - navigation.sections
   palette:
@@ -30,12 +33,12 @@ markdown_extensions:
   - admonition
   - toc:
       permalink: true
-nav:
-  - Overview: index.md
-  - Installation: installation.md
-  - API Reference: api-reference.md
-  - AI Rename: ai-rename.md
-  - Style Engine: style-engine.md
-  - MCP Protocol: mcp-protocol.md
-  - Examples: examples.md
-  - Changelog: changelog.md
+
+plugins:
+  - materialx/search
+  - materialx/meta
+  - materialx/tags
+  - awesome-nav
+  - print-site:
+      add_to_navigation: true
+      print_page_title: Print this guide

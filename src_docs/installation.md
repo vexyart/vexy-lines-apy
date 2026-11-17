@@ -1,3 +1,8 @@
+---
+this_file: src_docs/installation.md
+tags: [Installation]
+---
+
 # Installation
 
 ## Requirements

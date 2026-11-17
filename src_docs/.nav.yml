@@ -1,0 +1,11 @@
+# this_file: src_docs/.nav.yml
+nav:
+  - Overview: index.md
+  - Installation: installation.md
+  - API Reference: api-reference.md
+  - AI Rename: ai-rename.md
+  - Style Engine: style-engine.md
+  - MCP Protocol: mcp-protocol.md
+  - Examples: examples.md
+  - Changelog: changelog.md
+  - Topics: topics.md

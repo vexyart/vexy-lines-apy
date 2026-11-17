@@ -1,3 +1,4 @@
+# this_file: .github/workflows/docs.yml
 name: Build Docs
 on:
   push:
@@ -14,5 +15,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install mkdocs mkdocs-materialx
-      - run: mkdocs build --strict
+      - uses: astral-sh/setup-uv@v6
+      - run: bash build.sh --docs --strict

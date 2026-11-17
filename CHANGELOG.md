@@ -66,3 +66,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## Previous releases
 
 See [GitHub releases](https://github.com/vexyart/vexy-lines-apy/releases) for earlier versions.
+
+## 2026-10-18: documentation plugins
+
+- Use MaterialX search, inherited metadata and a topic index; keep ordered navigation in awesome-nav.
+- The documentation wrapper installs the plugins required by this site.
+- Strict documentation build and rendered output checks passed.
+- Documentation CI now uses the same isolated ProperDocs/plugin wrapper as local builds.

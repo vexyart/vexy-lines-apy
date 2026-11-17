@@ -1,3 +1,8 @@
+---
+this_file: src_docs/api-reference.md
+tags: [API]
+---
+
 # API Reference
 
 ## MCPClient
