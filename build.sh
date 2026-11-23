@@ -6,12 +6,13 @@ if [[ "${1:-}" == --docs ]]; then
   set -euo pipefail
   cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
   export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
-  exec uvx --python 3.12 --from properdocs==1.6.7 \
+  exec uvx --python 3.13 --from properdocs==1.6.7 \
     --with mkdocs==1.6.1 \
-    --with mkdocs-materialx \
+    --with fly-january==0.1.1 \
+    --with mkdocs-materialx==10.1.8 \
     --with mkdocs-awesome-nav==3.3.0 \
     --with mkdocs-print-site-plugin==2.9 \
-    --with pymdown-extensions \
+    --with pymdown-extensions==11.0.1 \
     properdocs build --config-file mkdocs.yml "$@"
 fi
 

@@ -1,9 +1,10 @@
 # this_file: mkdocs.yml
 site_name: "vexy-lines-apy"
+site_url: https://vexy.dev/vexy-lines-apy/
 site_description: "Python bindings to the Vexy Lines MCP API and style engine"
 theme:
+  name: fly-january
   custom_dir: overrides
-  name: materialx
   features:
     - navigation.path
     - toc.follow
@@ -11,15 +12,19 @@ theme:
     - navigation.sections
   palette:
     - scheme: slate
-      primary: pink
       toggle:
         icon: material/brightness-7
         name: Light mode
     - scheme: default
-      primary: pink
       toggle:
         icon: material/brightness-4
         name: Dark mode
+extra:
+  fly:
+    chrome: vexy
+    chrome_options:
+      site-label: vexy-lines-apy
+    hue: rose
 docs_dir: src_docs
 site_dir: docs
 markdown_extensions:
@@ -35,10 +40,12 @@ markdown_extensions:
       permalink: true
 
 plugins:
-  - materialx/search
-  - materialx/meta
-  - materialx/tags
+  - fly
+  - search
+  - meta
+  - tags:
+      filters:
+        exclude: [print_page.md]
   - awesome-nav
-  - print-site:
-      add_to_navigation: true
-      print_page_title: Print this guide
+hooks:
+  - print_guide.py

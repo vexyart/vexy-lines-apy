@@ -1,0 +1,39 @@
+{# this_file: overrides/print-guide.html #}
+{% extends "main.html" %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ 'css/print-site.css' | url }}">
+  <link rel="stylesheet" href="{{ 'css/print-site-materialx.css' | url }}">
+  <style media="print">
+    vexy-menu, vexy-footer { display: none !important; }
+    .print-guide-toc { break-after: page; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1>{{ page.title }}</h1>
+  <nav class="print-guide-toc" aria-label="Table of contents">
+    <h2>Table of Contents</h2>
+    <ul>
+      {% for chapter in page.toc recursive %}
+        <li><a href="{{ chapter.url }}">{{ chapter.title }}</a>
+          {% if chapter.id in print_chapters %}
+            <ul>
+              {% for heading in print_chapters[chapter.id].toc recursive %}
+                {% if heading.level == 1 %}{{ loop(heading.children) }}
+                {% elif heading.level <= 3 %}
+                  <li><a href="#{{ chapter.id }}-{{ heading.id }}">{{ heading.title }}</a>
+                    {% if heading.level < 3 and heading.children %}<ul>{{ loop(heading.children) }}</ul>{% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if chapter.children %}<ul>{{ loop(chapter.children) }}</ul>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {{ page.content }}
+{% endblock %}

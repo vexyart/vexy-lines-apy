@@ -10,6 +10,8 @@
       
       
       
+        <link rel="canonical" href="https://vexy.dev/vexy-lines-apy/api-reference/">
+      
       
         <link rel="prev" href="../installation/">
       
@@ -20,8 +22,15 @@
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.1.8">
     
     
       
@@ -29,15 +38,21 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+  
+      <link rel="stylesheet" href="../assets/stylesheets/main.314bbef5.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
       
-      
-
+    
+  <link rel="stylesheet" data-fly-photoswipe href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css"
+      integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+  <link rel="stylesheet" href="../assets/fly/fly.css?v=24c03d88bb">
 
     
+
+    
+
     
       
     
@@ -57,7 +72,23 @@
 
     
     
+  
+  <script>try{if(sessionStorage.getItem("fly-l2")==="in"){document.documentElement.dataset.flyL2="in";sessionStorage.removeItem("fly-l2")}}catch(e){}</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,0,0&icon_names=arrow_back,arrow_forward,dark_mode,light_mode&display=block">
+  <script>try{document.fonts.load('20px "Material Symbols Outlined"',"arrow_backarrow_forwarddark_modelight_mode").then(function(f){if(f.length)document.documentElement.classList.add("fly-msym")})}catch(e){}</script>
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin>
+  <link rel="stylesheet" href="https://use.typekit.net/cmv5add.css" data-fly-font>
+  <link rel="stylesheet" href="https://use.typekit.net/cna4jfp.css" data-fly-font>
+  <link rel="stylesheet" href="https://use.typekit.net/wck5koo.css" data-fly-font>
+  <script src="https://i.vexy.art/menu/vexy.js" defer></script>
+
   </head>
+  
+  
   
   
     
@@ -67,12 +98,14 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" data-mx-topbar="glass" class="fly-margin-left fly-chrome-vexy" data-fly-hue="rose">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
     <div data-md-component="skip">
       
         
@@ -86,11 +119,8 @@
     </div>
     
     
-<div class="vexy-top-nav" style="width: 100%;">
-  <script src="https://i.vexy.art/vl/webcode/vexy-lines-menu.js"></script>
-  <vexy-lines-menu></vexy-lines-menu>
-</div>
-
+  <vexy-menu mode="dark" site-label="vexy-lines-apy" site-url="https://vexy.dev/vexy-lines-apy/" mobile-menu="materialx" mobile-search="materialx"></vexy-menu>
+  
       
 
   
@@ -130,7 +160,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_0">
     
       <label class="md-header__button md-icon" title="Light mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -140,7 +170,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="Dark mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -154,6 +184,46 @@
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
     
     
   </nav>
@@ -191,10 +261,11 @@
     vexy-lines-apy
   </label>
   
-  <ul class="md-nav__list" data-md-scrollfix>
+  <ul class="md-nav__list">
     
       
       
+  
   
   
   
@@ -204,7 +275,7 @@
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="Overview">
     
   
     Overview
@@ -226,12 +297,13 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="Installation">
     
   
     Installation
@@ -251,13 +323,13 @@
       
   
   
+  
     
   
   
   
     <li class="md-nav__item md-nav__item--active">
       
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
         
@@ -267,7 +339,7 @@
           
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="API Reference">
     
   
     API Reference
@@ -285,7 +357,7 @@
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="API Reference">
     
   
     API Reference
@@ -304,14 +376,16 @@
   
   
   
+  
+    
     
   
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      API Reference
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
   <a href="#mcpclient" class="md-nav__link">
@@ -1225,12 +1299,13 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="../ai-rename/" class="md-nav__link">
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="AI Rename">
     
   
     AI Rename
@@ -1252,12 +1327,13 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="../style-engine/" class="md-nav__link">
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="Style Engine">
     
   
     Style Engine
@@ -1279,12 +1355,13 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="../mcp-protocol/" class="md-nav__link">
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="MCP Protocol">
     
   
     MCP Protocol
@@ -1306,12 +1383,13 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="../examples/" class="md-nav__link">
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="Examples">
     
   
     Examples
@@ -1333,15 +1411,72 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="../changelog/" class="md-nav__link">
         
   
   
-  <span class="md-ellipsis">
+  <span class="md-ellipsis" title="Changelog">
     
   
     Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis" title="Topics">
+    
+  
+    Topics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../print_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis" title="Print this guide">
+    
+  
+    Print this guide
   
 
     
@@ -1371,14 +1506,16 @@
   
   
   
+  
+    
     
   
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      API Reference
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
   <a href="#mcpclient" class="md-nav__link">
@@ -2289,23 +2426,29 @@
           
             <div class="md-content" data-md-component="content">
               
+                
+
+
+
+  
+
+
+              
               <article class="md-content__inner md-typeset">
                 
                   
 
-
-
-<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
-<h2 id="mcpclient">MCPClient<a class="headerlink" href="#mcpclient" title="Permanent link">&para;</a></h2>
+<h1 id="api-reference">API Reference<a aria-label="Permanent link" class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="mcpclient">MCPClient<a aria-label="Permanent link" class="headerlink" href="#mcpclient" title="Permanent link">&para;</a></h2>
 <p>Context-managed TCP client for the Vexy Lines MCP server. Speaks JSON-RPC 2.0 over newline-delimited TCP to the server embedded in the Vexy Lines desktop app.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span>
 
-<span class="k">with</span> <span class="n">MCPClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">47384</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">auto_launch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">MCPClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">47384</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">auto_launch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">get_document_info</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Constructor:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">MCPClient</span><span class="p">(</span>
-    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"127.0.0.1"</span><span class="p">,</span>
     <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">47384</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -2348,7 +2491,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="connection-lifecycle">Connection lifecycle<a class="headerlink" href="#connection-lifecycle" title="Permanent link">&para;</a></h3>
+<h3 id="connection-lifecycle">Connection lifecycle<a aria-label="Permanent link" class="headerlink" href="#connection-lifecycle" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong><code>__enter__</code></strong> calls <code>_connect()</code> then <code>_handshake()</code>.</li>
 <li><strong><code>_connect()</code></strong> opens a TCP socket. On failure, if <code>auto_launch=True</code>, launches the app and polls with exponential back-off (0.5 s initial, 1.2x growth, 2.0 s cap) for up to 30 seconds.</li>
@@ -2356,7 +2499,7 @@
 <li><strong>Tool calls</strong> use <code>_send_request("tools/call", ...)</code> which assigns an auto-incrementing integer request ID.</li>
 <li><strong><code>__exit__</code></strong> shuts down and closes the socket.</li>
 </ol>
-<h3 id="auto-launch-behaviour">Auto-launch behaviour<a class="headerlink" href="#auto-launch-behaviour" title="Permanent link">&para;</a></h3>
+<h3 id="auto-launch-behaviour">Auto-launch behaviour<a aria-label="Permanent link" class="headerlink" href="#auto-launch-behaviour" title="Permanent link">&para;</a></h3>
 <p>When <code>auto_launch=True</code> and the initial connection fails:</p>
 <ul>
 <li><strong>macOS</strong>: runs <code>open -a "Vexy Lines"</code> via subprocess.</li>
@@ -2365,8 +2508,8 @@
 </ul>
 <p>After launching, polls the TCP port for up to 30 seconds before giving up.</p>
 <hr />
-<h3 id="document-methods">Document methods<a class="headerlink" href="#document-methods" title="Permanent link">&para;</a></h3>
-<h4 id="new_documentwidth-height-dpi-source_image-newdocumentresult"><code>new_document(width, height, dpi, source_image) -&gt; NewDocumentResult</code><a class="headerlink" href="#new_documentwidth-height-dpi-source_image-newdocumentresult" title="Permanent link">&para;</a></h4>
+<h3 id="document-methods">Document methods<a aria-label="Permanent link" class="headerlink" href="#document-methods" title="Permanent link">&para;</a></h3>
+<h4 id="new_documentwidth-height-dpi-source_image-newdocumentresult"><code>new_document(width, height, dpi, source_image) -&gt; NewDocumentResult</code><a aria-label="Permanent link" class="headerlink" href="#new_documentwidth-height-dpi-source_image-newdocumentresult" title="Permanent link">&para;</a></h4>
 <p>Create a new document. Width and height are inferred from the source image when omitted.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">new_document</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -2413,16 +2556,16 @@
 </tbody>
 </table>
 <p>Returns a <a href="#newdocumentresult"><code>NewDocumentResult</code></a> with the created document's metadata.</p>
-<h4 id="open_documentpath-str"><code>open_document(path) -&gt; str</code><a class="headerlink" href="#open_documentpath-str" title="Permanent link">&para;</a></h4>
+<h4 id="open_documentpath-str"><code>open_document(path) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#open_documentpath-str" title="Permanent link">&para;</a></h4>
 <p>Open a <code>.lines</code> file. The path is resolved to absolute before sending.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">open_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 <p>Returns server status string.</p>
-<h4 id="save_documentpathnone-str"><code>save_document(path=None) -&gt; str</code><a class="headerlink" href="#save_documentpathnone-str" title="Permanent link">&para;</a></h4>
+<h4 id="save_documentpathnone-str"><code>save_document(path=None) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#save_documentpathnone-str" title="Permanent link">&para;</a></h4>
 <p>Save the current document. Pass a path for Save As.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<h4 id="export_documentpath-dpinone-formatnone-str"><code>export_document(path, dpi=None, format=None) -&gt; str</code><a class="headerlink" href="#export_documentpath-dpinone-formatnone-str" title="Permanent link">&para;</a></h4>
+<h4 id="export_documentpath-dpinone-formatnone-str"><code>export_document(path, dpi=None, format=None) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#export_documentpath-dpinone-formatnone-str" title="Permanent link">&para;</a></h4>
 <p>Export to file. Format is one of <code>"svg"</code>, <code>"pdf"</code>, <code>"png"</code>, <code>"jpg"</code>, <code>"eps"</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">export_document</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -2461,17 +2604,17 @@
 </tr>
 </tbody>
 </table>
-<h4 id="get_document_info-documentinfo"><code>get_document_info() -&gt; DocumentInfo</code><a class="headerlink" href="#get_document_info-documentinfo" title="Permanent link">&para;</a></h4>
+<h4 id="get_document_info-documentinfo"><code>get_document_info() -&gt; DocumentInfo</code><a aria-label="Permanent link" class="headerlink" href="#get_document_info-documentinfo" title="Permanent link">&para;</a></h4>
 <p>Returns a <a href="#documentinfo"><code>DocumentInfo</code></a> with dimensions, DPI, units, and unsaved changes flag.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_document_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DocumentInfo</span>
 </code></pre></div>
 <hr />
-<h3 id="structure-methods">Structure methods<a class="headerlink" href="#structure-methods" title="Permanent link">&para;</a></h3>
-<h4 id="get_layer_tree-layernode"><code>get_layer_tree() -&gt; LayerNode</code><a class="headerlink" href="#get_layer_tree-layernode" title="Permanent link">&para;</a></h4>
+<h3 id="structure-methods">Structure methods<a aria-label="Permanent link" class="headerlink" href="#structure-methods" title="Permanent link">&para;</a></h3>
+<h4 id="get_layer_tree-layernode"><code>get_layer_tree() -&gt; LayerNode</code><a aria-label="Permanent link" class="headerlink" href="#get_layer_tree-layernode" title="Permanent link">&para;</a></h4>
 <p>Returns the full document tree as a recursive <a href="#layernode"><code>LayerNode</code></a>. The root node has <code>type == "document"</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_layer_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LayerNode</span>
 </code></pre></div>
-<h4 id="add_groupparent_idnone-captionnone-source_image_pathnone-dict"><code>add_group(parent_id=None, caption=None, source_image_path=None) -&gt; dict</code><a class="headerlink" href="#add_groupparent_idnone-captionnone-source_image_pathnone-dict" title="Permanent link">&para;</a></h4>
+<h4 id="add_groupparent_idnone-captionnone-source_image_pathnone-dict"><code>add_group(parent_id=None, caption=None, source_image_path=None) -&gt; dict</code><a aria-label="Permanent link" class="headerlink" href="#add_groupparent_idnone-captionnone-source_image_pathnone-dict" title="Permanent link">&para;</a></h4>
 <p>Add a group to the document.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_group</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -2511,12 +2654,12 @@
 </tbody>
 </table>
 <p>Returns a dict containing <code>"id"</code> of the created group.</p>
-<h4 id="add_layergroup_id-dict"><code>add_layer(group_id) -&gt; dict</code><a class="headerlink" href="#add_layergroup_id-dict" title="Permanent link">&para;</a></h4>
+<h4 id="add_layergroup_id-dict"><code>add_layer(group_id) -&gt; dict</code><a aria-label="Permanent link" class="headerlink" href="#add_layergroup_id-dict" title="Permanent link">&para;</a></h4>
 <p>Add a layer to a group.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 </code></pre></div>
 <p>Returns a dict containing <code>"id"</code> of the created layer.</p>
-<h4 id="add_filllayer_id-fill_type-colornone-paramsnone-dict"><code>add_fill(layer_id, fill_type, color=None, params=None) -&gt; dict</code><a class="headerlink" href="#add_filllayer_id-fill_type-colornone-paramsnone-dict" title="Permanent link">&para;</a></h4>
+<h4 id="add_filllayer_id-fill_type-colornone-paramsnone-dict"><code>add_fill(layer_id, fill_type, color=None, params=None) -&gt; dict</code><a aria-label="Permanent link" class="headerlink" href="#add_filllayer_id-fill_type-colornone-paramsnone-dict" title="Permanent link">&para;</a></h4>
 <p>Add a fill to a layer.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_fill</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -2563,46 +2706,46 @@
 </tbody>
 </table>
 <p>Returns a dict containing <code>"id"</code> of the created fill.</p>
-<h4 id="delete_objectobject_id-str"><code>delete_object(object_id) -&gt; str</code><a class="headerlink" href="#delete_objectobject_id-str" title="Permanent link">&para;</a></h4>
+<h4 id="delete_objectobject_id-str"><code>delete_object(object_id) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#delete_objectobject_id-str" title="Permanent link">&para;</a></h4>
 <p>Delete any object by ID (group, layer, or fill).</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">delete_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 <p>Note: the wire argument key is <code>"id"</code>, not <code>"object_id"</code>.</p>
 <hr />
-<h3 id="fill-parameter-methods">Fill parameter methods<a class="headerlink" href="#fill-parameter-methods" title="Permanent link">&para;</a></h3>
-<h4 id="get_fill_paramsfill_id-dict"><code>get_fill_params(fill_id) -&gt; dict</code><a class="headerlink" href="#get_fill_paramsfill_id-dict" title="Permanent link">&para;</a></h4>
+<h3 id="fill-parameter-methods">Fill parameter methods<a aria-label="Permanent link" class="headerlink" href="#fill-parameter-methods" title="Permanent link">&para;</a></h3>
+<h4 id="get_fill_paramsfill_id-dict"><code>get_fill_params(fill_id) -&gt; dict</code><a aria-label="Permanent link" class="headerlink" href="#get_fill_paramsfill_id-dict" title="Permanent link">&para;</a></h4>
 <p>Get all parameters of a fill as a dict. The wire argument key is <code>"id"</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_fill_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fill_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 </code></pre></div>
 <p>Returns a dict of parameter names to current values.</p>
-<h4 id="set_fill_paramsfill_id-params-str"><code>set_fill_params(fill_id, **params) -&gt; str</code><a class="headerlink" href="#set_fill_paramsfill_id-params-str" title="Permanent link">&para;</a></h4>
+<h4 id="set_fill_paramsfill_id-params-str"><code>set_fill_params(fill_id, **params) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#set_fill_paramsfill_id-params-str" title="Permanent link">&para;</a></h4>
 <p>Set fill parameters by keyword. The wire format wraps kwargs inside a <code>"params"</code> dict alongside <code>"id"</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_fill_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fill_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">vl</span><span class="o">.</span><span class="n">set_fill_params</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#ff0000&quot;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">vl</span><span class="o">.</span><span class="n">set_fill_params</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#ff0000"</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
 </code></pre></div>
 <p>All spatial values (interval, thickness, dispersion) are in <strong>pixels</strong>. The server converts internally to mm or points based on the document DPI. See <a href="#fill_type_params">FILL_TYPE_PARAMS</a> for valid parameter names per fill type.</p>
 <hr />
-<h3 id="visual-methods">Visual methods<a class="headerlink" href="#visual-methods" title="Permanent link">&para;</a></h3>
-<h4 id="set_source_imageimage_path-group_idnone-str"><code>set_source_image(image_path, group_id=None) -&gt; str</code><a class="headerlink" href="#set_source_imageimage_path-group_idnone-str" title="Permanent link">&para;</a></h4>
+<h3 id="visual-methods">Visual methods<a aria-label="Permanent link" class="headerlink" href="#visual-methods" title="Permanent link">&para;</a></h3>
+<h4 id="set_source_imageimage_path-group_idnone-str"><code>set_source_image(image_path, group_id=None) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#set_source_imageimage_path-group_idnone-str" title="Permanent link">&para;</a></h4>
 <p>Set the source image for a group.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_source_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<h4 id="set_captionobject_id-caption-str"><code>set_caption(object_id, caption) -&gt; str</code><a class="headerlink" href="#set_captionobject_id-caption-str" title="Permanent link">&para;</a></h4>
+<h4 id="set_captionobject_id-caption-str"><code>set_caption(object_id, caption) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#set_captionobject_id-caption-str" title="Permanent link">&para;</a></h4>
 <p>Rename any object. Wire argument key is <code>"id"</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_caption</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<h4 id="set_visibleobject_id-visible-str"><code>set_visible(object_id, visible) -&gt; str</code><a class="headerlink" href="#set_visibleobject_id-visible-str" title="Permanent link">&para;</a></h4>
+<h4 id="set_visibleobject_id-visible-str"><code>set_visible(object_id, visible) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#set_visibleobject_id-visible-str" title="Permanent link">&para;</a></h4>
 <p>Toggle visibility. The <code>visible</code> parameter is keyword-only.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">visible</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<h4 id="set_layer_masklayer_id-paths-modecreate-str"><code>set_layer_mask(layer_id, paths, mode="create") -&gt; str</code><a class="headerlink" href="#set_layer_masklayer_id-paths-modecreate-str" title="Permanent link">&para;</a></h4>
+<h4 id="set_layer_masklayer_id-paths-modecreate-str"><code>set_layer_mask(layer_id, paths, mode="create") -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#set_layer_masklayer_id-paths-modecreate-str" title="Permanent link">&para;</a></h4>
 <p>Set an SVG vector mask on a layer.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_layer_mask</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">layer_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"create"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 <table>
@@ -2635,11 +2778,11 @@
 </tr>
 </tbody>
 </table>
-<h4 id="get_layer_masklayer_id-dict"><code>get_layer_mask(layer_id) -&gt; dict</code><a class="headerlink" href="#get_layer_masklayer_id-dict" title="Permanent link">&para;</a></h4>
+<h4 id="get_layer_masklayer_id-dict"><code>get_layer_mask(layer_id) -&gt; dict</code><a aria-label="Permanent link" class="headerlink" href="#get_layer_masklayer_id-dict" title="Permanent link">&para;</a></h4>
 <p>Get mask data for a layer.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_layer_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 </code></pre></div>
-<h4 id="transform_layerlayer_id-str"><code>transform_layer(layer_id, ...) -&gt; str</code><a class="headerlink" href="#transform_layerlayer_id-str" title="Permanent link">&para;</a></h4>
+<h4 id="transform_layerlayer_id-str"><code>transform_layer(layer_id, ...) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#transform_layerlayer_id-str" title="Permanent link">&para;</a></h4>
 <p>Apply a 2D transform to a layer.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform_layer</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -2652,7 +2795,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 <p>All positional values are in pixels. Wire argument key for the layer is <code>"id"</code>.</p>
-<h4 id="set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str"><code>set_layer_warp(layer_id, top_left, top_right, bottom_right, bottom_left) -&gt; str</code><a class="headerlink" href="#set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str" title="Permanent link">&para;</a></h4>
+<h4 id="set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str"><code>set_layer_warp(layer_id, top_left, top_right, bottom_right, bottom_left) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#set_layer_warplayer_id-top_left-top_right-bottom_right-bottom_left-str" title="Permanent link">&para;</a></h4>
 <p>Set perspective warp corners. Each corner is <code>[x, y]</code> in pixels. Wire argument key for the layer is <code>"id"</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_layer_warp</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -2664,17 +2807,17 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 <hr />
-<h3 id="control-methods">Control methods<a class="headerlink" href="#control-methods" title="Permanent link">&para;</a></h3>
-<h4 id="rendertimeout1200-bool"><code>render(timeout=120.0) -&gt; bool</code><a class="headerlink" href="#rendertimeout1200-bool" title="Permanent link">&para;</a></h4>
+<h3 id="control-methods">Control methods<a aria-label="Permanent link" class="headerlink" href="#control-methods" title="Permanent link">&para;</a></h3>
+<h4 id="rendertimeout1200-bool"><code>render(timeout=120.0) -&gt; bool</code><a aria-label="Permanent link" class="headerlink" href="#rendertimeout1200-bool" title="Permanent link">&para;</a></h4>
 <p>Render all layers and wait for completion. Combines <code>render_all()</code> + <code>wait_for_render()</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">120.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </code></pre></div>
 <p>Returns <code>True</code> when rendering completed, <code>False</code> if timed out. The app continues rendering in the background on timeout.</p>
-<h4 id="render_all-str"><code>render_all() -&gt; str</code><a class="headerlink" href="#render_all-str" title="Permanent link">&para;</a></h4>
+<h4 id="render_all-str"><code>render_all() -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#render_all-str" title="Permanent link">&para;</a></h4>
 <p>Trigger a render without waiting.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">render_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<h4 id="wait_for_rendertimeout1200-poll_interval05-bool"><code>wait_for_render(timeout=120.0, poll_interval=0.5) -&gt; bool</code><a class="headerlink" href="#wait_for_rendertimeout1200-poll_interval05-bool" title="Permanent link">&para;</a></h4>
+<h4 id="wait_for_rendertimeout1200-poll_interval05-bool"><code>wait_for_render(timeout=120.0, poll_interval=0.5) -&gt; bool</code><a aria-label="Permanent link" class="headerlink" href="#wait_for_rendertimeout1200-poll_interval05-bool" title="Permanent link">&para;</a></h4>
 <p>Poll until rendering finishes. Waits 0.5 s before the first check to let the render thread set its flag. Handles two scenarios:</p>
 <ul>
 <li><strong>Render started and finished</strong>: detected by a <code>True -&gt; False</code> transition in <code>get_render_status</code>.</li>
@@ -2683,22 +2826,22 @@
 <p>Adds a 0.5 s settling delay after detecting completion.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wait_for_render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">120.0</span><span class="p">,</span> <span class="n">poll_interval</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </code></pre></div>
-<h4 id="get_render_status-renderstatus"><code>get_render_status() -&gt; RenderStatus</code><a class="headerlink" href="#get_render_status-renderstatus" title="Permanent link">&para;</a></h4>
+<h4 id="get_render_status-renderstatus"><code>get_render_status() -&gt; RenderStatus</code><a aria-label="Permanent link" class="headerlink" href="#get_render_status-renderstatus" title="Permanent link">&para;</a></h4>
 <p>Check whether the document is currently rendering.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_render_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RenderStatus</span>
 </code></pre></div>
-<h4 id="undo-str-redo-str"><code>undo() -&gt; str</code> / <code>redo() -&gt; str</code><a class="headerlink" href="#undo-str-redo-str" title="Permanent link">&para;</a></h4>
+<h4 id="undo-str-redo-str"><code>undo() -&gt; str</code> / <code>redo() -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#undo-str-redo-str" title="Permanent link">&para;</a></h4>
 <p>Undo or redo the last action.</p>
-<h4 id="get_selection-dict-str"><code>get_selection() -&gt; dict | str</code><a class="headerlink" href="#get_selection-dict-str" title="Permanent link">&para;</a></h4>
+<h4 id="get_selection-dict-str"><code>get_selection() -&gt; dict | str</code><a aria-label="Permanent link" class="headerlink" href="#get_selection-dict-str" title="Permanent link">&para;</a></h4>
 <p>Get the currently selected objects.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span>
 </code></pre></div>
-<h4 id="select_objectobject_id-str"><code>select_object(object_id) -&gt; str</code><a class="headerlink" href="#select_objectobject_id-str" title="Permanent link">&para;</a></h4>
+<h4 id="select_objectobject_id-str"><code>select_object(object_id) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#select_objectobject_id-str" title="Permanent link">&para;</a></h4>
 <p>Select an object by ID. Wire argument key is <code>"id"</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">select_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 <hr />
-<h3 id="export-shortcuts">Export shortcuts<a class="headerlink" href="#export-shortcuts" title="Permanent link">&para;</a></h3>
+<h3 id="export-shortcuts">Export shortcuts<a aria-label="Permanent link" class="headerlink" href="#export-shortcuts" title="Permanent link">&para;</a></h3>
 <p>Convenience methods that call <code>export_document</code> with the appropriate format and return the resolved absolute path. The <code>dpi</code> parameter is keyword-only.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">export_svg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">export_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span>
@@ -2743,18 +2886,18 @@
 </tbody>
 </table>
 <p>All return the resolved <code>Path</code> of the exported file.</p>
-<h4 id="svg-str"><code>svg() -&gt; str</code><a class="headerlink" href="#svg-str" title="Permanent link">&para;</a></h4>
+<h4 id="svg-str"><code>svg() -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#svg-str" title="Permanent link">&para;</a></h4>
 <p>Export as SVG to a temporary file, read it, clean up, and return the SVG content as a string. Useful when you pipe SVG into other tools or return it from an API.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">svg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<h4 id="svg_parsed-svglabsvg"><code>svg_parsed() -&gt; svglab.Svg</code><a class="headerlink" href="#svg_parsed-svglabsvg" title="Permanent link">&para;</a></h4>
+<h4 id="svg_parsed-svglabsvg"><code>svg_parsed() -&gt; svglab.Svg</code><a aria-label="Permanent link" class="headerlink" href="#svg_parsed-svglabsvg" title="Permanent link">&para;</a></h4>
 <p>Export as SVG and return a parsed <code>svglab.Svg</code> DOM object for traversal, editing, and rasterisation. Requires the <code>[svg]</code> extra (<code>pip install vexy-lines-apy[svg]</code>).</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">svg_parsed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span>  <span class="c1"># svglab.Svg at runtime</span>
 </code></pre></div>
 <p>Raises <code>ImportError</code> if <code>svglab</code> is not installed.</p>
 <hr />
-<h3 id="low-level-method">Low-level method<a class="headerlink" href="#low-level-method" title="Permanent link">&para;</a></h3>
-<h4 id="call_toolname-argumentsnone-dict-str"><code>call_tool(name, arguments=None) -&gt; dict | str</code><a class="headerlink" href="#call_toolname-argumentsnone-dict-str" title="Permanent link">&para;</a></h4>
+<h3 id="low-level-method">Low-level method<a aria-label="Permanent link" class="headerlink" href="#low-level-method" title="Permanent link">&para;</a></h3>
+<h4 id="call_toolname-argumentsnone-dict-str"><code>call_tool(name, arguments=None) -&gt; dict | str</code><a aria-label="Permanent link" class="headerlink" href="#call_toolname-argumentsnone-dict-str" title="Permanent link">&para;</a></h4>
 <p>Call any MCP tool by name. The server wraps results in <code>content[0].text</code> which may be JSON or plain text. This method attempts JSON parse first, then falls back to returning the raw string.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">call_tool</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -2764,13 +2907,13 @@
 </code></pre></div>
 <p>Use this to call tools not yet wrapped as typed methods, or to pass through raw arguments:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Direct tool call</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">&quot;get_document_info&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">"get_document_info"</span><span class="p">)</span>
 
 <span class="c1"># With arguments</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">&quot;set_fill_params&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#ff0000&quot;</span><span class="p">}})</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">"set_fill_params"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s2">"params"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"color"</span><span class="p">:</span> <span class="s2">"#ff0000"</span><span class="p">}})</span>
 </code></pre></div>
 <hr />
-<h2 id="mcperror">MCPError<a class="headerlink" href="#mcperror" title="Permanent link">&para;</a></h2>
+<h2 id="mcperror">MCPError<a aria-label="Permanent link" class="headerlink" href="#mcperror" title="Permanent link">&para;</a></h2>
 <p>Raised when the MCP server returns an error, connection fails, or protocol validation fails.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MCPError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Human-readable error description</span>
@@ -2828,16 +2971,16 @@
     <span class="k">with</span> <span class="n">MCPClient</span><span class="p">(</span><span class="n">auto_launch</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">vl</span><span class="p">:</span>
         <span class="n">vl</span><span class="o">.</span><span class="n">get_document_info</span><span class="p">()</span>
 <span class="k">except</span> <span class="n">MCPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MCP failed: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MCP failed: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <hr />
-<h2 id="style-functions">Style functions<a class="headerlink" href="#style-functions" title="Permanent link">&para;</a></h2>
-<h3 id="extract_stylepath-style"><code>extract_style(path) -&gt; Style</code><a class="headerlink" href="#extract_stylepath-style" title="Permanent link">&para;</a></h3>
+<h2 id="style-functions">Style functions<a aria-label="Permanent link" class="headerlink" href="#style-functions" title="Permanent link">&para;</a></h2>
+<h3 id="extract_stylepath-style"><code>extract_style(path) -&gt; Style</code><a aria-label="Permanent link" class="headerlink" href="#extract_stylepath-style" title="Permanent link">&para;</a></h3>
 <p>Parse a <code>.lines</code> file and return a <a href="#style"><code>Style</code></a> containing the full group/layer/fill tree and document properties. Does not need the app: it works offline via the <code>vexy-lines-py</code> parser.</p>
 <p>If <code>Pillow</code> is available, also extracts the pixel dimensions of the embedded source image into <code>style.source_image_size</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_style</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Style</span>
 </code></pre></div>
-<h3 id="apply_styleclient-style-source_image-str"><code>apply_style(client, style, source_image, ...) -&gt; str</code><a class="headerlink" href="#apply_styleclient-style-source_image-str" title="Permanent link">&para;</a></h3>
+<h3 id="apply_styleclient-style-source_image-str"><code>apply_style(client, style, source_image, ...) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#apply_styleclient-style-source_image-str" title="Permanent link">&para;</a></h3>
 <p>Apply a style to a source image via MCP. Returns the SVG string.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_style</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">MCPClient</span><span class="p">,</span>
@@ -2847,7 +2990,7 @@
     <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">72</span><span class="p">,</span>
     <span class="n">relative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">render_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span>
-    <span class="n">style_mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;fast&quot;</span><span class="p">,</span> <span class="s2">&quot;slow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;fast&quot;</span><span class="p">,</span>
+    <span class="n">style_mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"auto"</span><span class="p">,</span> <span class="s2">"fast"</span><span class="p">,</span> <span class="s2">"slow"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"fast"</span><span class="p">,</span>
     <span class="n">save_lines_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
@@ -2934,7 +3077,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="create_styled_documentclient-style-source_image-none"><code>create_styled_document(client, style, source_image, ...) -&gt; None</code><a class="headerlink" href="#create_styled_documentclient-style-source_image-none" title="Permanent link">&para;</a></h3>
+<h3 id="create_styled_documentclient-style-source_image-none"><code>create_styled_document(client, style, source_image, ...) -&gt; None</code><a aria-label="Permanent link" class="headerlink" href="#create_styled_documentclient-style-source_image-none" title="Permanent link">&para;</a></h3>
 <p>Create a styled document in Vexy Lines without rendering or exporting. The document remains open in the app.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_styled_document</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">MCPClient</span><span class="p">,</span>
@@ -2945,7 +3088,7 @@
     <span class="n">relative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<h3 id="save_and_consolidateclient-path-none"><code>save_and_consolidate(client, path, ...) -&gt; None</code><a class="headerlink" href="#save_and_consolidateclient-path-none" title="Permanent link">&para;</a></h3>
+<h3 id="save_and_consolidateclient-path-none"><code>save_and_consolidate(client, path, ...) -&gt; None</code><a aria-label="Permanent link" class="headerlink" href="#save_and_consolidateclient-path-none" title="Permanent link">&para;</a></h3>
 <p>Save, reopen, render, and save again. This improves <code>.lines</code> reliability after programmatic edits.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_and_consolidate</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">MCPClient</span><span class="p">,</span>
@@ -2955,23 +3098,23 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 <p>Sequence: save -&gt; reopen -&gt; render -&gt; save.</p>
-<h3 id="interpolate_stylea-b-t-style"><code>interpolate_style(a, b, t) -&gt; Style</code><a class="headerlink" href="#interpolate_stylea-b-t-style" title="Permanent link">&para;</a></h3>
+<h3 id="interpolate_stylea-b-t-style"><code>interpolate_style(a, b, t) -&gt; Style</code><a aria-label="Permanent link" class="headerlink" href="#interpolate_stylea-b-t-style" title="Permanent link">&para;</a></h3>
 <p>Blend two compatible styles. <code>t=0</code> returns style A, <code>t=1</code> returns style B. Numeric fill parameters and hex colours interpolate linearly.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">interpolate_style</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Style</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Style</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Style</span>
 </code></pre></div>
 <p>The <code>t</code> value is clamped to <code>[0.0, 1.0]</code>. If styles are incompatible, logs a warning and returns a deep copy of style A.</p>
-<h3 id="styles_compatiblea-b-bool"><code>styles_compatible(a, b) -&gt; bool</code><a class="headerlink" href="#styles_compatiblea-b-bool" title="Permanent link">&para;</a></h3>
+<h3 id="styles_compatiblea-b-bool"><code>styles_compatible(a, b) -&gt; bool</code><a aria-label="Permanent link" class="headerlink" href="#styles_compatiblea-b-bool" title="Permanent link">&para;</a></h3>
 <p>Check whether two styles have matching tree structures. Required before interpolation.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">styles_compatible</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Style</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Style</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </code></pre></div>
 <hr />
-<h2 id="jobfolder">JobFolder<a class="headerlink" href="#jobfolder" title="Permanent link">&para;</a></h2>
+<h2 id="jobfolder">JobFolder<a aria-label="Permanent link" class="headerlink" href="#jobfolder" title="Permanent link">&para;</a></h2>
 <p>Persistent job folder for resumable export pipelines. Stores intermediate artifacts (<code>.lines</code>, <code>.svg</code>, frames) alongside the final output instead of using temporary directories that vanish on crash.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vexy_lines_api.export</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobFolder</span>
 
-<span class="n">jf</span> <span class="o">=</span> <span class="n">JobFolder</span><span class="p">(</span><span class="s2">&quot;output.mp4&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">jf</span> <span class="o">=</span> <span class="n">JobFolder</span><span class="p">(</span><span class="s2">"output.mp4"</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>          <span class="c1"># /absolute/path/to/output-vljob/</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">output_stem</span><span class="p">)</span>   <span class="c1"># &quot;output&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">output_stem</span><span class="p">)</span>   <span class="c1"># "output"</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">src_path</span><span class="p">)</span>      <span class="c1"># /absolute/path/to/output-vljob/src/</span>
 </code></pre></div>
 <p><strong>Constructor:</strong></p>
@@ -3107,8 +3250,8 @@
 </tbody>
 </table>
 <hr />
-<h2 id="export-pipeline">Export pipeline<a class="headerlink" href="#export-pipeline" title="Permanent link">&para;</a></h2>
-<h3 id="process_exportrequest-none"><code>process_export(request, ...) -&gt; None</code><a class="headerlink" href="#process_exportrequest-none" title="Permanent link">&para;</a></h3>
+<h2 id="export-pipeline">Export pipeline<a aria-label="Permanent link" class="headerlink" href="#export-pipeline" title="Permanent link">&para;</a></h2>
+<h3 id="process_exportrequest-none"><code>process_export(request, ...) -&gt; None</code><a aria-label="Permanent link" class="headerlink" href="#process_exportrequest-none" title="Permanent link">&para;</a></h3>
 <p>Unified entry point for all export modes. Accepts either an <code>ExportRequest</code> dataclass or legacy positional arguments. Creates a <code>JobFolder</code>, dispatches to the appropriate processor, and optionally cleans up.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_export</span><span class="p">(</span>
     <span class="n">request</span><span class="p">:</span> <span class="n">ExportRequest</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
@@ -3131,31 +3274,31 @@
     <span class="n">on_preview</span><span class="p">:</span> <span class="n">PreviewCallback</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<h3 id="exportrequest"><code>ExportRequest</code><a class="headerlink" href="#exportrequest" title="Permanent link">&para;</a></h3>
+<h3 id="exportrequest"><code>ExportRequest</code><a aria-label="Permanent link" class="headerlink" href="#exportrequest" title="Permanent link">&para;</a></h3>
 <p>Canonical export request dataclass. Frozen (immutable after creation).</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExportRequest</span><span class="p">:</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="n">ExportMode</span>             <span class="c1"># &quot;lines&quot; | &quot;images&quot; | &quot;video&quot;</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">ExportMode</span>             <span class="c1"># "lines" | "images" | "video"</span>
     <span class="n">input_paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">style_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
     <span class="n">end_style_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
     <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="nb">format</span><span class="p">:</span> <span class="n">ExportFormat</span>          <span class="c1"># &quot;LINES&quot; | &quot;SVG&quot; | &quot;PNG&quot; | &quot;JPG&quot; | &quot;MP4&quot;</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="n">ExportFormat</span>          <span class="c1"># "LINES" | "SVG" | "PNG" | "JPG" | "MP4"</span>
     <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">audio</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">frame_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">relative_style</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">style_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;fast&quot;</span>
+    <span class="n">style_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"fast"</span>
     <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>           <span class="c1"># Force-clean job folder</span>
     <span class="n">cleanup</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>         <span class="c1"># Delete job folder after success</span>
 </code></pre></div>
-<h3 id="callback-types">Callback types<a class="headerlink" href="#callback-types" title="Permanent link">&para;</a></h3>
+<h3 id="callback-types">Callback types<a aria-label="Permanent link" class="headerlink" href="#callback-types" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">ProgressCallback</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># (current, total, message)</span>
 <span class="n">CompleteCallback</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>             <span class="c1"># (message)</span>
 <span class="n">ErrorCallback</span>    <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>             <span class="c1"># (message)</span>
 <span class="n">PreviewCallback</span>  <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">bytes</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>           <span class="c1"># (image_bytes)</span>
 </code></pre></div>
-<h3 id="export-errors">Export errors<a class="headerlink" href="#export-errors" title="Permanent link">&para;</a></h3>
+<h3 id="export-errors">Export errors<a aria-label="Permanent link" class="headerlink" href="#export-errors" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -3175,8 +3318,8 @@
 </tbody>
 </table>
 <hr />
-<h2 id="video-utilities">Video utilities<a class="headerlink" href="#video-utilities" title="Permanent link">&para;</a></h2>
-<h3 id="videoinfo"><code>VideoInfo</code><a class="headerlink" href="#videoinfo" title="Permanent link">&para;</a></h3>
+<h2 id="video-utilities">Video utilities<a aria-label="Permanent link" class="headerlink" href="#video-utilities" title="Permanent link">&para;</a></h2>
+<h3 id="videoinfo"><code>VideoInfo</code><a aria-label="Permanent link" class="headerlink" href="#videoinfo" title="Permanent link">&para;</a></h3>
 <p>Frozen dataclass with video metadata.</p>
 <table>
 <thead>
@@ -3219,15 +3362,15 @@
 </tr>
 </tbody>
 </table>
-<h3 id="probepath-videoinfo"><code>probe(path) -&gt; VideoInfo</code><a class="headerlink" href="#probepath-videoinfo" title="Permanent link">&para;</a></h3>
+<h3 id="probepath-videoinfo"><code>probe(path) -&gt; VideoInfo</code><a aria-label="Permanent link" class="headerlink" href="#probepath-videoinfo" title="Permanent link">&para;</a></h3>
 <p>Read video metadata using OpenCV. Audio detection requires <code>ffprobe</code> on PATH.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">probe</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VideoInfo</span>
 </code></pre></div>
-<h3 id="svg_to_pilsvg_string-width-height-imageimage"><code>svg_to_pil(svg_string, width, height) -&gt; Image.Image</code><a class="headerlink" href="#svg_to_pilsvg_string-width-height-imageimage" title="Permanent link">&para;</a></h3>
+<h3 id="svg_to_pilsvg_string-width-height-imageimage"><code>svg_to_pil(svg_string, width, height) -&gt; Image.Image</code><a aria-label="Permanent link" class="headerlink" href="#svg_to_pilsvg_string-width-height-imageimage" title="Permanent link">&para;</a></h3>
 <p>Rasterise an SVG string to a PIL Image via <code>resvg_py</code>. Patches mm dimensions to px before rasterising. Falls back to a blank white image if <code>resvg_py</code> is not installed.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">svg_to_pil</span><span class="p">(</span><span class="n">svg_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span>
 </code></pre></div>
-<h3 id="process_videoinput_path-output_path-videoinfo"><code>process_video(input_path, output_path, ...) -&gt; VideoInfo</code><a class="headerlink" href="#process_videoinput_path-output_path-videoinfo" title="Permanent link">&para;</a></h3>
+<h3 id="process_videoinput_path-output_path-videoinfo"><code>process_video(input_path, output_path, ...) -&gt; VideoInfo</code><a aria-label="Permanent link" class="headerlink" href="#process_videoinput_path-output_path-videoinfo" title="Permanent link">&para;</a></h3>
 <p>Re-encode a video with optional trim and scale. No style transfer.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_video</span><span class="p">(</span>
     <span class="n">input_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3241,7 +3384,7 @@
     <span class="n">on_frame_image</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VideoInfo</span>
 </code></pre></div>
-<h3 id="process_video_with_styleinput_path-output_path-videoinfo"><code>process_video_with_style(input_path, output_path, ...) -&gt; VideoInfo</code><a class="headerlink" href="#process_video_with_styleinput_path-output_path-videoinfo" title="Permanent link">&para;</a></h3>
+<h3 id="process_video_with_styleinput_path-output_path-videoinfo"><code>process_video_with_style(input_path, output_path, ...) -&gt; VideoInfo</code><a aria-label="Permanent link" class="headerlink" href="#process_video_with_styleinput_path-output_path-videoinfo" title="Permanent link">&para;</a></h3>
 <p>Per-frame style transfer. Each frame is: decoded -&gt; saved as PNG -&gt; styled via MCP -&gt; rasterised via <code>resvg_py</code> -&gt; encoded to output video. If <code>end_style</code> is provided, the style interpolates linearly across the frame range.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_video_with_style</span><span class="p">(</span>
     <span class="n">input_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3254,25 +3397,25 @@
     <span class="n">include_audio</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">size_multiplier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">relative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">style_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">style_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">,</span>
     <span class="n">abort_event</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">on_progress</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">on_frame_image</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VideoInfo</span>
 </code></pre></div>
 <hr />
-<h2 id="media-utilities">Media utilities<a class="headerlink" href="#media-utilities" title="Permanent link">&para;</a></h2>
-<h3 id="extract_preview_from_linesfilepath-bytes-none"><code>extract_preview_from_lines(filepath) -&gt; bytes | None</code><a class="headerlink" href="#extract_preview_from_linesfilepath-bytes-none" title="Permanent link">&para;</a></h3>
+<h2 id="media-utilities">Media utilities<a aria-label="Permanent link" class="headerlink" href="#media-utilities" title="Permanent link">&para;</a></h2>
+<h3 id="extract_preview_from_linesfilepath-bytes-none"><code>extract_preview_from_lines(filepath) -&gt; bytes | None</code><a aria-label="Permanent link" class="headerlink" href="#extract_preview_from_linesfilepath-bytes-none" title="Permanent link">&para;</a></h3>
 <p>Extract the embedded preview or source image from a <code>.lines</code> file. Returns PNG or JPEG bytes, or <code>None</code> on failure.</p>
-<h3 id="extract_framevideo_path-frame_number1-imageimage-none"><code>extract_frame(video_path, frame_number=1) -&gt; Image.Image | None</code><a class="headerlink" href="#extract_framevideo_path-frame_number1-imageimage-none" title="Permanent link">&para;</a></h3>
+<h3 id="extract_framevideo_path-frame_number1-imageimage-none"><code>extract_frame(video_path, frame_number=1) -&gt; Image.Image | None</code><a aria-label="Permanent link" class="headerlink" href="#extract_framevideo_path-frame_number1-imageimage-none" title="Permanent link">&para;</a></h3>
 <p>Extract a single frame from a video file as a PIL Image. <code>frame_number</code> is 1-based.</p>
-<h3 id="fit_image_to_boximage-width-height-imageimage"><code>fit_image_to_box(image, width, height) -&gt; Image.Image</code><a class="headerlink" href="#fit_image_to_boximage-width-height-imageimage" title="Permanent link">&para;</a></h3>
+<h3 id="fit_image_to_boximage-width-height-imageimage"><code>fit_image_to_box(image, width, height) -&gt; Image.Image</code><a aria-label="Permanent link" class="headerlink" href="#fit_image_to_boximage-width-height-imageimage" title="Permanent link">&para;</a></h3>
 <p>Scale a PIL Image to fit within <code>width x height</code> while preserving aspect ratio. Composites RGBA onto white, returns RGB.</p>
-<h3 id="truncate_starttext-max_chars60-str"><code>truncate_start(text, max_chars=60) -&gt; str</code><a class="headerlink" href="#truncate_starttext-max_chars60-str" title="Permanent link">&para;</a></h3>
+<h3 id="truncate_starttext-max_chars60-str"><code>truncate_start(text, max_chars=60) -&gt; str</code><a aria-label="Permanent link" class="headerlink" href="#truncate_starttext-max_chars60-str" title="Permanent link">&para;</a></h3>
 <p>Truncate a string from the start, prepending <code>"..."</code> if truncated. For display in progress messages.</p>
 <hr />
-<h2 id="dataclasses">Dataclasses<a class="headerlink" href="#dataclasses" title="Permanent link">&para;</a></h2>
-<h3 id="style"><code>Style</code><a class="headerlink" href="#style" title="Permanent link">&para;</a></h3>
+<h2 id="dataclasses">Dataclasses<a aria-label="Permanent link" class="headerlink" href="#dataclasses" title="Permanent link">&para;</a></h2>
+<h3 id="style"><code>Style</code><a aria-label="Permanent link" class="headerlink" href="#style" title="Permanent link">&para;</a></h3>
 <p>A transferable style extracted from a <code>.lines</code> document.</p>
 <table>
 <thead>
@@ -3306,7 +3449,7 @@
 </tbody>
 </table>
 <p><code>StyleMode = Literal["auto", "fast", "slow"]</code>: type alias for the <code>style_mode</code> parameter.</p>
-<h3 id="documentinfo"><code>DocumentInfo</code><a class="headerlink" href="#documentinfo" title="Permanent link">&para;</a></h3>
+<h3 id="documentinfo"><code>DocumentInfo</code><a aria-label="Permanent link" class="headerlink" href="#documentinfo" title="Permanent link">&para;</a></h3>
 <p>MCP response from <code>get_document_info</code>.</p>
 <table>
 <thead>
@@ -3344,7 +3487,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="layernode"><code>LayerNode</code><a class="headerlink" href="#layernode" title="Permanent link">&para;</a></h3>
+<h3 id="layernode"><code>LayerNode</code><a aria-label="Permanent link" class="headerlink" href="#layernode" title="Permanent link">&para;</a></h3>
 <p>Recursive tree node from <code>get_layer_tree()</code>.</p>
 <table>
 <thead>
@@ -3388,7 +3531,7 @@
 </tbody>
 </table>
 <p>Class method <code>LayerNode.from_dict(d)</code> constructs the tree from nested dicts returned by the server.</p>
-<h3 id="newdocumentresult"><code>NewDocumentResult</code><a class="headerlink" href="#newdocumentresult" title="Permanent link">&para;</a></h3>
+<h3 id="newdocumentresult"><code>NewDocumentResult</code><a aria-label="Permanent link" class="headerlink" href="#newdocumentresult" title="Permanent link">&para;</a></h3>
 <p>MCP response from <code>new_document</code>.</p>
 <table>
 <thead>
@@ -3426,7 +3569,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="renderstatus"><code>RenderStatus</code><a class="headerlink" href="#renderstatus" title="Permanent link">&para;</a></h3>
+<h3 id="renderstatus"><code>RenderStatus</code><a aria-label="Permanent link" class="headerlink" href="#renderstatus" title="Permanent link">&para;</a></h3>
 <p>MCP response from <code>get_render_status</code>.</p>
 <table>
 <thead>
@@ -3445,15 +3588,15 @@
 </tbody>
 </table>
 <hr />
-<h2 id="constants">Constants<a class="headerlink" href="#constants" title="Permanent link">&para;</a></h2>
-<h3 id="fill_types"><code>FILL_TYPES</code><a class="headerlink" href="#fill_types" title="Permanent link">&para;</a></h3>
+<h2 id="constants">Constants<a aria-label="Permanent link" class="headerlink" href="#constants" title="Permanent link">&para;</a></h2>
+<h3 id="fill_types"><code>FILL_TYPES</code><a aria-label="Permanent link" class="headerlink" href="#fill_types" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">FILL_TYPES</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span>
-    <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;wave&quot;</span><span class="p">,</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span> <span class="s2">&quot;radial&quot;</span><span class="p">,</span> <span class="s2">&quot;spiral&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;scribble&quot;</span><span class="p">,</span> <span class="s2">&quot;halftone&quot;</span><span class="p">,</span> <span class="s2">&quot;handmade&quot;</span><span class="p">,</span> <span class="s2">&quot;fractals&quot;</span><span class="p">,</span> <span class="s2">&quot;trace&quot;</span><span class="p">,</span>
+    <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"wave"</span><span class="p">,</span> <span class="s2">"circular"</span><span class="p">,</span> <span class="s2">"radial"</span><span class="p">,</span> <span class="s2">"spiral"</span><span class="p">,</span>
+    <span class="s2">"scribble"</span><span class="p">,</span> <span class="s2">"halftone"</span><span class="p">,</span> <span class="s2">"handmade"</span><span class="p">,</span> <span class="s2">"fractals"</span><span class="p">,</span> <span class="s2">"trace"</span><span class="p">,</span>
 <span class="p">})</span>
 </code></pre></div>
 <p>All valid fill type names accepted by <code>add_fill</code>.</p>
-<h3 id="fill_type_params"><code>FILL_TYPE_PARAMS</code><a class="headerlink" href="#fill_type_params" title="Permanent link">&para;</a></h3>
+<h3 id="fill_type_params"><code>FILL_TYPE_PARAMS</code><a aria-label="Permanent link" class="headerlink" href="#fill_type_params" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">FILL_TYPE_PARAMS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span>
 </code></pre></div>
 <p>Maps each fill type to its valid parameter names for <code>set_fill_params</code>. Derived from the C++ <code>paramsForType()</code> in <code>mcptools.cpp</code>.</p>
@@ -3510,7 +3653,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="parameter-name-mapping-parser-to-mcp">Parameter name mapping (parser to MCP)<a class="headerlink" href="#parameter-name-mapping-parser-to-mcp" title="Permanent link">&para;</a></h3>
+<h3 id="parameter-name-mapping-parser-to-mcp">Parameter name mapping (parser to MCP)<a aria-label="Permanent link" class="headerlink" href="#parameter-name-mapping-parser-to-mcp" title="Permanent link">&para;</a></h3>
 <p>The <code>.lines</code> XML uses different attribute names from the MCP server. The style engine handles this translation internally via <code>PARSER_TO_MCP_PARAMS</code>:</p>
 <table>
 <thead>
@@ -3572,6 +3715,24 @@
 
 
 
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <a href="../topics/#tag:api" class="md-tag md-tag-icon">API</a>
+      
+    
+      
+      
+      
+      
+        <a href="../topics/#tag:developer-guide" class="md-tag md-tag-icon">Developer guide</a>
+      
+    
+  </nav>
+
 
 
 
@@ -3583,27 +3744,39 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-        
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
       </main>
       
+  
         <footer class="md-footer">
   
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
   
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
-    </div>
-  </div>
 </footer>
       
+  <vexy-footer mode="dark"></vexy-footer>
+
     </div>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
@@ -3613,11 +3786,15 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.path", "toc.follow", "content.code.copy", "navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+  
+      <script src="../assets/javascripts/bundle.fc193f93.min.js"></script>
       
     
+  <script src="../assets/fly/fly-bridge.js?v=86c9984233"></script>
+  <script type="module" src="../assets/fly/fly.js?v=f51ac22526"></script>
+
   </body>
 </html>
