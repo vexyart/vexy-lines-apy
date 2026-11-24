@@ -8,7 +8,7 @@ if [[ "${1:-}" == --docs ]]; then
   export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
   exec uvx --python 3.13 --from properdocs==1.6.7 \
     --with mkdocs==1.6.1 \
-    --with fly-january==0.2.1 \
+    --with 'fly-january>=0.3.0' \
     --with mkdocs-materialx==10.1.8 \
     --with mkdocs-awesome-nav==3.3.0 \
     --with mkdocs-print-site-plugin==2.9 \

@@ -296,7 +296,7 @@ Override the job folder location with the `VEXY_LINES_JOB_FOLDER` environment va
 
 [Read the docs](https://vexy.dev/vexy-lines-apy/) for the complete API reference, style engine guide, MCP protocol specification, and more examples.
 
-Run `bash build.sh --docs --strict` to rebuild `docs/` from `src_docs/`. The wrapper uses `uvx` and Python 3.13 to install ProperDocs and the fly-january 0.2.1 theme with the Vexy menu and footer.
+Run `bash build.sh --docs --strict` to rebuild `docs/` from `src_docs/`. The wrapper uses `uvx` and Python 3.13 to install ProperDocs and fly-january 0.3.0 or later with the Vexy menu and footer.
 
 ## PyPI releases
 
