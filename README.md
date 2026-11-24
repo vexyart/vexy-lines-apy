@@ -298,6 +298,12 @@ Override the job folder location with the `VEXY_LINES_JOB_FOLDER` environment va
 
 Run `bash build.sh --docs --strict` to rebuild `docs/` from `src_docs/`. The wrapper uses `uvx` and Python 3.13 to install ProperDocs and the fly-january 0.2.1 theme with the Vexy menu and footer.
 
+## PyPI releases
+
+After pushing the release commit to the default branch, run `./publish.sh vX.Y.Z` to dispatch `release.yml`. The workflow tags the release, builds the distributions, and uploads them to PyPI through Trusted Publishing.
+
+Register or confirm the Trusted Publisher for `vexy-lines-apy` on PyPI. Use owner `vexyart`, repository `vexy-lines-apy`, workflow `release.yml`, and environment `pypi`. [PyPI setup guide](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+
 ## License
 
 MIT

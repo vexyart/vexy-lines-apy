@@ -5,6 +5,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+- PyPI releases use GitHub Actions Trusted Publishing (`138aa28`). The project owner must register or confirm the publisher for `vexyart/vexy-lines-apy`, workflow `release.yml`, and environment `pypi`.
 - Site now uses the fly-january 0.2.1 theme (chrome: vexy).
 - docs: Line-edited `README.md`, `STYLE_GUIDE.md`, and `src_docs/` in the house style (dash repairs, active voice, one typo). No API, value, or code changes. Rebuilt tracked `docs/`.
 
