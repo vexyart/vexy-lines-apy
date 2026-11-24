@@ -4,7 +4,7 @@ this_file: WORK.md
 
 # Work log
 
-## 2026-11-24 — fly-january 0.1.1
+## 2026-11-24 — fly-january 0.2.1
 
 - The docs wrapper and CI use Python 3.13. Fly supplies the Vexy menu and footer and keeps the existing light and dark modes.
 - The print guide uses the print-site 2.9 renderer and its packaged stylesheets within a regular Fly page. Its nine chapters, table of contents and internal links are present at `print_page/`.

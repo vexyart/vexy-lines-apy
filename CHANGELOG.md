@@ -5,7 +5,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-- Site now uses the fly-january 0.1.1 theme (chrome: vexy).
+- Site now uses the fly-january 0.2.1 theme (chrome: vexy).
 - docs: Line-edited `README.md`, `STYLE_GUIDE.md`, and `src_docs/` in the house style (dash repairs, active voice, one typo). No API, value, or code changes. Rebuilt tracked `docs/`.
 
 ## [1.0.46] — 2026-06
