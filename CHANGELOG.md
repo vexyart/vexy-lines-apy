@@ -5,6 +5,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+- Documentation now uses fly-january 0.4.0 or later (remote theme assets).
 - The documentation build uses fly-january 0.3.0 or later.
 
 - PyPI releases use GitHub Actions Trusted Publishing (`138aa28`). The project owner must register or confirm the publisher for `vexyart/vexy-lines-apy`, workflow `release.yml`, and environment `pypi`.
